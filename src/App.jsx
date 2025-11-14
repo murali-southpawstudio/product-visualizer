@@ -11,14 +11,14 @@ function App() {
   const [collapsedGroups, setCollapsedGroups] = useState(new Set())
   const [infoPanelCollapsed, setInfoPanelCollapsed] = useState(false)
   const [copiedProducts, setCopiedProducts] = useState([])
-  const [jsonVersion, setJsonVersion] = useState('v5') // Track which version is loaded
+  const [jsonVersion, setJsonVersion] = useState('v6') // Track which version is loaded
 
   const navigate = useNavigate()
   const { brandName } = useParams()
   const selectedBrand = brandName || null
 
   useEffect(() => {
-    const version = 'v5' // Change this to switch versions: 'v1', 'v3', 'v4', 'v5'
+    const version = 'v6' // Change this to switch versions: 'v1', 'v3', 'v4', 'v5', 'v6'
     setJsonVersion(version)
     fetch(`${import.meta.env.BASE_URL}products-grouped-by-variant_${version}.json`)
       .then(response => {
@@ -240,10 +240,58 @@ function App() {
             reason: "Same base product, different color combinations"
           }
         ]
+      },
+      v6: {
+        title: "Grouping Algorithm (v6 - Temperature Variants)",
+        description: "Products are intelligently grouped based on similarity, ignoring variations in size, color, material, finish, and temperature. The algorithm treats temperature variations as product variants.",
+        whatGetsIgnored: [
+          { label: "Sizes", examples: "600mm, 700mm, 1200x900mm, etc." },
+          { label: "Materials/Colors", examples: "Chrome, Brass, Bronze, Black, White, Grey, etc." },
+          { label: "Finishes", examples: "Matte, Gloss, Polished, Brushed, Satin" },
+          { label: "Material Combinations", examples: "Brushed Nickel, Matte Black, Polished Chrome, etc." },
+          { label: "Color Combinations", examples: "Grey/Chrome, White/Chrome, Black/Brass, etc." },
+          { label: "Temperature Variations", examples: "Cold, Warm, Hot, Cool, Cold Water, Warm Water, etc." },
+          { label: "Glass Types", examples: "Black Glass, Reflective Glass, Frosted Glass, etc." },
+          { label: "Wood Types", examples: "Oak, Walnut, Bamboo, Timber, etc." }
+        ],
+        howItWorks: [
+          "Extract and normalize product titles by removing sizes, finishes, materials, colors, temperature variations, and combinations",
+          "Treat materials like Chrome, Black, White as both colors AND materials",
+          "Treat temperature indicators (Cold, Warm, Hot) as variants",
+          "Group products with identical base descriptions together",
+          "Products that differ only in size, finish, color, material, temperature, or any combination end up in the same group"
+        ],
+        examples: [
+          {
+            title: "These products get grouped together:",
+            items: [
+              "Mizu Drift 600mm Grab Rail Polished Stainless Steel",
+              "Mizu Drift 700mm Grab Rail Polished Stainless Steel",
+              "Mizu Drift 450mm Grab Rail Polished Stainless Steel"
+            ],
+            reason: "Same base product, different sizes"
+          },
+          {
+            title: "Temperature variations (v6 enhancement):",
+            items: [
+              "Wolfen Timed Flow Basin Tap (Cold) 7 Seconds (6 Star)",
+              "Wolfen Timed Flow Basin Tap (Warm) 7 Seconds (6 Star)"
+            ],
+            reason: "Cold and Warm treated as temperature variants"
+          },
+          {
+            title: "Materials as colors:",
+            items: [
+              "Mizu Drift Toilet Brush & Holder Chrome",
+              "Mizu Drift Toilet Brush & Holder Matte Black"
+            ],
+            reason: "Chrome and Matte Black treated as color/material variants"
+          }
+        ]
       }
     }
 
-    return algorithmVersions[version] || algorithmVersions.v5
+    return algorithmVersions[version] || algorithmVersions.v6
   }
 
   // Copy product codes from a group
