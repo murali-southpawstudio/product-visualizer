@@ -11,13 +11,16 @@ function App() {
   const [collapsedGroups, setCollapsedGroups] = useState(new Set())
   const [infoPanelCollapsed, setInfoPanelCollapsed] = useState(false)
   const [copiedProducts, setCopiedProducts] = useState([])
+  const [jsonVersion, setJsonVersion] = useState('v5') // Track which version is loaded
 
   const navigate = useNavigate()
   const { brandName } = useParams()
   const selectedBrand = brandName || null
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}products-grouped-by-variant_v5.json`)
+    const version = 'v5' // Change this to switch versions: 'v1', 'v3', 'v4', 'v5'
+    setJsonVersion(version)
+    fetch(`${import.meta.env.BASE_URL}products-grouped-by-variant_${version}.json`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to load data')
@@ -102,6 +105,145 @@ function App() {
           otherIdx < idx && other.includes(phrase)
         )
       })
+  }
+
+  // Get algorithm info based on version
+  const getAlgorithmInfo = (version) => {
+    const algorithmVersions = {
+      v1: {
+        title: "Grouping Algorithm (v1 - Original)",
+        description: "Original grouping from the source data. Basic grouping by product variants.",
+        whatGetsIgnored: [
+          { label: "Sizes", examples: "600mm, 700mm, 1200x900mm, etc." }
+        ],
+        howItWorks: [
+          "Products are grouped as provided in the original data source",
+          "Basic variant detection based on product codes and categories"
+        ],
+        examples: []
+      },
+      v3: {
+        title: "Grouping Algorithm (v3)",
+        description: "Products are intelligently grouped based on similarity, ignoring variations in size, color, and material.",
+        whatGetsIgnored: [
+          { label: "Sizes", examples: "600mm, 700mm, 1200x900mm, etc." },
+          { label: "Materials", examples: "Chrome, Brass, Bronze, Stainless Steel, etc." },
+          { label: "Colors", examples: "Black, White, Matte Black, Brushed Nickel, etc." },
+          { label: "Glass Types", examples: "Black Glass, Reflective Glass, Frosted Glass, etc." },
+          { label: "Wood Types", examples: "Oak, Walnut, Bamboo, Timber, etc." }
+        ],
+        howItWorks: [
+          "Extract and normalize product titles by removing sizes and materials",
+          "Group products with identical base descriptions together",
+          "Products that differ only in size, color, or material end up in the same group"
+        ],
+        examples: [
+          {
+            title: "These products get grouped together:",
+            items: [
+              "Mizu Drift 600mm Grab Rail Polished Stainless Steel",
+              "Mizu Drift 700mm Grab Rail Polished Stainless Steel",
+              "Mizu Drift 450mm Grab Rail Polished Stainless Steel"
+            ],
+            reason: "Same base product, different sizes"
+          },
+          {
+            title: "These also get grouped:",
+            items: [
+              "Geberit Sigma80 Sensor Plate Black Glass",
+              "Geberit Sigma80 Sensor Plate Reflective Glass"
+            ],
+            reason: "Same base product, different materials"
+          }
+        ]
+      },
+      v4: {
+        title: "Grouping Algorithm (v4)",
+        description: "Products are intelligently grouped based on similarity, ignoring variations in size, color, material, and color combinations.",
+        whatGetsIgnored: [
+          { label: "Sizes", examples: "600mm, 700mm, 1200x900mm, etc." },
+          { label: "Materials", examples: "Chrome, Brass, Bronze, Stainless Steel, etc." },
+          { label: "Colors", examples: "Black, White, Matte Black, Brushed Nickel, etc." },
+          { label: "Color Combinations", examples: "Grey/Chrome, White/Chrome, Black/Brass, etc." },
+          { label: "Glass Types", examples: "Black Glass, Reflective Glass, Frosted Glass, etc." },
+          { label: "Wood Types", examples: "Oak, Walnut, Bamboo, Timber, etc." }
+        ],
+        howItWorks: [
+          "Extract and normalize product titles by removing sizes, materials, and color combinations",
+          "Group products with identical base descriptions together",
+          "Products that differ only in size, color, material, or color combinations end up in the same group"
+        ],
+        examples: [
+          {
+            title: "These products get grouped together:",
+            items: [
+              "Mizu Drift 600mm Grab Rail Polished Stainless Steel",
+              "Mizu Drift 700mm Grab Rail Polished Stainless Steel",
+              "Mizu Drift 450mm Grab Rail Polished Stainless Steel"
+            ],
+            reason: "Same base product, different sizes"
+          },
+          {
+            title: "Color combinations are treated as variants:",
+            items: [
+              "Product Name Grey/Chrome",
+              "Product Name White/Chrome",
+              "Product Name Black/Brass"
+            ],
+            reason: "Same base product, different color combinations"
+          }
+        ]
+      },
+      v5: {
+        title: "Grouping Algorithm (v5 - Enhanced)",
+        description: "Products are intelligently grouped based on similarity, ignoring variations in size, color, material, and finish. The algorithm treats materials like Chrome and Black as both colors and materials.",
+        whatGetsIgnored: [
+          { label: "Sizes", examples: "600mm, 700mm, 1200x900mm, etc." },
+          { label: "Materials/Colors", examples: "Chrome, Brass, Bronze, Black, White, Grey, etc." },
+          { label: "Finishes", examples: "Matte, Gloss, Polished, Brushed, Satin" },
+          { label: "Material Combinations", examples: "Brushed Nickel, Matte Black, Polished Chrome, etc." },
+          { label: "Color Combinations", examples: "Grey/Chrome, White/Chrome, Black/Brass, etc." },
+          { label: "Glass Types", examples: "Black Glass, Reflective Glass, Frosted Glass, etc." },
+          { label: "Wood Types", examples: "Oak, Walnut, Bamboo, Timber, etc." }
+        ],
+        howItWorks: [
+          "Extract and normalize product titles by removing sizes, finishes, materials, colors, and combinations",
+          "Treat materials like Chrome, Black, White as both colors AND materials",
+          "Group products with identical base descriptions together",
+          "Products that differ only in size, finish, color, material, or any combination end up in the same group"
+        ],
+        examples: [
+          {
+            title: "These products get grouped together:",
+            items: [
+              "Mizu Drift 600mm Grab Rail Polished Stainless Steel",
+              "Mizu Drift 700mm Grab Rail Polished Stainless Steel",
+              "Mizu Drift 450mm Grab Rail Polished Stainless Steel"
+            ],
+            reason: "Same base product, different sizes"
+          },
+          {
+            title: "Materials as colors (v5 enhancement):",
+            items: [
+              "Mizu Drift Toilet Brush & Holder Chrome",
+              "Mizu Drift Toilet Brush & Holder Matte Black"
+            ],
+            reason: "Chrome and Matte Black treated as color/material variants"
+          },
+          {
+            title: "Color combinations are treated as variants:",
+            items: [
+              "Product Name Grey/Chrome",
+              "Product Name White/Chrome",
+              "Product Name Black/Brass"
+            ],
+            reason: "Same base product, different color combinations"
+          }
+        ]
+      }
+    }
+
+    return algorithmVersions[version] || algorithmVersions.v5
   }
 
   // Copy product codes from a group
@@ -320,7 +462,7 @@ function App() {
 
         <div className={`info-panel ${infoPanelCollapsed ? 'collapsed' : ''}`}>
           <div className="info-panel-header">
-            <h2>Grouping Algorithm</h2>
+            <h2>{getAlgorithmInfo(jsonVersion).title}</h2>
             <button
               className="collapse-toggle-btn"
               onClick={() => setInfoPanelCollapsed(!infoPanelCollapsed)}
@@ -332,72 +474,45 @@ function App() {
           {!infoPanelCollapsed && (
             <>
           <p className="info-description">
-            Products are intelligently grouped based on similarity, ignoring variations in size, color, material, and finish. The algorithm treats materials like Chrome and Black as both colors and materials.
+            {getAlgorithmInfo(jsonVersion).description}
           </p>
 
-          <div className="info-section">
-            <h3>What Gets Ignored</h3>
-            <ul>
-              <li><strong>Sizes:</strong> 600mm, 700mm, 1200x900mm, etc.</li>
-              <li><strong>Materials/Colors:</strong> Chrome, Brass, Bronze, Black, White, Grey, etc.</li>
-              <li><strong>Finishes:</strong> Matte, Gloss, Polished, Brushed, Satin</li>
-              <li><strong>Material Combinations:</strong> Brushed Nickel, Matte Black, Polished Chrome, etc.</li>
-              <li><strong>Color Combinations:</strong> Grey/Chrome, White/Chrome, Black/Brass, etc.</li>
-              <li><strong>Glass Types:</strong> Black Glass, Reflective Glass, Frosted Glass, etc.</li>
-              <li><strong>Wood Types:</strong> Oak, Walnut, Bamboo, Timber, etc.</li>
-            </ul>
-          </div>
+          {getAlgorithmInfo(jsonVersion).whatGetsIgnored.length > 0 && (
+            <div className="info-section">
+              <h3>What Gets Ignored</h3>
+              <ul>
+                {getAlgorithmInfo(jsonVersion).whatGetsIgnored.map((item, index) => (
+                  <li key={index}><strong>{item.label}:</strong> {item.examples}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div className="info-section">
             <h3>How It Works</h3>
             <ol>
-              <li>Extract and normalize product titles by removing sizes, finishes, materials, colors, and combinations</li>
-              <li>Treat materials like Chrome, Black, White as both colors AND materials</li>
-              <li>Group products with identical base descriptions together</li>
-              <li>Products that differ only in size, finish, color, material, or any combination end up in the same group</li>
+              {getAlgorithmInfo(jsonVersion).howItWorks.map((step, index) => (
+                <li key={index}>{step}</li>
+              ))}
             </ol>
           </div>
 
-          <div className="info-section">
-            <h3>Example</h3>
-            <div className="info-example">
-              <p className="example-title">These products get grouped together:</p>
-              <ul>
-                <li>"Mizu Drift 600mm Grab Rail Polished Stainless Steel"</li>
-                <li>"Mizu Drift 700mm Grab Rail Polished Stainless Steel"</li>
-                <li>"Mizu Drift 450mm Grab Rail Polished Stainless Steel"</li>
-              </ul>
-              <p className="example-reason">→ Same base product, different sizes</p>
+          {getAlgorithmInfo(jsonVersion).examples.length > 0 && (
+            <div className="info-section">
+              <h3>Examples</h3>
+              {getAlgorithmInfo(jsonVersion).examples.map((example, index) => (
+                <div key={index} className="info-example">
+                  <p className="example-title">{example.title}</p>
+                  <ul>
+                    {example.items.map((item, i) => (
+                      <li key={i}>"{item}"</li>
+                    ))}
+                  </ul>
+                  <p className="example-reason">→ {example.reason}</p>
+                </div>
+              ))}
             </div>
-
-            <div className="info-example">
-              <p className="example-title">These also get grouped:</p>
-              <ul>
-                <li>"Geberit Sigma80 Sensor Plate Black Glass"</li>
-                <li>"Geberit Sigma80 Sensor Plate Reflective Glass"</li>
-              </ul>
-              <p className="example-reason">→ Same base product, different materials</p>
-            </div>
-
-            <div className="info-example">
-              <p className="example-title">Color combinations are treated as variants:</p>
-              <ul>
-                <li>"Product Name Grey/Chrome"</li>
-                <li>"Product Name White/Chrome"</li>
-                <li>"Product Name Black/Brass"</li>
-              </ul>
-              <p className="example-reason">→ Same base product, different color combinations</p>
-            </div>
-
-            <div className="info-example">
-              <p className="example-title">Materials as colors (v5 enhancement):</p>
-              <ul>
-                <li>"Mizu Drift Toilet Brush & Holder Chrome"</li>
-                <li>"Mizu Drift Toilet Brush & Holder Matte Black"</li>
-              </ul>
-              <p className="example-reason">→ Chrome and Matte Black treated as color/material variants</p>
-            </div>
-          </div>
+          )}
 
           <div className="info-section">
             <h3>Statistics</h3>
