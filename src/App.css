@@ -1,7 +1,7 @@
 .app {
   min-height: 100vh;
   background: linear-gradient(to bottom, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem;
+  padding: 2rem 2rem 0 2rem;
 }
 
 .header {
@@ -70,7 +70,7 @@
   border-radius: 12px;
   padding: 0 1.5rem 1.5rem 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  max-height: calc(100vh - 300px);
+  max-height: calc(100vh - 500px);
   overflow-y: auto;
   border: 1px solid #e8ecef;
 }
@@ -201,7 +201,7 @@
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  max-height: calc(100vh - 300px);
+  max-height: calc(100vh - 500px);
   overflow-y: auto;
   border: 1px solid #e8ecef;
   transition: all 0.3s ease;
@@ -352,7 +352,7 @@
   border-radius: 12px;
   padding: 0 1.5rem 1.5rem 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  max-height: calc(100vh - 300px);
+  max-height: calc(100vh - 500px);
   overflow-y: auto;
   animation: slideIn 0.3s ease;
   border: 1px solid #e8ecef;
@@ -472,10 +472,16 @@
   background: #f8f9fa;
 }
 
+.group-label-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
 .group-label {
   font-weight: 600;
   color: #3498db;
-  margin-bottom: 0.75rem;
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -485,10 +491,29 @@
   gap: 0.5rem;
   user-select: none;
   transition: color 0.2s ease;
+  flex: 1;
 }
 
 .group-label:hover {
   color: #2980b9;
+}
+
+.copy-group-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.copy-group-btn:hover {
+  background: #2980b9;
+  transform: translateY(-1px);
 }
 
 .collapse-icon {
@@ -547,6 +572,91 @@
 
 .error {
   color: #e74c3c;
+}
+
+.copied-products-panel {
+  max-width: 100%;
+  margin: 2rem auto 0 auto;
+  padding: 0 2rem 0 2rem;
+}
+
+.copied-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.copied-panel-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.copied-panel-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.copy-clipboard-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-clipboard-btn:hover:not(:disabled) {
+  background: #2980b9;
+  transform: scale(1.05);
+}
+
+.copy-clipboard-btn:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.clear-copied-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-copied-btn:hover {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+
+.copied-products-textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e0e6ed;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: monospace;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  resize: vertical;
+  min-height: 150px;
+  max-height: 150px;
+}
+
+.copied-products-textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
 }
 
 @media (max-width: 768px) {

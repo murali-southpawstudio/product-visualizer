@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import './App.css'
 
 function App() {
@@ -6,10 +7,14 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedBrand, setSelectedBrand] = useState(null)
   const [productSearchTerm, setProductSearchTerm] = useState('')
   const [collapsedGroups, setCollapsedGroups] = useState(new Set())
   const [infoPanelCollapsed, setInfoPanelCollapsed] = useState(false)
+  const [copiedProducts, setCopiedProducts] = useState([])
+
+  const navigate = useNavigate()
+  const { brandName } = useParams()
+  const selectedBrand = brandName || null
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}products-grouped-by-variant_v3.json`)
@@ -99,6 +104,20 @@ function App() {
       })
   }
 
+  // Copy product codes from a group
+  const copyProductCodes = (group) => {
+    const productCodes = group.map(product => product.productCode)
+    setCopiedProducts(prev => [...prev, ...productCodes])
+  }
+
+  // Copy to clipboard
+  const copyToClipboard = () => {
+    const arrayString = `[${copiedProducts.map(code => `"${code}"`).join(', ')}]`
+    navigator.clipboard.writeText(arrayString).then(() => {
+      // Optional: You could add a toast notification here
+    })
+  }
+
   // Highlight common text in a product title
   const highlightCommonText = (title, commonPhrases) => {
     if (!commonPhrases || commonPhrases.length === 0) {
@@ -179,7 +198,7 @@ function App() {
                 <div
                   key={brand}
                   className={`brand-card ${selectedBrand === brand ? 'active' : ''}`}
-                  onClick={() => setSelectedBrand(brand)}
+                  onClick={() => navigate(`/brand/${encodeURIComponent(brand)}`)}
                 >
                   <div className="brand-name">{brand}</div>
                   <div className="brand-count">{totalProducts} products</div>
@@ -221,7 +240,7 @@ function App() {
                 <button
                   className="close-btn"
                   onClick={() => {
-                    setSelectedBrand(null)
+                    navigate('/')
                     setProductSearchTerm('')
                   }}
                 >
@@ -271,9 +290,18 @@ function App() {
 
                   return (
                     <div key={groupIndex} className="product-group">
-                      <div className="group-label" onClick={toggleGroup}>
-                        <span className="collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
-                        <span>Group {groupIndex + 1} ({filteredGroup.length} {filteredGroup.length === 1 ? 'product' : 'products'})</span>
+                      <div className="group-label-container">
+                        <div className="group-label" onClick={toggleGroup}>
+                          <span className="collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
+                          <span>Group {groupIndex + 1} ({filteredGroup.length} {filteredGroup.length === 1 ? 'product' : 'products'})</span>
+                        </div>
+                        <button
+                          className="copy-group-btn"
+                          onClick={() => copyProductCodes(filteredGroup)}
+                          title="Select product numbers"
+                        >
+                          Select product numbers
+                        </button>
                       </div>
                       {!isCollapsed && filteredGroup.map((product, productIndex) => (
                         <div key={productIndex} className="product-item">
@@ -360,6 +388,33 @@ function App() {
             </>
           )}
         </div>
+      </div>
+
+      <div className="copied-products-panel">
+        <div className="copied-panel-header">
+          <h3>Copied Product Numbers ({copiedProducts.length})</h3>
+          <div className="copied-panel-actions">
+            <button
+              className="copy-clipboard-btn"
+              onClick={copyToClipboard}
+              disabled={copiedProducts.length === 0}
+            >
+              Copy to Clipboard
+            </button>
+            <button
+              className="clear-copied-btn"
+              onClick={() => setCopiedProducts([])}
+            >
+              Clear All
+            </button>
+          </div>
+        </div>
+        <textarea
+          className="copied-products-textarea"
+          value={copiedProducts.length > 0 ? `[${copiedProducts.map(code => `"${code}"`).join(', ')}]` : ''}
+          readOnly
+          rows={10}
+        />
       </div>
     </div>
   )
