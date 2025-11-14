@@ -12,7 +12,7 @@ function App() {
   const [infoPanelCollapsed, setInfoPanelCollapsed] = useState(false)
 
   useEffect(() => {
-    fetch('/products-grouped-by-variant_v3.json')
+    fetch(`${import.meta.env.BASE_URL}products-grouped-by-variant_v3.json`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to load data')
@@ -142,30 +142,30 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>Product Visualizer</h1>
-        <p className="subtitle">Exploring {brands.length} brands</p>
+        <h1>Reece Product Visualizer <span className="subtitle">Exploring {brands.length} brands</span></h1>
       </header>
-
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search brands..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
-      </div>
 
       <div className={`content ${selectedBrand ? 'with-products' : ''}`}>
         <div className="brands-list">
-          <div className="brands-list-header">
-            <h2>Brands ({filteredBrands.length})</h2>
-            <div className="brands-list-stats">
-              <span className="stat-item">{overallStats.total} total</span>
-              <span className="stat-separator">•</span>
-              <span className="stat-item">{overallStats.unique} unique</span>
-              <span className="stat-separator">•</span>
-              <span className="stat-item">{overallStats.grouped} grouped</span>
+          <div className="brands-sticky-header">
+            <div className="brands-list-header">
+              <h2>Brands ({filteredBrands.length})</h2>
+              <div className="brands-list-stats">
+                <span className="stat-item">{overallStats.total} total</span>
+                <span className="stat-separator">•</span>
+                <span className="stat-item">{overallStats.unique} unique</span>
+                <span className="stat-separator">•</span>
+                <span className="stat-item">{overallStats.grouped} grouped</span>
+              </div>
+            </div>
+            <div className="brands-search-container">
+              <input
+                type="text"
+                placeholder="Search brands..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="brands-search-input"
+              />
             </div>
           </div>
           <div className="brands-grid">
