@@ -17,7 +17,7 @@ function App() {
   const selectedBrand = brandName || null
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}products-grouped-by-variant_v3.json`)
+    fetch(`${import.meta.env.BASE_URL}products-grouped-by-variant_v5.json`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to load data')
@@ -332,15 +332,17 @@ function App() {
           {!infoPanelCollapsed && (
             <>
           <p className="info-description">
-            Products are intelligently grouped based on similarity, ignoring variations in size, color, and material.
+            Products are intelligently grouped based on similarity, ignoring variations in size, color, material, and finish. The algorithm treats materials like Chrome and Black as both colors and materials.
           </p>
 
           <div className="info-section">
             <h3>What Gets Ignored</h3>
             <ul>
               <li><strong>Sizes:</strong> 600mm, 700mm, 1200x900mm, etc.</li>
-              <li><strong>Materials:</strong> Chrome, Brass, Bronze, Stainless Steel, etc.</li>
-              <li><strong>Colors:</strong> Black, White, Matte Black, Brushed Nickel, etc.</li>
+              <li><strong>Materials/Colors:</strong> Chrome, Brass, Bronze, Black, White, Grey, etc.</li>
+              <li><strong>Finishes:</strong> Matte, Gloss, Polished, Brushed, Satin</li>
+              <li><strong>Material Combinations:</strong> Brushed Nickel, Matte Black, Polished Chrome, etc.</li>
+              <li><strong>Color Combinations:</strong> Grey/Chrome, White/Chrome, Black/Brass, etc.</li>
               <li><strong>Glass Types:</strong> Black Glass, Reflective Glass, Frosted Glass, etc.</li>
               <li><strong>Wood Types:</strong> Oak, Walnut, Bamboo, Timber, etc.</li>
             </ul>
@@ -349,9 +351,10 @@ function App() {
           <div className="info-section">
             <h3>How It Works</h3>
             <ol>
-              <li>Extract and normalize product titles by removing sizes and materials</li>
+              <li>Extract and normalize product titles by removing sizes, finishes, materials, colors, and combinations</li>
+              <li>Treat materials like Chrome, Black, White as both colors AND materials</li>
               <li>Group products with identical base descriptions together</li>
-              <li>Products that differ only in size, color, or material end up in the same group</li>
+              <li>Products that differ only in size, finish, color, material, or any combination end up in the same group</li>
             </ol>
           </div>
 
@@ -374,6 +377,25 @@ function App() {
                 <li>"Geberit Sigma80 Sensor Plate Reflective Glass"</li>
               </ul>
               <p className="example-reason">→ Same base product, different materials</p>
+            </div>
+
+            <div className="info-example">
+              <p className="example-title">Color combinations are treated as variants:</p>
+              <ul>
+                <li>"Product Name Grey/Chrome"</li>
+                <li>"Product Name White/Chrome"</li>
+                <li>"Product Name Black/Brass"</li>
+              </ul>
+              <p className="example-reason">→ Same base product, different color combinations</p>
+            </div>
+
+            <div className="info-example">
+              <p className="example-title">Materials as colors (v5 enhancement):</p>
+              <ul>
+                <li>"Mizu Drift Toilet Brush & Holder Chrome"</li>
+                <li>"Mizu Drift Toilet Brush & Holder Matte Black"</li>
+              </ul>
+              <p className="example-reason">→ Chrome and Matte Black treated as color/material variants</p>
             </div>
           </div>
 
