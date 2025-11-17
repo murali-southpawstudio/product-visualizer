@@ -9,6 +9,7 @@ const materials = [
   'brushed platinum gold',
   'brushed pure gold',
   'brushed smoked gunmetal',
+  'brushed smoke gunmetal',  // Variation: "smoke" vs "smoked"
   'matte opium black',
   'brushed oyster nickel',
   'polished stainless steel',
@@ -41,10 +42,17 @@ const materials = [
   'tinted glass',
   'glass',
 
-  // Wood types
+  // Wood types (with color descriptors first)
+  'light oak',
+  'dark oak',
+  'natural oak',
+  'dark elm',
+  'light elm',
+  'natural elm',
   'oak',
   'walnut',
   'bamboo',
+  'elm',
   'timber',
   'wood',
 
@@ -92,6 +100,7 @@ const materials = [
   'platinum gold',
   'pure gold',
   'smoked gunmetal',
+  'smoke gunmetal',  // Variation: "smoke" vs "smoked"
   'oyster nickel',
   'tangerine',
   'platinum',
@@ -114,7 +123,11 @@ const materials = [
   'pearl',
   'opium',
   'oyster',
-  'smoked'
+  'smoked',
+  'smoke',  // Variation: "smoke" vs "smoked"
+  'light',
+  'dark',
+  'natural'
 ];
 
 // Sort by length (longest first) to match longer phrases first
@@ -138,6 +151,10 @@ function normalizeTitle(title) {
   // Normalize common word variations to ensure consistency
   normalized = normalized.replace(/\bunderfloor\b/gi, 'under floor');
   normalized = normalized.replace(/\bunder\s+floor\b/gi, 'underfloor');  // Normalize to single word
+
+  // Remove directional indicators (left/right, left hand/right hand)
+  normalized = normalized.replace(/\b(left|right)\s+hand\b/gi, '');
+  normalized = normalized.replace(/\b(left|right)\b/gi, '');
 
   // Remove color combination patterns like "Grey/Chrome", "White/Chrome", "Black/Brass", etc.
   // This will match patterns like: word/word, word / word
@@ -186,13 +203,14 @@ for (const [brand, groups] of Object.entries(data)) {
 const output = {
   _algorithmInfo: {
     version: 6,
-    description: "Groups products by base type, removing size, materials, finishes, color combinations, and temperature variations. Includes whitespace normalization fix for proper multi-word material matching.",
+    description: "Groups products by base type, removing size, materials, finishes, color combinations, directional indicators, and temperature variations. Includes whitespace normalization fix for proper multi-word material matching.",
     groupingCriteria: [
       "Same base product name (after normalization)",
       "Different sizes grouped together",
       "Different materials/finishes grouped together (e.g., Matte Black, Polished Stainless Steel)",
       "Different color combinations grouped together (e.g., Grey/Chrome, White/Chrome)",
-      "Different temperature variations grouped together (e.g., Cold, Warm, Hot)"
+      "Different temperature variations grouped together (e.g., Cold, Warm, Hot)",
+      "Different directional orientations grouped together (e.g., Left, Right, Left Hand, Right Hand)"
     ],
     normalizedAttributes: [
       "Sizes (e.g., 1200x900mm, 630mm, 10m2, 5m3)",
@@ -200,10 +218,11 @@ const output = {
       "Finishes (e.g., brushed, polished, matte, gloss, satin, bright, shiny)",
       "Complex material/finish combinations (e.g., brushed platinum gold, matte opium black, brushed oyster nickel)",
       "Glass types (e.g., black glass, frosted glass, mirror glass)",
-      "Wood types (e.g., oak, walnut, bamboo)",
-      "Color names (e.g., fume, green, tangerine orange, platinum, oyster, smoked)",
+      "Wood types (e.g., light oak, dark elm, walnut, bamboo)",
+      "Color names (e.g., fume, green, tangerine orange, platinum, oyster, smoked, light, dark)",
       "Color combinations (e.g., Grey/Chrome, Black/Brass)",
       "Temperature variations (e.g., cold, warm, hot)",
+      "Directional indicators (e.g., left, right, left hand, right hand)",
       "Word variations (e.g., underfloor vs under floor)"
     ],
     bugFixes: [
