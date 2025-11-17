@@ -45,7 +45,7 @@ function App() {
     return <div className="error">Error: {error}</div>
   }
 
-  const brands = Object.keys(data || {}).sort()
+  const brands = Object.keys(data || {}).filter(key => key !== '_algorithmInfo').sort()
   const filteredBrands = searchTerm
     ? brands.filter(brand =>
         brand.toLowerCase().includes(searchTerm.toLowerCase())
@@ -449,7 +449,14 @@ function App() {
             </div>
             <div className="products-list">
               {[...data[selectedBrand]]
-                .sort((a, b) => b.length - a.length)
+                .sort((a, b) => {
+                  // Sort single-product groups separately at the end
+                  if (a.length === 1 && b.length === 1) return 0
+                  if (a.length === 1) return 1
+                  if (b.length === 1) return -1
+                  // For multi-product groups, sort by size (largest first)
+                  return b.length - a.length
+                })
                 .map((group, groupIndex) => {
                   // Filter products based on search term
                   const filteredGroup = productSearchTerm

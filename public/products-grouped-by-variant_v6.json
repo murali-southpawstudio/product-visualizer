@@ -27,6 +27,139 @@
       }
     ]
   ],
+  "_algorithmInfo": {
+    "version": 6,
+    "description": "Groups products by base type, removing size, materials, finishes, color combinations, and temperature variations. Includes whitespace normalization fix for proper multi-word material matching.",
+    "groupingCriteria": [
+      "Same base product name (after normalization)",
+      "Different sizes grouped together",
+      "Different materials/finishes grouped together (e.g., Matte Black, Polished Stainless Steel)",
+      "Different color combinations grouped together (e.g., Grey/Chrome, White/Chrome)",
+      "Different temperature variations grouped together (e.g., Cold, Warm, Hot)"
+    ],
+    "normalizedAttributes": [
+      "Sizes (e.g., 1200x900mm, 630mm, 10m2, 5m3)",
+      "Materials (e.g., stainless steel, brass, bronze, chrome)",
+      "Finishes (e.g., brushed, polished, matte, gloss, satin, bright, shiny)",
+      "Complex material/finish combinations (e.g., brushed platinum gold, matte opium black, brushed oyster nickel)",
+      "Glass types (e.g., black glass, frosted glass, mirror glass)",
+      "Wood types (e.g., oak, walnut, bamboo)",
+      "Color names (e.g., fume, green, tangerine orange, platinum, oyster, smoked)",
+      "Color combinations (e.g., Grey/Chrome, Black/Brass)",
+      "Temperature variations (e.g., cold, warm, hot)",
+      "Word variations (e.g., underfloor vs under floor)"
+    ],
+    "bugFixes": [
+      {
+        "issue": "Whitespace normalization bug",
+        "description": "Multi-word materials with inconsistent spacing (e.g., 'Polished Stainless    Steel' with extra spaces) were not being removed properly",
+        "solution": "Normalize whitespace to single spaces BEFORE attempting to remove materials, ensuring consistent matching",
+        "affectedProducts": [
+          {
+            "productCodes": [
+              "9509570",
+              "9509568"
+            ],
+            "productTitles": [
+              "Mizu Bloc Heated Towel Rail 630 (Each) (Less Transformer) Matte Black",
+              "Mizu Bloc Heated Towel Rail 630 (Each) (Less Transformer) Polished Stainless Steel"
+            ],
+            "before": "Not grouped (whitespace prevented material matching)",
+            "after": "Properly grouped (same base product, different finishes)"
+          }
+        ]
+      },
+      {
+        "issue": "Meter squared (m2) notation not recognized",
+        "description": "Size patterns like '10M2', '5m2' (meter squared) and '10M3' (meter cubed) were not being removed, preventing products with different area/volume measurements from grouping together",
+        "solution": "Extended size pattern regex to match m2/m3 notations and parenthetical formats like (10m2)",
+        "affectedProducts": [
+          {
+            "productCodes": [
+              "1903029",
+              "1903034",
+              "1903314",
+              "1903313",
+              "1903031",
+              "1903030",
+              "1903028",
+              "1903027",
+              "1903026",
+              "1903032"
+            ],
+            "productTitles": [
+              "Stiebel Eltron Under Floor Heating Pack (1M2)",
+              "Stiebel Eltron Under Floor Heating Pack (2M2)",
+              "...up to (10M2)"
+            ],
+            "before": "Not grouped (m2 notation not recognized as size)",
+            "after": "Properly grouped (same base product, different coverage areas)"
+          }
+        ]
+      },
+      {
+        "issue": "Inconsistent word spacing (underfloor vs under floor)",
+        "description": "Product names with inconsistent spacing like 'Underfloor' vs 'Under Floor' were treated as different products",
+        "solution": "Normalize common word variations to a consistent format before comparison",
+        "affectedProducts": [
+          {
+            "productCodes": [
+              "1903029",
+              "1903034"
+            ],
+            "productTitles": [
+              "Stiebel Eltron Underfloor Heating Pack (5M2)",
+              "Stiebel Eltron Under Floor Heating Pack (9m2)"
+            ],
+            "before": "Not grouped ('underfloor' vs 'under floor' treated as different)",
+            "after": "Properly grouped (word variations normalized)"
+          }
+        ]
+      },
+      {
+        "issue": "Color names not recognized",
+        "description": "Many color names (Fume, Green, Tangerine Orange, etc.) were not in the materials list, preventing color variants from grouping together",
+        "solution": "Added comprehensive list of color names to materials array, sorted by length to match multi-word colors first",
+        "affectedProducts": [
+          {
+            "productCodes": [
+              "9504732",
+              "9510157",
+              "9504574"
+            ],
+            "productTitles": [
+              "LAUFEN Kartell Rack 750mm x 260mm x 530mm Fume",
+              "LAUFEN Kartell Rack 750mm x 260mm x 530mm Green",
+              "LAUFEN Kartell Rack 750mm x 260mm x 530mm Tangerine Orange"
+            ],
+            "before": "Not grouped (color names not recognized)",
+            "after": "Properly grouped (same base product, different colors)"
+          }
+        ]
+      },
+      {
+        "issue": "Missing finish terms (bright, shiny, etc.)",
+        "description": "Finish terms like 'bright', 'shiny', 'reflective' were not in the materials list, preventing products with these finishes from grouping",
+        "solution": "Added missing finish terms to materials array",
+        "affectedProducts": [
+          {
+            "productCodes": [
+              "1850680",
+              "1850681"
+            ],
+            "productTitles": [
+              "Raffaello Drop Down Rail 610mm Stainless Steel Black",
+              "Raffaello Drop Down Rail 610mm Stainless Steel Bright"
+            ],
+            "before": "Not grouped ('bright' finish not recognized)",
+            "after": "Properly grouped (same base product, different finishes)"
+          }
+        ]
+      }
+    ],
+    "sourceFile": "products-grouped-by-variant_v5.json",
+    "lastUpdated": "2025-11-17T05:37:19.864Z"
+  },
   "Akril": [
     [
       {
@@ -2746,9 +2879,7 @@
       {
         "productCode": "9504015",
         "productTitle": "Geberit Sigma 01 Dual Flush Access Plate ABS White"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9504016",
         "productTitle": "Geberit Sigma 01 Dual Flush Access Plate ABS Bright Chrome"
@@ -2918,6 +3049,10 @@
       {
         "productCode": "1836022",
         "productTitle": "Geberit Sigma70 Dual Flush Button Matte  White Easy Clean Coating"
+      },
+      {
+        "productCode": "1836026",
+        "productTitle": "Geberit Sigma70 Dual Flush Button Red    Gold Easy Clean Coating"
       }
     ],
     [
@@ -2934,12 +3069,6 @@
       {
         "productCode": "1836029",
         "productTitle": "Geberit Sigma70 Dual Flush Button Lava   Glass"
-      }
-    ],
-    [
-      {
-        "productCode": "1836026",
-        "productTitle": "Geberit Sigma70 Dual Flush Button Red    Gold Easy Clean Coating"
       }
     ],
     [
@@ -13328,7 +13457,9 @@
       {
         "productCode": "951021",
         "productTitle": "Kado Lux Floor Waste 97mm DN80 Matte     White"
-      },
+      }
+    ],
+    [
       {
         "productCode": "306298",
         "productTitle": "Kado Lux Floor Waste 97mm DN80 Satin"
@@ -13450,7 +13581,9 @@
       {
         "productCode": "951045",
         "productTitle": "Kado Lux Oval Floor Waste 97mm DN80      Matte White"
-      },
+      }
+    ],
+    [
       {
         "productCode": "306297",
         "productTitle": "Kado Lux Oval Floor Waste 97mm DN80      Satin"
@@ -14240,7 +14373,9 @@
       {
         "productCode": "951033",
         "productTitle": "Kado Lux Square Floor Waste 97mm DN80    Matte White"
-      },
+      }
+    ],
+    [
       {
         "productCode": "306299",
         "productTitle": "Kado Lux Square Floor Waste 97mm DN80    Satin"
@@ -17266,9 +17401,7 @@
       {
         "productCode": "9504731",
         "productTitle": "LAUFEN Kartell 330mm x 280mm x 465mm     Stool Fume"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9504572",
         "productTitle": "LAUFEN Kartell 330mm x 280mm x 465mm     Stool Tangerine Orange"
@@ -17386,15 +17519,11 @@
       {
         "productCode": "9504732",
         "productTitle": "LAUFEN Kartell Rack 750mm x 260mm x      530mm Fume"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9510157",
         "productTitle": "LAUFEN Kartell Rack 750mm x 260mm x      530mm Green"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9504574",
         "productTitle": "LAUFEN Kartell Rack 750mm x 260mm x      530mm Tangerine Orange"
@@ -17486,9 +17615,7 @@
       {
         "productCode": "9504737",
         "productTitle": "LAUFEN Kartell Towel Rail 600mm x 75mm x 40mm Fume"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9504580",
         "productTitle": "LAUFEN Kartell Towel Rail 300mm x 75mm x 40mm Tangerine Orange"
@@ -17550,9 +17677,7 @@
       {
         "productCode": "9504735",
         "productTitle": "LAUFEN Kartell Wall Mounted Shelf 450mm  x 155mm x 40mm Fume"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9504578",
         "productTitle": "LAUFEN Kartell Wall Mounted Shelf 450mm  x 155mm x 40mm Tangerine Orange"
@@ -18032,6 +18157,14 @@
       {
         "productCode": "9510138",
         "productTitle": "LAUFEN Sonar Above Counter Basin 410mm x 365mm White"
+      },
+      {
+        "productCode": "9509855",
+        "productTitle": "LAUFEN Sonar Textured Above Counter      Basin 340mm x 340mm White"
+      },
+      {
+        "productCode": "9508612",
+        "productTitle": "LAUFEN Sonar Textured Above Counter      Basin 410mm x 365mm White"
       }
     ],
     [
@@ -18080,16 +18213,6 @@
       {
         "productCode": "1813055",
         "productTitle": "LAUFEN Sonar Rimless Wall Hung Pan and   Soft Close Quick Release Seat (4 Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "9509855",
-        "productTitle": "LAUFEN Sonar Textured Above Counter      Basin 340mm x 340mm White"
-      },
-      {
-        "productCode": "9508612",
-        "productTitle": "LAUFEN Sonar Textured Above Counter      Basin 410mm x 365mm White"
       }
     ],
     [
@@ -21590,9 +21713,7 @@
       {
         "productCode": "4200539",
         "productTitle": "Milli Mood Edit Twin Rail Shower with    Top Rail Water Inlet PVD Platinum Gold   (3 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9511162",
         "productTitle": "Milli Mood Edit Twin Rail Shower with    Top Rail Water Inlet PVD Brushed Bronze  (3 Star)"
@@ -28020,9 +28141,7 @@
       {
         "productCode": "9509570",
         "productTitle": "Mizu Bloc Heated Towel Rail 630 (Each)   (Less Transformer) Matte Black"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9509568",
         "productTitle": "Mizu Bloc Heated Towel Rail 630 (Each)   (Less Transformer) Polished Stainless    Steel"
@@ -28050,9 +28169,7 @@
       {
         "productCode": "9509571",
         "productTitle": "Mizu Bloc Heated Towel Rail 830 (Each)   (Less Transformer) Matte Black"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9509569",
         "productTitle": "Mizu Bloc Heated Towel Rail 830 (Each)   (Less Transformer) Polished Stainless    Steel"
@@ -28102,9 +28219,7 @@
       {
         "productCode": "9511217",
         "productTitle": "Mizu Bloc MK2 750 x 800mm Heated Towel   Rail Low Voltage 24V Matte Black"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9511214",
         "productTitle": "Mizu Bloc MK2 550 x 1050mm Heated Towel  Rail Low Voltage 24V Polished Stainless  Steel"
@@ -30282,15 +30397,7 @@
       {
         "productCode": "2007895",
         "productTitle": "Mizu Drift MK2 750 x 800mm Heated Towel  Rail Low Voltage 24V Brushed Gunmetal"
-      }
-    ],
-    [
-      {
-        "productCode": "9511203",
-        "productTitle": "Mizu Drift MK2 550 x 1050mm Heated Towel Rail Low Voltage 24V Brushed Gold PVD"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9511201",
         "productTitle": "Mizu Drift MK2 550 x 1050mm Heated Towel Rail Low Voltage 24V Brushed Stainless   Steel"
@@ -30322,6 +30429,12 @@
       {
         "productCode": "9511204",
         "productTitle": "Mizu Drift MK2 750 x 800mm Heated Towel  Rail Low Voltage 24V Polished Stainless  Steel"
+      }
+    ],
+    [
+      {
+        "productCode": "9511203",
+        "productTitle": "Mizu Drift MK2 550 x 1050mm Heated Towel Rail Low Voltage 24V Brushed Gold PVD"
       }
     ],
     [
@@ -32044,9 +32157,7 @@
       {
         "productCode": "9509574",
         "productTitle": "Mizu Soothe Heated Towel Rail 630 (Each) (Less Transformer) Matte Black"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9509572",
         "productTitle": "Mizu Soothe Heated Towel Rail 630 (Each) (Less Transformer) Polished Stainless    Steel"
@@ -32074,9 +32185,7 @@
       {
         "productCode": "9509575",
         "productTitle": "Mizu Soothe Heated Towel Rail 830 (Each) (Less Transformer) Matte Black"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9509573",
         "productTitle": "Mizu Soothe Heated Towel Rail 830 (Each) (Less Transformer) Polished Stainless    Steel"
@@ -32742,9 +32851,7 @@
       {
         "productCode": "2007484",
         "productTitle": "Mizu Soothe Vertical Heated Towel Rail   (Less Transformer) Brushed Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2002734",
         "productTitle": "Mizu Soothe Vertical Heated Towel Rail   (Less Transformer) Brushed Stainless     Steel"
@@ -32898,9 +33005,7 @@
       {
         "productCode": "9509576",
         "productTitle": "Mizu Stream Heated Towel Rail 650 (Each) (Less Transformer) Polished Stainless    Steel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9509580",
         "productTitle": "Mizu Stream Heated Towel Rail 650 (Each) (Less Transformer) Matte Black"
@@ -32940,9 +33045,7 @@
       {
         "productCode": "9509577",
         "productTitle": "Mizu Stream Heated Towel Rail 850 (Each) (Less Transformer) Polished Stainless    Steel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9509581",
         "productTitle": "Mizu Stream Heated Towel Rail 850 (Each) (Less Transformer) Matte Black"
@@ -33128,9 +33231,7 @@
       {
         "productCode": "9502629",
         "productTitle": "Mobi 900 x 700mm x 140 Degree Left Hand  Corner Grab Rail Polished Stainless      Steel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9501874",
         "productTitle": "Mobi 900 x 700mm x 140 Degree Left Hand  Corner Grab Rail Satin Stainless Steel"
@@ -33140,9 +33241,7 @@
       {
         "productCode": "9502630",
         "productTitle": "Mobi 900 x 700mm x 140 Degree Right Hand Corner Grab Rail Polished Stainless      Steel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9501875",
         "productTitle": "Mobi 900 x 700mm x 140 Degree Right Hand Corner Grab Rail Satin Stainless Steel"
@@ -42974,9 +43073,7 @@
       {
         "productCode": "1852333",
         "productTitle": "Raffaello Accessible Stainless Steel     Grab Rail 90 Degree Left Hand 950mm x    700mm Black"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1852334",
         "productTitle": "Raffaello Accessible Stainless Steel     Grab Rail 90 Degree Left Hand 950mm x    700mm Bright"
@@ -42990,9 +43087,7 @@
       {
         "productCode": "1852335",
         "productTitle": "Raffaello Accessible Stainless Steel     Grab Rail 90 Degree Right Hand 950mm x   700mm White"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1852337",
         "productTitle": "Raffaello Accessible Stainless Steel     Grab Rail 90 Degree Right Hand 950mm x   700mm Bright"
@@ -43002,9 +43097,7 @@
       {
         "productCode": "1850680",
         "productTitle": "Raffaello Drop Down Rail 610mm Stainless Steel Black"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1850681",
         "productTitle": "Raffaello Drop Down Rail 610mm Stainless Steel Bright"
@@ -43938,9 +44031,7 @@
       {
         "productCode": "9508560",
         "productTitle": "Roca Meridian 800 Rimless Back to Wall   Pan with Single Flap Seat Blue (4 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9508561",
         "productTitle": "Roca Meridian 800 Rimless Back to Wall   Pan with Single Flap Seat Grey (4 Star)"
@@ -44582,9 +44673,7 @@
       {
         "productCode": "21223",
         "productTitle": "Roca Ona Vanity All Door Centre Bowl     1000mm Matte Green"
-      }
-    ],
-    [
+      },
       {
         "productCode": "21220",
         "productTitle": "Roca Ona Vanity All Door Centre Bowl     1000mm Matte Grey"
@@ -44610,9 +44699,7 @@
       {
         "productCode": "22444",
         "productTitle": "Roca Ona Vanity All Door Left Hand Bowl  800mm Matte Green"
-      }
-    ],
-    [
+      },
       {
         "productCode": "22441",
         "productTitle": "Roca Ona Vanity All Door Left Hand Bowl  800mm Matte Grey"
@@ -44638,9 +44725,7 @@
       {
         "productCode": "22449",
         "productTitle": "Roca Ona Vanity All Door Right Hand Bowl 800mm Matte Green"
-      }
-    ],
-    [
+      },
       {
         "productCode": "22446",
         "productTitle": "Roca Ona Vanity All Door Right Hand Bowl 800mm Matte Grey"
@@ -44678,9 +44763,7 @@
       {
         "productCode": "20593",
         "productTitle": "Roca Ona Vanity All Drawer Single Centre Bowl 800mm Matte Green"
-      }
-    ],
-    [
+      },
       {
         "productCode": "20796",
         "productTitle": "Roca Ona Vanity All Drawer Single Centre Bowl 1000mm Matte Grey"
@@ -44714,9 +44797,7 @@
       {
         "productCode": "20789",
         "productTitle": "Roca Ona Vanity All Drawer Single Left   Hand Bowl 800mm Matte Green"
-      }
-    ],
-    [
+      },
       {
         "productCode": "20786",
         "productTitle": "Roca Ona Vanity All Drawer Single Left   Hand Bowl 800mm Matte Grey"
@@ -44742,9 +44823,7 @@
       {
         "productCode": "20794",
         "productTitle": "Roca Ona Vanity All Drawer Single Right  Hand Bowl 800mm Matte Green"
-      }
-    ],
-    [
+      },
       {
         "productCode": "20791",
         "productTitle": "Roca Ona Vanity All Drawer Single Right  Hand Bowl 800mm Matte Grey"
@@ -44782,9 +44861,7 @@
       {
         "productCode": "21198",
         "productTitle": "Roca Ona Vanity All Drawer Twin Centre   Bowl 800mm Matte Green"
-      }
-    ],
-    [
+      },
       {
         "productCode": "21210",
         "productTitle": "Roca Ona Vanity All Drawer Twin Centre   Bowl 1000mm Matte Grey"
@@ -44818,9 +44895,7 @@
       {
         "productCode": "21203",
         "productTitle": "Roca Ona Vanity All Drawer Twin Left     Hand Bowl 800mm Matte Green"
-      }
-    ],
-    [
+      },
       {
         "productCode": "21200",
         "productTitle": "Roca Ona Vanity All Drawer Twin Left     Hand Bowl 800mm Matte Grey"
@@ -44846,9 +44921,7 @@
       {
         "productCode": "21208",
         "productTitle": "Roca Ona Vanity All Drawer Twin Right    Hand Bowl 800mm Matte Green"
-      }
-    ],
-    [
+      },
       {
         "productCode": "21205",
         "productTitle": "Roca Ona Vanity All Drawer Twin Right    Hand Bowl 800mm Matte Grey"
@@ -45298,9 +45371,7 @@
       {
         "productCode": "2211748",
         "productTitle": "Self Closing Basin Tap Single            Temperature Bright Stainless Steel (6    Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2211749",
         "productTitle": "Self Closing Basin Tap Single            Temperature Satin Stainless Steel (6     Star)"
@@ -45608,57 +45679,39 @@
       {
         "productCode": "1903032",
         "productTitle": "Stiebel Eltron Under Floor Heating Pack  (10M2)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1903026",
         "productTitle": "Stiebel Eltron Under Floor Heating Pack  (2M2)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1903027",
         "productTitle": "Stiebel Eltron Under Floor Heating Pack  (3M2)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1903028",
         "productTitle": "Stiebel Eltron Under Floor Heating Pack  (4M2)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1903030",
         "productTitle": "Stiebel Eltron Under Floor Heating Pack  (6M2)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1903031",
         "productTitle": "Stiebel Eltron Under Floor Heating Pack  (7M2)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1903313",
         "productTitle": "Stiebel Eltron Under Floor Heating Pack  (8m2)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1903314",
         "productTitle": "Stiebel Eltron Under Floor Heating Pack  (9m2)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1903034",
         "productTitle": "Stiebel Eltron Underfloor Heating Pack   (1M2)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1903029",
         "productTitle": "Stiebel Eltron Underfloor Heating Pack   (5M2)"
@@ -45830,27 +45883,19 @@
       {
         "productCode": "2268334",
         "productTitle": "Sussex Scala 32mm Curved Bath Outlet     250mm LUX PVD Brushed Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267118",
         "productTitle": "Sussex Scala 25mm Curved Bath Outlet     200mm LUX PVD Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267121",
         "productTitle": "Sussex Scala 25mm Curved Bath Outlet     200mm LUX PVD Brushed Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267119",
         "productTitle": "Sussex Scala 25mm Curved Bath Outlet     200mm LUX PVD Brushed Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267120",
         "productTitle": "Sussex Scala 25mm Curved Bath Outlet     200mm LUX PVD Matte Opium Black"
@@ -45882,27 +45927,19 @@
       {
         "productCode": "2267110",
         "productTitle": "Sussex Scala 25mm Curved Wall Basin      Mixer Tap System Right Hand 200mm Outlet LUX PVD Brushed Oyster Nickel (6 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267113",
         "productTitle": "Sussex Scala 25mm Curved Wall Basin      Mixer Tap System Right Hand 200mm Outlet LUX PVD Brushed Pure Gold (6 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267111",
         "productTitle": "Sussex Scala 25mm Curved Wall Basin      Mixer Tap System Right Hand 200mm Outlet LUX PVD Brushed Smoked Gunmetal (6 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268244",
         "productTitle": "Sussex Scala 25mm Curved Wall Basin      Mixer Tap System Right Hand 200mm Outlet LUX PVD Brushed Platinum Gold (6 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267112",
         "productTitle": "Sussex Scala 25mm Curved Wall Basin      Mixer Tap System Right Hand 200mm Outlet LUX PVD Matte Opium Black (6 Star)"
@@ -46122,6 +46159,42 @@
       {
         "productCode": "2267046",
         "productTitle": "Sussex Scala 25mm Wall Outlet Curved     200mm LUX PVD Brushed Oyster Nickel (6   Star)"
+      },
+      {
+        "productCode": "2268323",
+        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     160mm LUX PVD Brushed Platinum Gold (6   Star)"
+      },
+      {
+        "productCode": "2268324",
+        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     200mm LUX PVD Brushed Platinum Gold (6   Star)"
+      },
+      {
+        "productCode": "2268325",
+        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     250mm LUX PVD Brushed Platinum Gold (6   Star)"
+      },
+      {
+        "productCode": "2267161",
+        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     160mm LUX PVD Brushed Pure Gold (6 Star)"
+      },
+      {
+        "productCode": "2267049",
+        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     200mm LUX PVD Brushed Pure Gold (6 Star)"
+      },
+      {
+        "productCode": "2267159",
+        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     160mm LUX PVD Brushed Smoked Gunmetal (6 Star)"
+      },
+      {
+        "productCode": "2267047",
+        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     200mm LUX PVD Brushed Smoked Gunmetal (6 Star)"
+      },
+      {
+        "productCode": "2267160",
+        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     160mm LUX PVD Matte Opium Black (6 Star)"
+      },
+      {
+        "productCode": "2267048",
+        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     200mm LUX PVD Matte Opium Black (6 Star)"
       }
     ],
     [
@@ -46136,71 +46209,19 @@
       {
         "productCode": "2268322",
         "productTitle": "Sussex Scala 25mm Wall Outlet Curved     250mm LUX PVD Brushed Platinum Gold (3   Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "2268323",
-        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     160mm LUX PVD Brushed Platinum Gold (6   Star)"
       },
-      {
-        "productCode": "2268324",
-        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     200mm LUX PVD Brushed Platinum Gold (6   Star)"
-      },
-      {
-        "productCode": "2268325",
-        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     250mm LUX PVD Brushed Platinum Gold (6   Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "2267161",
-        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     160mm LUX PVD Brushed Pure Gold (6 Star)"
-      },
-      {
-        "productCode": "2267049",
-        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     200mm LUX PVD Brushed Pure Gold (6 Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "2267159",
-        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     160mm LUX PVD Brushed Smoked Gunmetal (6 Star)"
-      },
-      {
-        "productCode": "2267047",
-        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     200mm LUX PVD Brushed Smoked Gunmetal (6 Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "2267160",
-        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     160mm LUX PVD Matte Opium Black (6 Star)"
-      },
-      {
-        "productCode": "2267048",
-        "productTitle": "Sussex Scala 25mm Wall Outlet Curved     200mm LUX PVD Matte Opium Black (6 Star)"
-      }
-    ],
-    [
       {
         "productCode": "2267070",
         "productTitle": "Sussex Scala 25mm Wall Outlet Curved     200mm LUX PVD Brushed Oyster Nickel (3   Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267073",
         "productTitle": "Sussex Scala 25mm Wall Outlet Curved     200mm LUX PVD Brushed Pure Gold (3 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267071",
         "productTitle": "Sussex Scala 25mm Wall Outlet Curved     200mm LUX PVD Brushed Smoked Gunmetal (3 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267072",
         "productTitle": "Sussex Scala 25mm Wall Outlet Curved     200mm LUX PVD Matte Opium Black (3 Star)"
@@ -46274,21 +46295,15 @@
       {
         "productCode": "2267114",
         "productTitle": "Sussex Scala Basin / Sink Mixer Tap      Small Curved Spout Right Hand LUX PVD    Brushed Oyster Nickel (4 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267117",
         "productTitle": "Sussex Scala Basin / Sink Mixer Tap      Small Curved Spout Right Hand LUX PVD    Brushed Pure Gold (4 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267115",
         "productTitle": "Sussex Scala Basin / Sink Mixer Tap      Small Curved Spout Right Hand LUX PVD    Brushed Smoked Gunmetal (4 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267116",
         "productTitle": "Sussex Scala Basin / Sink Mixer Tap      Small Curved Spout Right Hand LUX PVD    Matte Opium Black (4 Star)"
@@ -46350,6 +46365,22 @@
       {
         "productCode": "2268173",
         "productTitle": "Sussex Scala Basin Mixer Tap with 150mm  Extension Pin LUX PVD Brushed Platinum   Gold (5 Star)"
+      },
+      {
+        "productCode": "2267142",
+        "productTitle": "Sussex Scala Basin Mixer Tap with 150mm  Extension Pin LUX PVD Brushed Oyster     Nickel (5 Star)"
+      },
+      {
+        "productCode": "2267145",
+        "productTitle": "Sussex Scala Basin Mixer Tap with 150mm  Extension Pin LUX PVD Brushed Pure Gold  (5 Star)"
+      },
+      {
+        "productCode": "2267143",
+        "productTitle": "Sussex Scala Basin Mixer Tap with 150mm  Extension Pin LUX PVD Brushed Smoked     Gunmetal (5 Star)"
+      },
+      {
+        "productCode": "2267144",
+        "productTitle": "Sussex Scala Basin Mixer Tap with 150mm  Extension Pin LUX PVD Matte Opium Black  (5 Star)"
       }
     ],
     [
@@ -46394,6 +46425,22 @@
       {
         "productCode": "2268165",
         "productTitle": "Sussex Scala Basin Mixer Tap with 90mm   Outlet LUX PVD Brushed Platinum Gold (5  Star)"
+      },
+      {
+        "productCode": "2267034",
+        "productTitle": "Sussex Scala Basin Mixer Tap with 90mm   Outlet LUX PVD Brushed Oyster Nickel (5  Star)"
+      },
+      {
+        "productCode": "2267037",
+        "productTitle": "Sussex Scala Basin Mixer Tap with 90mm   Outlet LUX PVD Brushed Pure Gold (5      Star)"
+      },
+      {
+        "productCode": "2267035",
+        "productTitle": "Sussex Scala Basin Mixer Tap with 90mm   Outlet LUX PVD Brushed Smoked Gunmetal   (5 Star)"
+      },
+      {
+        "productCode": "2267036",
+        "productTitle": "Sussex Scala Basin Mixer Tap with 90mm   Outlet LUX PVD Matte Opium Black (5      Star)"
       }
     ],
     [
@@ -46408,54 +46455,6 @@
       {
         "productCode": "2268168",
         "productTitle": "Sussex Scala Basin Mixer Tap with 90mm   Outlet LUX PVD Brushed Platinum Gold (6  Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "2267142",
-        "productTitle": "Sussex Scala Basin Mixer Tap with 150mm  Extension Pin LUX PVD Brushed Oyster     Nickel (5 Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "2267145",
-        "productTitle": "Sussex Scala Basin Mixer Tap with 150mm  Extension Pin LUX PVD Brushed Pure Gold  (5 Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "2267143",
-        "productTitle": "Sussex Scala Basin Mixer Tap with 150mm  Extension Pin LUX PVD Brushed Smoked     Gunmetal (5 Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "2267144",
-        "productTitle": "Sussex Scala Basin Mixer Tap with 150mm  Extension Pin LUX PVD Matte Opium Black  (5 Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "2267034",
-        "productTitle": "Sussex Scala Basin Mixer Tap with 90mm   Outlet LUX PVD Brushed Oyster Nickel (5  Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "2267037",
-        "productTitle": "Sussex Scala Basin Mixer Tap with 90mm   Outlet LUX PVD Brushed Pure Gold (5      Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "2267035",
-        "productTitle": "Sussex Scala Basin Mixer Tap with 90mm   Outlet LUX PVD Brushed Smoked Gunmetal   (5 Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "2267036",
-        "productTitle": "Sussex Scala Basin Mixer Tap with 90mm   Outlet LUX PVD Matte Opium Black (5      Star)"
       }
     ],
     [
@@ -46480,27 +46479,19 @@
       {
         "productCode": "2267098",
         "productTitle": "Sussex Scala Basin Set Curved LUX PVD    Brushed Oyster Nickel (5 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268273",
         "productTitle": "Sussex Scala Basin Set Curved LUX PVD    Brushed Platinum Gold (5 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267101",
         "productTitle": "Sussex Scala Basin Set Curved LUX PVD    Brushed Pure Gold (5 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267099",
         "productTitle": "Sussex Scala Basin Set Curved LUX PVD    Brushed Smoked Gunmetal (5 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267100",
         "productTitle": "Sussex Scala Basin Set Curved LUX PVD    Matte Opium Black (5 Star)"
@@ -46642,21 +46633,15 @@
       {
         "productCode": "2267106",
         "productTitle": "Sussex Scala Bath Outlet Swivel Curved   210mm LUX PVD Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267109",
         "productTitle": "Sussex Scala Bath Outlet Swivel Curved   210mm LUX PVD Brushed Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267107",
         "productTitle": "Sussex Scala Bath Outlet Swivel Curved   210mm LUX PVD Brushed Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268309",
         "productTitle": "Sussex Scala Bath Outlet Swivel Curved   210mm LUX PVD Brushed Platinum Gold"
@@ -46664,9 +46649,7 @@
       {
         "productCode": "2268310",
         "productTitle": "Sussex Scala Bath Outlet Swivel Curved   250mm LUX PVD Brushed Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267108",
         "productTitle": "Sussex Scala Bath Outlet Swivel Curved   210mm LUX PVD Matte Opium Black"
@@ -46818,27 +46801,19 @@
       {
         "productCode": "2267010",
         "productTitle": "Sussex Scala Shower / Bath Mixer Tap LUX PVD Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267013",
         "productTitle": "Sussex Scala Shower / Bath Mixer Tap LUX PVD Brushed Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267011",
         "productTitle": "Sussex Scala Shower / Bath Mixer Tap LUX PVD Brushed Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268204",
         "productTitle": "Sussex Scala Shower / Bath Mixer Tap LUX PVD Brushed Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267012",
         "productTitle": "Sussex Scala Shower / Bath Mixer Tap LUX PVD Matte Opium Black"
@@ -46878,27 +46853,19 @@
       {
         "productCode": "2267022",
         "productTitle": "Sussex Scala Shower Shelf LUX PVD        Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268346",
         "productTitle": "Sussex Scala Shower Shelf LUX PVD        Brushed Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267025",
         "productTitle": "Sussex Scala Shower Shelf LUX PVD        Brushed Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267023",
         "productTitle": "Sussex Scala Shower Shelf LUX PVD        Brushed Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267024",
         "productTitle": "Sussex Scala Shower Shelf LUX PVD Matte  Opium Black"
@@ -46926,27 +46893,19 @@
       {
         "productCode": "2267086",
         "productTitle": "Sussex Scala Double Spare Toilet Roll    Holder LUX PVD Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267089",
         "productTitle": "Sussex Scala Double Spare Toilet Roll    Holder LUX PVD Brushed Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267087",
         "productTitle": "Sussex Scala Double Spare Toilet Roll    Holder LUX PVD Brushed Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268352",
         "productTitle": "Sussex Scala Double Spare Toilet Roll    Holder LUX PVD Brushed Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267088",
         "productTitle": "Sussex Scala Double Spare Toilet Roll    Holder LUX PVD Matte Opium Black"
@@ -46982,9 +46941,7 @@
       {
         "productCode": "2267050",
         "productTitle": "Sussex Scala Double Towel Rail 900mm LUX PVD Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267065",
         "productTitle": "Sussex Scala Double Towel Rail 700mm LUX PVD Brushed Pure Gold"
@@ -46992,9 +46949,7 @@
       {
         "productCode": "2267053",
         "productTitle": "Sussex Scala Double Towel Rail 900mm LUX PVD Brushed Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267063",
         "productTitle": "Sussex Scala Double Towel Rail 700mm LUX PVD Brushed Smoked Gunmetal"
@@ -47002,9 +46957,7 @@
       {
         "productCode": "2267051",
         "productTitle": "Sussex Scala Double Towel Rail 900mm LUX PVD Brushed Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268339",
         "productTitle": "Sussex Scala Double Towel Rail 700mm LUX PVD Brushed Platinum Gold"
@@ -47012,9 +46965,7 @@
       {
         "productCode": "2268340",
         "productTitle": "Sussex Scala Double Towel Rail 900mm LUX PVD Brushed Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267064",
         "productTitle": "Sussex Scala Double Towel Rail 700mm LUX PVD Matte Opium Black"
@@ -47206,24 +47157,20 @@
       {
         "productCode": "2269150",
         "productTitle": "Sussex Scala Floor Mounted Bath Mixer    Tap Curved Outlet with Handshower LUX    PVD Brushed Oyster Nickel (3 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2269153",
         "productTitle": "Sussex Scala Floor Mounted Bath Mixer    Tap Curved Outlet with Handshower LUX    PVD Brushed Pure Gold (3 Star)"
+      },
+      {
+        "productCode": "2269152",
+        "productTitle": "Sussex Scala Floor Mounted Bath Mixer    Tap Curved Outlet with Handshower LUX    PVD Matte Opium Black (3 Star)"
       }
     ],
     [
       {
         "productCode": "2269151",
         "productTitle": "Sussex Scala Floor Mounted Bath Mixer    Tap Curved Outlet with Handshower LUX    PVD Brushed Smoke Gunmetal (3 Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "2269152",
-        "productTitle": "Sussex Scala Floor Mounted Bath Mixer    Tap Curved Outlet with Handshower LUX    PVD Matte Opium Black (3 Star)"
       }
     ],
     [
@@ -47236,27 +47183,19 @@
       {
         "productCode": "2267038",
         "productTitle": "Sussex Scala Guest Towel Rail 300mm LUX  PVD Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267041",
         "productTitle": "Sussex Scala Guest Towel Rail 300mm LUX  PVD Brushed Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267039",
         "productTitle": "Sussex Scala Guest Towel Rail 300mm LUX  PVD Brushed Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268341",
         "productTitle": "Sussex Scala Guest Towel Rail 300mm LUX  PVD Brushed Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267040",
         "productTitle": "Sussex Scala Guest Towel Rail 300mm LUX  PVD Matte Opium Black"
@@ -47272,27 +47211,19 @@
       {
         "productCode": "2267030",
         "productTitle": "Sussex Scala Guest Towel Ring LUX PVD    Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268344",
         "productTitle": "Sussex Scala Guest Towel Ring LUX PVD    Brushed Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267033",
         "productTitle": "Sussex Scala Guest Towel Ring LUX PVD    Brushed Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267031",
         "productTitle": "Sussex Scala Guest Towel Ring LUX PVD    Brushed Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267032",
         "productTitle": "Sussex Scala Guest Towel Ring LUX PVD    Matte Opium Black"
@@ -47314,27 +47245,19 @@
       {
         "productCode": "2267042",
         "productTitle": "Sussex Scala Handshower with Water Inlet Wall Bracket LUX PVD Brushed Oyster      Nickel (3 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268336",
         "productTitle": "Sussex Scala Handshower with Water Inlet Wall Bracket LUX PVD Brushed Platinum    Gold (3 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267045",
         "productTitle": "Sussex Scala Handshower with Water Inlet Wall Bracket LUX PVD Brushed Pure Gold   (3 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267043",
         "productTitle": "Sussex Scala Handshower with Water Inlet Wall Bracket LUX PVD Brushed Smoked      Gunmetal (3 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267044",
         "productTitle": "Sussex Scala Handshower with Water Inlet Wall Bracket LUX PVD Matte Opium Black   (3 Star)"
@@ -47502,27 +47425,19 @@
       {
         "productCode": "2267074",
         "productTitle": "Sussex Scala Mini Basin / Sink Mixer Tap Small Curved Spout Right Hand LUX PVD    Brushed Oyster Nickel (5 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268208",
         "productTitle": "Sussex Scala Mini Basin / Sink Mixer Tap Small Curved Spout Right Hand LUX PVD    Brushed Platinum Gold (5 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267077",
         "productTitle": "Sussex Scala Mini Basin / Sink Mixer Tap Small Curved Spout Right Hand LUX PVD    Brushed Pure Gold (5 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267075",
         "productTitle": "Sussex Scala Mini Basin / Sink Mixer Tap Small Curved Spout Right Hand LUX PVD    Brushed Smoked Gunmetal (5 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267076",
         "productTitle": "Sussex Scala Mini Basin / Sink Mixer Tap Small Curved Spout Right Hand LUX PVD    Matte Opium Black (5 Star)"
@@ -47610,27 +47525,19 @@
       {
         "productCode": "2267018",
         "productTitle": "Sussex Scala Robe Hook LUX PVD Brushed   Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268343",
         "productTitle": "Sussex Scala Robe Hook LUX PVD Brushed   Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267021",
         "productTitle": "Sussex Scala Robe Hook LUX PVD Brushed   Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267019",
         "productTitle": "Sussex Scala Robe Hook LUX PVD Brushed   Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267020",
         "productTitle": "Sussex Scala Robe Hook LUX PVD Matte     Opium Black"
@@ -47652,27 +47559,19 @@
       {
         "productCode": "2268335",
         "productTitle": "Sussex Scala Single Rail Shower with Top Rail Water Inlet LUX PVD Brushed         Platinum Gold (3 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267154",
         "productTitle": "Sussex Scala Single Rail Shower with Top Rail Water Inlet LUX PVD Brushed Oyster  Nickel (3 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267157",
         "productTitle": "Sussex Scala Single Rail Shower with Top Rail Water Inlet LUX PVD Brushed Pure    Gold (3 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267155",
         "productTitle": "Sussex Scala Single Rail Shower with Top Rail Water Inlet LUX PVD Brushed Smoked  Gunmetal (3 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267156",
         "productTitle": "Sussex Scala Single Rail Shower with Top Rail Water Inlet LUX PVD Matte Opium     Black (3 Star)"
@@ -47696,9 +47595,7 @@
       {
         "productCode": "2267078",
         "productTitle": "Sussex Scala Single Towel Rail 900mm LUX PVD Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267057",
         "productTitle": "Sussex Scala Single Towel Rail 700mm LUX PVD Brushed Pure Gold"
@@ -47706,9 +47603,7 @@
       {
         "productCode": "2267081",
         "productTitle": "Sussex Scala Single Towel Rail 900mm LUX PVD Brushed Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267055",
         "productTitle": "Sussex Scala Single Towel Rail 700mm LUX PVD Brushed Smoked Gunmetal"
@@ -47716,9 +47611,7 @@
       {
         "productCode": "2267079",
         "productTitle": "Sussex Scala Single Towel Rail 900mm LUX PVD Brushed Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268337",
         "productTitle": "Sussex Scala Single Towel Rail 700mm LUX PVD Brushed Platinum Gold"
@@ -47726,9 +47619,7 @@
       {
         "productCode": "2268338",
         "productTitle": "Sussex Scala Single Towel Rail 900mm LUX PVD Brushed Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267056",
         "productTitle": "Sussex Scala Single Towel Rail 700mm LUX PVD Matte Opium Black"
@@ -47748,27 +47639,19 @@
       {
         "productCode": "2267102",
         "productTitle": "Sussex Scala Soap Dish LUX PVD Brushed   Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268345",
         "productTitle": "Sussex Scala Soap Dish LUX PVD Brushed   Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267105",
         "productTitle": "Sussex Scala Soap Dish LUX PVD Brushed   Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267103",
         "productTitle": "Sussex Scala Soap Dish LUX PVD Brushed   Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267104",
         "productTitle": "Sussex Scala Soap Dish LUX PVD Matte     Opium Black"
@@ -47796,27 +47679,19 @@
       {
         "productCode": "2267014",
         "productTitle": "Sussex Scala Straight Toilet Roll Holder LUX PVD Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267017",
         "productTitle": "Sussex Scala Straight Toilet Roll Holder LUX PVD Brushed Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267015",
         "productTitle": "Sussex Scala Straight Toilet Roll Holder LUX PVD Brushed Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268348",
         "productTitle": "Sussex Scala Straight Toilet Roll Holder LUX PVD Brushed Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267016",
         "productTitle": "Sussex Scala Straight Toilet Roll Holder LUX PVD Matte Opium Black"
@@ -47986,27 +47861,19 @@
       {
         "productCode": "2267058",
         "productTitle": "Sussex Scala Toilet Roll Holder LUX PVD  Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268350",
         "productTitle": "Sussex Scala Toilet Roll Holder LUX PVD  Brushed Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267061",
         "productTitle": "Sussex Scala Toilet Roll Holder LUX PVD  Brushed Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267059",
         "productTitle": "Sussex Scala Toilet Roll Holder LUX PVD  Brushed Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267060",
         "productTitle": "Sussex Scala Toilet Roll Holder LUX PVD  Matte Opium Black"
@@ -48038,27 +47905,19 @@
       {
         "productCode": "2267090",
         "productTitle": "Sussex Scala Vanity Shelf LUX PVD        Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268347",
         "productTitle": "Sussex Scala Vanity Shelf LUX PVD        Brushed Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267093",
         "productTitle": "Sussex Scala Vanity Shelf LUX PVD        Brushed Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267091",
         "productTitle": "Sussex Scala Vanity Shelf LUX PVD        Brushed Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267092",
         "productTitle": "Sussex Scala Vanity Shelf LUX PVD Matte  Opium Black"
@@ -48094,24 +47953,20 @@
       {
         "productCode": "2267094",
         "productTitle": "Sussex Scala Wall Spa Outlet Curved LUX  PVD Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267097",
         "productTitle": "Sussex Scala Wall Spa Outlet Curved LUX  PVD Brushed Pure Gold"
+      },
+      {
+        "productCode": "2267096",
+        "productTitle": "Sussex Scala Wall Spa Outlet Curved LUX  PVD Matte Opium Black"
       }
     ],
     [
       {
         "productCode": "2267095",
         "productTitle": "Sussex Scala Wall Spa Outlet Curved LUX  PVD Brushed Smoke Gunmetal"
-      }
-    ],
-    [
-      {
-        "productCode": "2267096",
-        "productTitle": "Sussex Scala Wall Spa Outlet Curved LUX  PVD Matte Opium Black"
       }
     ],
     [
@@ -48124,24 +47979,20 @@
       {
         "productCode": "2267138",
         "productTitle": "Sussex Scala Wall Spa Outlet Square LUX  PVD Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267141",
         "productTitle": "Sussex Scala Wall Spa Outlet Square LUX  PVD Brushed Pure Gold"
+      },
+      {
+        "productCode": "2267140",
+        "productTitle": "Sussex Scala Wall Spa Outlet Square LUX  PVD Matte Opium Black"
       }
     ],
     [
       {
         "productCode": "2267139",
         "productTitle": "Sussex Scala Wall Spa Outlet Square LUX  PVD Brushed Smoke Gunmetal"
-      }
-    ],
-    [
-      {
-        "productCode": "2267140",
-        "productTitle": "Sussex Scala Wall Spa Outlet Square LUX  PVD Matte Opium Black"
       }
     ],
     [
@@ -48184,27 +48035,19 @@
       {
         "productCode": "2267026",
         "productTitle": "Sussex Scala Wall Top Assembly LUX PVD   Brushed Oyster Nickel"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2268304",
         "productTitle": "Sussex Scala Wall Top Assembly LUX PVD   Brushed Platinum Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267029",
         "productTitle": "Sussex Scala Wall Top Assembly LUX PVD   Brushed Pure Gold"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267027",
         "productTitle": "Sussex Scala Wall Top Assembly LUX PVD   Brushed Smoked Gunmetal"
-      }
-    ],
-    [
+      },
       {
         "productCode": "2267028",
         "productTitle": "Sussex Scala Wall Top Assembly LUX PVD   Matte Opium Black"
@@ -48422,9 +48265,7 @@
       {
         "productCode": "1806669",
         "productTitle": "Wolfen 800 Close Coupled Back to Wall    Rimless Toilet Suite with Double Flap    Seat Blue (4 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1806670",
         "productTitle": "Wolfen 800 Close Coupled Back to Wall    Rimless Toilet Suite with Double Flap    Seat Grey (4 Star)"
@@ -48438,15 +48279,7 @@
       {
         "productCode": "9508011",
         "productTitle": "Wolfen 800 Close Coupled Back to Wall    Rimless Toilet Suite with Single Flap    Seat Blue (4 Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "9508925",
-        "productTitle": "Wolfen 800 Close Coupled Back to Wall    Rimless Toilet Suite with Single Flap    Seat Blue with Backrest (4 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9508012",
         "productTitle": "Wolfen 800 Close Coupled Back to Wall    Rimless Toilet Suite with Single Flap    Seat Grey (4 Star)"
@@ -48457,6 +48290,10 @@
       }
     ],
     [
+      {
+        "productCode": "9508925",
+        "productTitle": "Wolfen 800 Close Coupled Back to Wall    Rimless Toilet Suite with Single Flap    Seat Blue with Backrest (4 Star)"
+      },
       {
         "productCode": "9508926",
         "productTitle": "Wolfen 800 Close Coupled Back to Wall    Rimless Toilet Suite with Single Flap    Seat Grey with Backrest (4 Star)"
@@ -48470,9 +48307,7 @@
       {
         "productCode": "1806675",
         "productTitle": "Wolfen 800 Back to Wall Rimless Pan with Double Flap Seat Blue (4 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1806676",
         "productTitle": "Wolfen 800 Back to Wall Rimless Pan with Double Flap Seat Grey (4 Star)"
@@ -48486,15 +48321,7 @@
       {
         "productCode": "9509297",
         "productTitle": "Wolfen 800 Back to Wall Rimless Pan with Single Flap Seat Blue (4 Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "9509298",
-        "productTitle": "Wolfen 800 Back to Wall Rimless Pan with Single Flap Seat Blue with Backrest (4   Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "9509295",
         "productTitle": "Wolfen 800 Back to Wall Rimless Pan with Single Flap Seat Grey (4 Star)"
@@ -48505,6 +48332,10 @@
       }
     ],
     [
+      {
+        "productCode": "9509298",
+        "productTitle": "Wolfen 800 Back to Wall Rimless Pan with Single Flap Seat Blue with Backrest (4   Star)"
+      },
       {
         "productCode": "9509296",
         "productTitle": "Wolfen 800 Back to Wall Rimless Pan with Single Flap Seat Grey with Backrest (4   Star)"
@@ -48518,9 +48349,7 @@
       {
         "productCode": "1811729",
         "productTitle": "Wolfen Ambulant Back to Wall Rimless Pan with Double Flap Seat Blue (4 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1811731",
         "productTitle": "Wolfen Ambulant Back to Wall Rimless Pan with Double Flap Seat Grey (4 Star)"
@@ -48534,9 +48363,7 @@
       {
         "productCode": "1811723",
         "productTitle": "Wolfen Ambulant Back to Wall Rimless Pan with Single Flap Seat Blue (4 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1811725",
         "productTitle": "Wolfen Ambulant Back to Wall Rimless Pan with Single Flap Seat Grey (4 Star)"
@@ -48556,9 +48383,7 @@
       {
         "productCode": "1811615",
         "productTitle": "Wolfen Ambulant Close Coupled Back to    Wall Rimless Toilet Suite Double Flap    Seat Blue (4 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1811614",
         "productTitle": "Wolfen Ambulant Close Coupled Back to    Wall Rimless Toilet Suite Double Flap    Seat White (4 Star)"
@@ -48568,9 +48393,7 @@
       {
         "productCode": "1811612",
         "productTitle": "Wolfen Ambulant Close Coupled Back to    Wall Rimless Toilet Suite Single Flap    Seat Blue (4 Star)"
-      }
-    ],
-    [
+      },
       {
         "productCode": "1811613",
         "productTitle": "Wolfen Ambulant Close Coupled Back to    Wall Rimless Toilet Suite Single Flap    Seat Grey (4 Star)"
