@@ -3,7 +3,7 @@
     "version": 1,
     "description": "Product families with variants. Each family represents a base product with multiple variations in size, color, material, finish, or orientation. Only includes families with 2 or more products.",
     "sourceFile": "products-grouped-by-variant_v6.json",
-    "generatedAt": "2025-11-18T01:35:56.632Z",
+    "generatedAt": "2025-11-18T23:32:12.012Z",
     "statistics": {
       "totalFamilies": 1281,
       "totalProductsInFamilies": 8446,
@@ -18,46 +18,6 @@
     ]
   },
   "families": [
-    {
-      "productFamilyId": "fam_02867d2701fd",
-      "productFamilyTitle": "90 Degree 2 Wall Grab Rail 1075 X 1050 X 600mm",
-      "brand": "90",
-      "variantCount": 2,
-      "variantOptions": {
-        "orientation": [
-          "Left Hand",
-          "Right Hand"
-        ]
-      },
-      "variants": [
-        {
-          "productCode": "2219851",
-          "productTitle": "90 Degree 2 Wall Grab Rail 1075 x 1050 x 600mm Left Hand",
-          "attributes": {
-            "sizes": [
-              "1075 x 1050 x 600mm"
-            ],
-            "coverage": [
-              "600m"
-            ],
-            "orientation": "Left Hand"
-          }
-        },
-        {
-          "productCode": "2219852",
-          "productTitle": "90 Degree 2 Wall Grab Rail 1075 x 1050 x 600mm Right Hand",
-          "attributes": {
-            "sizes": [
-              "1075 x 1050 x 600mm"
-            ],
-            "coverage": [
-              "600m"
-            ],
-            "orientation": "Right Hand"
-          }
-        }
-      ]
-    },
     {
       "productFamilyId": "fam_5613fea5246b",
       "productFamilyTitle": "Akril Torbex Shower Base",
@@ -121323,6 +121283,46 @@
             "orientation": "Right Hand",
             "uniqueDescriptors": "RBA",
             "color": "RBA"
+          }
+        }
+      ]
+    },
+    {
+      "productFamilyId": "fam_f2a94f07046a",
+      "productFamilyTitle": "Rba 90 Degree 2 Wall Grab Rail 1075 X 1050 X 600mm",
+      "brand": "RBA",
+      "variantCount": 2,
+      "variantOptions": {
+        "orientation": [
+          "Left Hand",
+          "Right Hand"
+        ]
+      },
+      "variants": [
+        {
+          "productCode": "2219851",
+          "productTitle": "RBA 90 Degree 2 Wall Grab Rail 1075 x 1050 x 600mm Left Hand",
+          "attributes": {
+            "sizes": [
+              "1075 x 1050 x 600mm"
+            ],
+            "coverage": [
+              "600m"
+            ],
+            "orientation": "Left Hand"
+          }
+        },
+        {
+          "productCode": "2219852",
+          "productTitle": "RBA 90 Degree 2 Wall Grab Rail 1075 x 1050 x 600mm Right Hand",
+          "attributes": {
+            "sizes": [
+              "1075 x 1050 x 600mm"
+            ],
+            "coverage": [
+              "600m"
+            ],
+            "orientation": "Right Hand"
           }
         }
       ]
