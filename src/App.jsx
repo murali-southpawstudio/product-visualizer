@@ -353,12 +353,6 @@ function App() {
       <header className="header">
         <div className="header-content">
           <h1>Reece Product Visualizer <span className="subtitle">Exploring {brands.length} brands</span></h1>
-          <button
-            className="families-link-button"
-            onClick={() => navigate('/families')}
-          >
-            Show Product Families →
-          </button>
         </div>
       </header>
 
@@ -373,6 +367,13 @@ function App() {
                 <span className="stat-item">{overallStats.unique} unique</span>
                 <span className="stat-separator">•</span>
                 <span className="stat-item">{overallStats.grouped} grouped</span>
+                <span className="stat-separator">•</span>
+                <button
+                  className="families-link-button"
+                  onClick={() => navigate('/families')}
+                >
+                  Show Product Families →
+                </button>
               </div>
             </div>
             <div className="brands-search-container">
