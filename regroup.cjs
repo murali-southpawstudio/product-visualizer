@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 // Read the original JSON
-const data = JSON.parse(fs.readFileSync('./public/products-grouped-by-variant_v1.json', 'utf8'));
+const data = JSON.parse(fs.readFileSync('./public/products-grouped-by-variant_v6.json', 'utf8'));
 
 // Common materials and finishes to remove for base comparison
 const materials = [
@@ -72,13 +72,16 @@ function normalizeTitle(title) {
     .replace(/\d+\s*x\s*\d+(?:\s*x\s*\d+)?\s*(mm|cm|m)?/gi, '')
     .replace(/\d+\s*(mm|cm|m)\b/gi, '');
 
+  // Normalize whitespace BEFORE removing materials (critical for multi-word materials with inconsistent spacing)
+  normalized = normalized.replace(/\s+/g, ' ').trim();
+
   // Remove materials
   for (const material of materials) {
     const regex = new RegExp(`\\b${material}\\b`, 'gi');
     normalized = normalized.replace(regex, '');
   }
 
-  // Normalize whitespace
+  // Normalize whitespace again
   return normalized.replace(/\s+/g, ' ').trim();
 }
 
@@ -86,6 +89,9 @@ function normalizeTitle(title) {
 const regroupedData = {};
 
 for (const [brand, groups] of Object.entries(data)) {
+  // Skip metadata
+  if (brand === '_algorithmInfo') continue;
+
   // Flatten all products from all groups
   const allProducts = groups.flat();
 
@@ -112,10 +118,48 @@ for (const [brand, groups] of Object.entries(data)) {
   regroupedData[brand] = newGroups;
 }
 
-// Write the new grouped data
+// Add algorithm metadata
+const output = {
+  _algorithmInfo: {
+    version: 6,
+    description: "Groups products by base type, removing size, materials, and finishes. Includes whitespace normalization fix for proper multi-word material matching.",
+    groupingCriteria: [
+      "Same base product name (after normalization)",
+      "Different sizes grouped together",
+      "Different materials/finishes grouped together (e.g., Matte Black, Polished Stainless Steel)"
+    ],
+    normalizedAttributes: [
+      "Sizes (e.g., 1200x900mm, 630mm)",
+      "Materials (e.g., stainless steel, brass, bronze)",
+      "Finishes (e.g., brushed, polished, matte, gloss)"
+    ],
+    bugFixes: [
+      {
+        issue: "Whitespace normalization bug",
+        description: "Multi-word materials with inconsistent spacing (e.g., 'Polished Stainless    Steel' with extra spaces) were not being removed properly",
+        solution: "Normalize whitespace to single spaces BEFORE attempting to remove materials, ensuring consistent matching",
+        affectedProducts: [
+          {
+            productCodes: ["9509570", "9509568"],
+            productTitles: [
+              "Mizu Bloc Heated Towel Rail 630 (Each) (Less Transformer) Matte Black",
+              "Mizu Bloc Heated Towel Rail 630 (Each) (Less Transformer) Polished Stainless Steel"
+            ],
+            before: "Not grouped (whitespace prevented material matching)",
+            after: "Properly grouped (same base product, different finishes)"
+          }
+        ]
+      }
+    ],
+    lastUpdated: new Date().toISOString()
+  },
+  ...regroupedData
+};
+
+// Write the updated v6 data
 fs.writeFileSync(
-  './public/products-grouped-by-variant_v3.json',
-  JSON.stringify(regroupedData, null, 2),
+  './public/products-grouped-by-variant_v6.json',
+  JSON.stringify(output, null, 2),
   'utf8'
 );
 
@@ -127,6 +171,7 @@ let totalGroupsBefore = 0;
 let totalGroupsAfter = 0;
 
 for (const brand in data) {
+  if (brand === '_algorithmInfo') continue;
   totalGroupsBefore += data[brand].length;
   totalGroupsAfter += regroupedData[brand].length;
 }

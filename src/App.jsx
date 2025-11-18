@@ -351,7 +351,15 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>Reece Product Visualizer <span className="subtitle">Exploring {brands.length} brands</span></h1>
+        <div className="header-content">
+          <h1>Reece Product Visualizer <span className="subtitle">Exploring {brands.length} brands</span></h1>
+          <button
+            className="families-link-button"
+            onClick={() => navigate('/families')}
+          >
+            Show Product Families →
+          </button>
+        </div>
       </header>
 
       <div className={`content ${selectedBrand ? 'with-products' : ''}`}>

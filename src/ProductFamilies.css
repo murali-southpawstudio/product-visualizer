@@ -1,0 +1,301 @@
+.product-families-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.families-header {
+  margin-bottom: 30px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-content h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #1a1a1a;
+}
+
+.back-button {
+  padding: 10px 20px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  background-color: #e0e0e0;
+}
+
+.metadata-stats {
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.search-container {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: #4CAF50;
+}
+
+.families-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.brand-section {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.brand-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.brand-name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.brand-family-count {
+  font-size: 14px;
+  opacity: 0.9;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.families-table {
+  overflow-x: auto;
+}
+
+.families-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.families-table thead {
+  background-color: #f8f9fa;
+}
+
+.families-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.title-col {
+  width: 50%;
+}
+
+.variants-col {
+  width: 15%;
+}
+
+.options-col {
+  width: 25%;
+}
+
+.action-col {
+  width: 10%;
+  text-align: right;
+}
+
+.family-row {
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.family-row:hover {
+  background-color: #f8f9fa;
+}
+
+.family-row:last-child {
+  border-bottom: none;
+}
+
+.family-row td {
+  padding: 16px;
+}
+
+.title-cell {
+  font-weight: 500;
+  color: #1a1a1a;
+  font-size: 18px;
+}
+
+.family-title {
+  display: block;
+  line-height: 1.4;
+}
+
+.variants-cell {
+  text-align: center;
+}
+
+.variant-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 32px;
+  padding: 0 12px;
+  background-color: #4CAF50;
+  color: white;
+  font-weight: 600;
+  border-radius: 16px;
+  font-size: 14px;
+}
+
+.options-cell {
+  color: #666;
+}
+
+.options-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.option-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 4px;
+  text-transform: capitalize;
+}
+
+.no-options-text {
+  color: #ccc;
+  font-style: italic;
+}
+
+.action-cell {
+  text-align: right;
+  padding-right: 16px;
+}
+
+.view-btn {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0;
+}
+
+.family-row:hover .view-btn {
+  opacity: 1;
+}
+
+.view-btn:hover {
+  background-color: #45a049;
+}
+
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  font-size: 18px;
+  background: white;
+  border-radius: 12px;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+}
+
+.error {
+  color: #d32f2f;
+}
+
+@media (max-width: 768px) {
+  .families-table {
+    font-size: 14px;
+  }
+
+  .brand-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .options-tags {
+    flex-direction: column;
+  }
+
+  .view-btn {
+    opacity: 1;
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}

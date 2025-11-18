@@ -1,0 +1,432 @@
+{
+  "products": [
+    {
+      "id": "prod_12345",
+      "name": "Classic Cotton T-Shirt",
+      "slug": "classic-cotton-t-shirt",
+      "brand": "StyleCo",
+      "description": "A timeless essential made from 100% organic cotton. Perfect for everyday wear.",
+      "category": "apparel",
+      "subcategory": "t-shirts",
+      "basePrice": 29.99,
+      "currency": "USD",
+      "images": [
+        {
+          "url": "/images/products/tshirt-main.jpg",
+          "alt": "Classic Cotton T-Shirt front view",
+          "isPrimary": true
+        },
+        {
+          "url": "/images/products/tshirt-back.jpg",
+          "alt": "Classic Cotton T-Shirt back view",
+          "isPrimary": false
+        }
+      ],
+      "variantOptions": {
+        "size": ["XS", "S", "M", "L", "XL", "XXL"],
+        "color": [
+          {
+            "name": "Black",
+            "hex": "#000000",
+            "code": "BLK"
+          },
+          {
+            "name": "White",
+            "hex": "#FFFFFF",
+            "code": "WHT"
+          },
+          {
+            "name": "Navy",
+            "hex": "#001F3F",
+            "code": "NAV"
+          },
+          {
+            "name": "Gray",
+            "hex": "#808080",
+            "code": "GRY"
+          }
+        ]
+      },
+      "variants": [
+        {
+          "id": "var_12345_001",
+          "sku": "TSH-BLK-S-001",
+          "productNumber": "PN-001-BLK-S",
+          "attributes": {
+            "size": "S",
+            "color": "Black"
+          },
+          "price": 29.99,
+          "compareAtPrice": null,
+          "inventory": {
+            "quantity": 150,
+            "inStock": true,
+            "lowStockThreshold": 10,
+            "isLowStock": false
+          },
+          "weight": 0.2,
+          "dimensions": {
+            "length": 30,
+            "width": 20,
+            "height": 2,
+            "unit": "cm"
+          }
+        },
+        {
+          "id": "var_12345_002",
+          "sku": "TSH-BLK-M-002",
+          "productNumber": "PN-001-BLK-M",
+          "attributes": {
+            "size": "M",
+            "color": "Black"
+          },
+          "price": 29.99,
+          "compareAtPrice": null,
+          "inventory": {
+            "quantity": 8,
+            "inStock": true,
+            "lowStockThreshold": 10,
+            "isLowStock": true
+          },
+          "weight": 0.22,
+          "dimensions": {
+            "length": 32,
+            "width": 22,
+            "height": 2,
+            "unit": "cm"
+          }
+        },
+        {
+          "id": "var_12345_003",
+          "sku": "TSH-WHT-M-003",
+          "productNumber": "PN-001-WHT-M",
+          "attributes": {
+            "size": "M",
+            "color": "White"
+          },
+          "price": 29.99,
+          "compareAtPrice": 34.99,
+          "inventory": {
+            "quantity": 0,
+            "inStock": false,
+            "lowStockThreshold": 10,
+            "isLowStock": false
+          },
+          "weight": 0.22,
+          "dimensions": {
+            "length": 32,
+            "width": 22,
+            "height": 2,
+            "unit": "cm"
+          }
+        },
+        {
+          "id": "var_12345_004",
+          "sku": "TSH-NAV-L-004",
+          "productNumber": "PN-001-NAV-L",
+          "attributes": {
+            "size": "L",
+            "color": "Navy"
+          },
+          "price": 29.99,
+          "compareAtPrice": null,
+          "inventory": {
+            "quantity": 95,
+            "inStock": true,
+            "lowStockThreshold": 10,
+            "isLowStock": false
+          },
+          "weight": 0.24,
+          "dimensions": {
+            "length": 34,
+            "width": 24,
+            "height": 2,
+            "unit": "cm"
+          }
+        },
+        {
+          "id": "var_12345_005",
+          "sku": "TSH-GRY-XL-005",
+          "productNumber": "PN-001-GRY-XL",
+          "attributes": {
+            "size": "XL",
+            "color": "Gray"
+          },
+          "price": 29.99,
+          "compareAtPrice": null,
+          "inventory": {
+            "quantity": 120,
+            "inStock": true,
+            "lowStockThreshold": 10,
+            "isLowStock": false
+          },
+          "weight": 0.26,
+          "dimensions": {
+            "length": 36,
+            "width": 26,
+            "height": 2,
+            "unit": "cm"
+          }
+        }
+      ],
+      "availability": {
+        "isAvailable": true,
+        "totalStock": 450,
+        "backorderAllowed": false,
+        "estimatedRestockDate": null
+      },
+      "tags": ["organic", "cotton", "essential", "sustainable"],
+      "seo": {
+        "title": "Classic Cotton T-Shirt | StyleCo",
+        "description": "Shop our Classic Cotton T-Shirt made from 100% organic cotton.",
+        "keywords": ["cotton t-shirt", "organic clothing", "basic tee"]
+      },
+      "createdAt": "2024-01-15T10:30:00Z",
+      "updatedAt": "2024-11-18T08:45:00Z",
+      "publishedAt": "2024-01-20T00:00:00Z",
+      "status": "active"
+    },
+    {
+      "id": "prod_67890",
+      "name": "Orthopedic Running Shoe",
+      "slug": "orthopedic-running-shoe",
+      "brand": "FitStep",
+      "description": "Advanced orthopedic running shoe with customized support. Available as individual shoes or pairs.",
+      "category": "footwear",
+      "subcategory": "running-shoes",
+      "basePrice": 89.99,
+      "currency": "USD",
+      "images": [
+        {
+          "url": "/images/products/shoe-main.jpg",
+          "alt": "Orthopedic Running Shoe side view",
+          "isPrimary": true
+        },
+        {
+          "url": "/images/products/shoe-top.jpg",
+          "alt": "Orthopedic Running Shoe top view",
+          "isPrimary": false
+        },
+        {
+          "url": "/images/products/shoe-sole.jpg",
+          "alt": "Orthopedic Running Shoe sole detail",
+          "isPrimary": false
+        }
+      ],
+      "variantOptions": {
+        "size": ["7", "8", "8.5", "9", "9.5", "10", "11", "12"],
+        "color": [
+          {
+            "name": "Blue",
+            "hex": "#0066CC",
+            "code": "BLU"
+          },
+          {
+            "name": "Red",
+            "hex": "#CC0000",
+            "code": "RED"
+          },
+          {
+            "name": "Black",
+            "hex": "#000000",
+            "code": "BLK"
+          }
+        ],
+        "direction": ["Left", "Right", "Pair"]
+      },
+      "variants": [
+        {
+          "id": "var_67890_001",
+          "sku": "SHOE-BLU-9-L-001",
+          "productNumber": "PN-SHOE-001-BLU-9-L",
+          "attributes": {
+            "size": "9",
+            "color": "Blue",
+            "direction": "Left"
+          },
+          "price": 89.99,
+          "compareAtPrice": null,
+          "inventory": {
+            "quantity": 25,
+            "inStock": true,
+            "lowStockThreshold": 5,
+            "isLowStock": false
+          },
+          "weight": 0.35,
+          "dimensions": {
+            "length": 28,
+            "width": 10,
+            "height": 12,
+            "unit": "cm"
+          }
+        },
+        {
+          "id": "var_67890_002",
+          "sku": "SHOE-BLU-9-R-002",
+          "productNumber": "PN-SHOE-001-BLU-9-R",
+          "attributes": {
+            "size": "9",
+            "color": "Blue",
+            "direction": "Right"
+          },
+          "price": 89.99,
+          "compareAtPrice": null,
+          "inventory": {
+            "quantity": 25,
+            "inStock": true,
+            "lowStockThreshold": 5,
+            "isLowStock": false
+          },
+          "weight": 0.35,
+          "dimensions": {
+            "length": 28,
+            "width": 10,
+            "height": 12,
+            "unit": "cm"
+          }
+        },
+        {
+          "id": "var_67890_003",
+          "sku": "SHOE-BLU-9-PAIR-003",
+          "productNumber": "PN-SHOE-001-BLU-9-PAIR",
+          "attributes": {
+            "size": "9",
+            "color": "Blue",
+            "direction": "Pair"
+          },
+          "price": 169.99,
+          "compareAtPrice": 179.98,
+          "inventory": {
+            "quantity": 50,
+            "inStock": true,
+            "lowStockThreshold": 10,
+            "isLowStock": false
+          },
+          "weight": 0.7,
+          "dimensions": {
+            "length": 30,
+            "width": 20,
+            "height": 12,
+            "unit": "cm"
+          }
+        },
+        {
+          "id": "var_67890_004",
+          "sku": "SHOE-RED-10-L-004",
+          "productNumber": "PN-SHOE-001-RED-10-L",
+          "attributes": {
+            "size": "10",
+            "color": "Red",
+            "direction": "Left"
+          },
+          "price": 89.99,
+          "compareAtPrice": null,
+          "inventory": {
+            "quantity": 18,
+            "inStock": true,
+            "lowStockThreshold": 5,
+            "isLowStock": false
+          },
+          "weight": 0.36,
+          "dimensions": {
+            "length": 29,
+            "width": 10.5,
+            "height": 12,
+            "unit": "cm"
+          }
+        },
+        {
+          "id": "var_67890_005",
+          "sku": "SHOE-RED-10-R-005",
+          "productNumber": "PN-SHOE-001-RED-10-R",
+          "attributes": {
+            "size": "10",
+            "color": "Red",
+            "direction": "Right"
+          },
+          "price": 89.99,
+          "compareAtPrice": null,
+          "inventory": {
+            "quantity": 18,
+            "inStock": true,
+            "lowStockThreshold": 5,
+            "isLowStock": false
+          },
+          "weight": 0.36,
+          "dimensions": {
+            "length": 29,
+            "width": 10.5,
+            "height": 12,
+            "unit": "cm"
+          }
+        },
+        {
+          "id": "var_67890_006",
+          "sku": "SHOE-RED-10-PAIR-006",
+          "productNumber": "PN-SHOE-001-RED-10-PAIR",
+          "attributes": {
+            "size": "10",
+            "color": "Red",
+            "direction": "Pair"
+          },
+          "price": 169.99,
+          "compareAtPrice": null,
+          "inventory": {
+            "quantity": 42,
+            "inStock": true,
+            "lowStockThreshold": 10,
+            "isLowStock": false
+          },
+          "weight": 0.72,
+          "dimensions": {
+            "length": 31,
+            "width": 21,
+            "height": 12,
+            "unit": "cm"
+          }
+        },
+        {
+          "id": "var_67890_007",
+          "sku": "SHOE-BLK-8.5-PAIR-007",
+          "productNumber": "PN-SHOE-001-BLK-8.5-PAIR",
+          "attributes": {
+            "size": "8.5",
+            "color": "Black",
+            "direction": "Pair"
+          },
+          "price": 169.99,
+          "compareAtPrice": null,
+          "inventory": {
+            "quantity": 3,
+            "inStock": true,
+            "lowStockThreshold": 10,
+            "isLowStock": true
+          },
+          "weight": 0.68,
+          "dimensions": {
+            "length": 29,
+            "width": 20,
+            "height": 12,
+            "unit": "cm"
+          }
+        }
+      ],
+      "availability": {
+        "isAvailable": true,
+        "totalStock": 243,
+        "backorderAllowed": true,
+        "estimatedRestockDate": "2024-12-01T00:00:00Z"
+      },
+      "tags": ["orthopedic", "running", "athletic", "medical-grade", "custom-fit"],
+      "seo": {
+        "title": "Orthopedic Running Shoe - Custom Support | FitStep",
+        "description": "Premium orthopedic running shoes with customized support. Buy individual shoes or pairs.",
+        "keywords": ["orthopedic shoes", "running shoes", "medical footwear", "custom support"]
+      },
+      "createdAt": "2024-02-10T14:20:00Z",
+      "updatedAt": "2024-11-18T09:15:00Z",
+      "publishedAt": "2024-02-15T00:00:00Z",
+      "status": "active"
+    }
+  ]
+}
