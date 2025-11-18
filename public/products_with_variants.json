@@ -3,7 +3,7 @@
     "version": 1,
     "description": "Product families with variants. Each family represents a base product with multiple variations in size, color, material, finish, or orientation. Only includes families with 2 or more products.",
     "sourceFile": "products-grouped-by-variant_v6.json",
-    "generatedAt": "2025-11-18T23:32:12.012Z",
+    "generatedAt": "2025-11-18T23:37:24.971Z",
     "statistics": {
       "totalFamilies": 1281,
       "totalProductsInFamilies": 8446,
@@ -536,8 +536,8 @@
       "variantCount": 2,
       "variantOptions": {
         "size": [
-          "1200 x  1200 ",
-          "1635 x  1635 "
+          "1200 x 1200 ",
+          "1635 x 1635 "
         ]
       },
       "variants": [
@@ -546,7 +546,7 @@
           "productTitle": "Aluminium 90 Degree Shower Track 1200 x 1200 with Curtain",
           "attributes": {
             "sizes": [
-              "1200 x  1200 "
+              "1200 x 1200 "
             ],
             "uniqueDescriptors": "Curtain",
             "color": "Curtain"
@@ -557,7 +557,7 @@
           "productTitle": "Aluminium 90 Degree Shower Track 1635 x 1635 with Curtain",
           "attributes": {
             "sizes": [
-              "1635 x  1635 "
+              "1635 x 1635 "
             ],
             "uniqueDescriptors": "Curtain",
             "color": "Curtain"
@@ -934,9 +934,9 @@
       "variantCount": 3,
       "variantOptions": {
         "size": [
-          "400 x    320mm",
-          "500 x    320mm",
-          "600 x    320mm"
+          "400 x 320mm",
+          "500 x 320mm",
+          "600 x 320mm"
         ]
       },
       "variants": [
@@ -945,7 +945,7 @@
           "productTitle": "AXA H10 Rectangle Counter Basin 400 x 320mm White",
           "attributes": {
             "sizes": [
-              "400 x    320mm"
+              "400 x 320mm"
             ],
             "coverage": [
               "320m"
@@ -959,7 +959,7 @@
           "productTitle": "AXA H10 Rectangle Counter Basin 500 x 320mm White",
           "attributes": {
             "sizes": [
-              "500 x    320mm"
+              "500 x 320mm"
             ],
             "coverage": [
               "320m"
@@ -973,7 +973,7 @@
           "productTitle": "AXA H10 Rectangle Counter Basin 600 x 320mm White",
           "attributes": {
             "sizes": [
-              "600 x    320mm"
+              "600 x 320mm"
             ],
             "coverage": [
               "320m"
@@ -1105,8 +1105,8 @@
       "variantCount": 4,
       "variantOptions": {
         "size": [
-          "1520 x 715 x     380mm",
-          "1650 x 715 x     380mm"
+          "1520 x 715 x 380mm",
+          "1650 x 715 x 380mm"
         ],
         "color": [
           "Base Acrylic Chrome",
@@ -1119,7 +1119,7 @@
           "productTitle": "Base Acrylic Inset Bath 1520 x 715 x 380mm with Overflow Chrome",
           "attributes": {
             "sizes": [
-              "1520 x 715 x     380mm"
+              "1520 x 715 x 380mm"
             ],
             "coverage": [
               "380m"
@@ -1133,7 +1133,7 @@
           "productTitle": "Base Acrylic Inset Bath 1520 x 715 x 380mm with Overflow Gloss White",
           "attributes": {
             "sizes": [
-              "1520 x 715 x     380mm"
+              "1520 x 715 x 380mm"
             ],
             "coverage": [
               "380m"
@@ -1147,7 +1147,7 @@
           "productTitle": "Base Acrylic Inset Bath 1650 x 715 x 380mm with Overflow Chrome",
           "attributes": {
             "sizes": [
-              "1650 x 715 x     380mm"
+              "1650 x 715 x 380mm"
             ],
             "coverage": [
               "380m"
@@ -1161,7 +1161,7 @@
           "productTitle": "Base Acrylic Inset Bath 1650 x 715 x 380mm with Overflow Gloss White",
           "attributes": {
             "sizes": [
-              "1650 x 715 x     380mm"
+              "1650 x 715 x 380mm"
             ],
             "coverage": [
               "380m"
@@ -32640,7 +32640,7 @@
       "variantCount": 2,
       "variantOptions": {
         "dimension": [
-          "80      M",
+          "80 M",
           "97mm"
         ],
         "color": [
@@ -32655,11 +32655,11 @@
           "attributes": {
             "dimensions": [
               "97mm",
-              "80      M"
+              "80 M"
             ],
             "coverage": [
               "97m",
-              "80      M"
+              "80 M"
             ],
             "uniqueDescriptors": "Black",
             "color": "Black"
@@ -32671,11 +32671,11 @@
           "attributes": {
             "dimensions": [
               "97mm",
-              "80      M"
+              "80 M"
             ],
             "coverage": [
               "97m",
-              "80      M"
+              "80 M"
             ],
             "uniqueDescriptors": "White",
             "color": "White"
@@ -35295,7 +35295,7 @@
       "variantCount": 2,
       "variantOptions": {
         "dimension": [
-          "80    M",
+          "80 M",
           "97mm"
         ],
         "color": [
@@ -35310,11 +35310,11 @@
           "attributes": {
             "dimensions": [
               "97mm",
-              "80    M"
+              "80 M"
             ],
             "coverage": [
               "97m",
-              "80    M"
+              "80 M"
             ],
             "uniqueDescriptors": "Black",
             "color": "Black"
@@ -35326,11 +35326,11 @@
           "attributes": {
             "dimensions": [
               "97mm",
-              "80    M"
+              "80 M"
             ],
             "coverage": [
               "97m",
-              "80    M"
+              "80 M"
             ],
             "uniqueDescriptors": "White",
             "color": "White"
@@ -46458,7 +46458,6 @@
       "variantOptions": {
         "size": [
           "460x280 ",
-          "460x280      ",
           "600x460 "
         ],
         "orientation": [
@@ -46496,7 +46495,7 @@
           "productTitle": "LAUFEN Kartell Wall/Counter Basin Only Right Hand Basin 1 Tap Hole 460x280 White",
           "attributes": {
             "sizes": [
-              "460x280      "
+              "460x280 "
             ],
             "orientation": "Right Hand",
             "uniqueDescriptors": "White",
@@ -47578,7 +47577,7 @@
           "productTitle": "LAUFEN Val Wall Basin Only Left Hand Basin 1 Taphole with Over Flow 550x315 White",
           "attributes": {
             "sizes": [
-              "550x315   "
+              "550x315 "
             ],
             "orientation": "Left Hand",
             "uniqueDescriptors": "LAUFEN Val Only",
@@ -47590,7 +47589,7 @@
           "productTitle": "LAUFEN Val Wall Basin Only Right Hand Basin 1 Taphole with Over Flow 550x315 White",
           "attributes": {
             "sizes": [
-              "550x315   "
+              "550x315 "
             ],
             "orientation": "Right Hand",
             "uniqueDescriptors": "LAUFEN Val Only",
@@ -54621,10 +54620,10 @@
       "variantCount": 20,
       "variantOptions": {
         "size": [
-          "500 x  1100mm",
-          "500 x  800mm",
-          "800 x  1100mm",
-          "800 x  800mm"
+          "500 x 1100mm",
+          "500 x 800mm",
+          "800 x 1100mm",
+          "800 x 800mm"
         ],
         "color": [
           "Brushed Gold",
@@ -54640,7 +54639,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 500 x 1100mm Brushed Gold",
           "attributes": {
             "sizes": [
-              "500 x  1100mm"
+              "500 x 1100mm"
             ],
             "coverage": [
               "1100m"
@@ -54654,7 +54653,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 500 x 1100mm Brushed Nickel",
           "attributes": {
             "sizes": [
-              "500 x  1100mm"
+              "500 x 1100mm"
             ],
             "coverage": [
               "1100m"
@@ -54668,7 +54667,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 500 x 1100mm Chrome",
           "attributes": {
             "sizes": [
-              "500 x  1100mm"
+              "500 x 1100mm"
             ],
             "coverage": [
               "1100m"
@@ -54682,7 +54681,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 500 x 1100mm Matte Black",
           "attributes": {
             "sizes": [
-              "500 x  1100mm"
+              "500 x 1100mm"
             ],
             "coverage": [
               "1100m"
@@ -54696,7 +54695,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 500 x 1100mm Brushed Gunmetal",
           "attributes": {
             "sizes": [
-              "500 x  1100mm"
+              "500 x 1100mm"
             ],
             "coverage": [
               "1100m"
@@ -54710,7 +54709,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 500 x 800mm Brushed Gold",
           "attributes": {
             "sizes": [
-              "500 x  800mm"
+              "500 x 800mm"
             ],
             "coverage": [
               "800m"
@@ -54724,7 +54723,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 500 x 800mm Brushed Nickel",
           "attributes": {
             "sizes": [
-              "500 x  800mm"
+              "500 x 800mm"
             ],
             "coverage": [
               "800m"
@@ -54738,7 +54737,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 500 x 800mm Chrome",
           "attributes": {
             "sizes": [
-              "500 x  800mm"
+              "500 x 800mm"
             ],
             "coverage": [
               "800m"
@@ -54752,7 +54751,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 500 x 800mm Matte Black",
           "attributes": {
             "sizes": [
-              "500 x  800mm"
+              "500 x 800mm"
             ],
             "coverage": [
               "800m"
@@ -54766,7 +54765,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 500 x 800mm Brushed Gunmetal",
           "attributes": {
             "sizes": [
-              "500 x  800mm"
+              "500 x 800mm"
             ],
             "coverage": [
               "800m"
@@ -54780,7 +54779,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 800 x 1100mm Brushed Gold",
           "attributes": {
             "sizes": [
-              "800 x  1100mm"
+              "800 x 1100mm"
             ],
             "coverage": [
               "1100m"
@@ -54794,7 +54793,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 800 x 1100mm Brushed Nickel",
           "attributes": {
             "sizes": [
-              "800 x  1100mm"
+              "800 x 1100mm"
             ],
             "coverage": [
               "1100m"
@@ -54808,7 +54807,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 800 x 1100mm Chrome",
           "attributes": {
             "sizes": [
-              "800 x  1100mm"
+              "800 x 1100mm"
             ],
             "coverage": [
               "1100m"
@@ -54822,7 +54821,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 800 x 1100mm Matte Black",
           "attributes": {
             "sizes": [
-              "800 x  1100mm"
+              "800 x 1100mm"
             ],
             "coverage": [
               "1100m"
@@ -54836,7 +54835,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 800 x 1100mm Brushed Gunmetal",
           "attributes": {
             "sizes": [
-              "800 x  1100mm"
+              "800 x 1100mm"
             ],
             "coverage": [
               "1100m"
@@ -54850,7 +54849,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 800 x 800mm Brushed Gold",
           "attributes": {
             "sizes": [
-              "800 x  800mm"
+              "800 x 800mm"
             ],
             "coverage": [
               "800m"
@@ -54864,7 +54863,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 800 x 800mm Brushed Nickel",
           "attributes": {
             "sizes": [
-              "800 x  800mm"
+              "800 x 800mm"
             ],
             "coverage": [
               "800m"
@@ -54878,7 +54877,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 800 x 800mm Chrome",
           "attributes": {
             "sizes": [
-              "800 x  800mm"
+              "800 x 800mm"
             ],
             "coverage": [
               "800m"
@@ -54892,7 +54891,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 800 x 800mm Matte Black",
           "attributes": {
             "sizes": [
-              "800 x  800mm"
+              "800 x 800mm"
             ],
             "coverage": [
               "800m"
@@ -54906,7 +54905,7 @@
           "productTitle": "Milli Mood Edit Heated Towel Rail 800 x 800mm Brushed Gunmetal",
           "attributes": {
             "sizes": [
-              "800 x  800mm"
+              "800 x 800mm"
             ],
             "coverage": [
               "800m"
@@ -81692,9 +81691,9 @@
       "variantCount": 26,
       "variantOptions": {
         "size": [
-          "550 x       1050mm",
+          "550 x 1050mm",
           "550 x 850mm",
-          "760 x       1050mm",
+          "760 x 1050mm",
           "760 x 850mm"
         ],
         "dimension": [
@@ -81722,7 +81721,7 @@
           "productTitle": "Mizu Drift Heated Towel Rail 550 x 1050mm Polished Stainless Steel",
           "attributes": {
             "sizes": [
-              "550 x       1050mm"
+              "550 x 1050mm"
             ],
             "coverage": [
               "1050m"
@@ -81750,7 +81749,7 @@
           "productTitle": "Mizu Drift Heated Towel Rail 760 x 1050mm Polished Stainless Steel",
           "attributes": {
             "sizes": [
-              "760 x       1050mm"
+              "760 x 1050mm"
             ],
             "coverage": [
               "1050m"
@@ -89151,10 +89150,10 @@
       "variantCount": 18,
       "variantOptions": {
         "size": [
-          "600 x      1050mm",
-          "600 x      450mm",
-          "600 x      800mm",
-          "800 x      1050mm"
+          "600 x 1050mm",
+          "600 x 450mm",
+          "600 x 800mm",
+          "800 x 1050mm"
         ],
         "dimension": [
           "650mm",
@@ -89175,7 +89174,7 @@
           "productTitle": "Mizu Stream Heated Towel Rail 600 x 1050mm Brushed Stainless Steel",
           "attributes": {
             "sizes": [
-              "600 x      1050mm"
+              "600 x 1050mm"
             ],
             "coverage": [
               "1050m"
@@ -89189,7 +89188,7 @@
           "productTitle": "Mizu Stream Heated Towel Rail 600 x 1050mm Matte Black",
           "attributes": {
             "sizes": [
-              "600 x      1050mm"
+              "600 x 1050mm"
             ],
             "coverage": [
               "1050m"
@@ -89203,7 +89202,7 @@
           "productTitle": "Mizu Stream Heated Towel Rail 600 x 1050mm Polished Stainless Steel",
           "attributes": {
             "sizes": [
-              "600 x      1050mm"
+              "600 x 1050mm"
             ],
             "coverage": [
               "1050m"
@@ -89217,7 +89216,7 @@
           "productTitle": "Mizu Stream Heated Towel Rail 600 x 450mm Brushed Stainless Steel",
           "attributes": {
             "sizes": [
-              "600 x      450mm"
+              "600 x 450mm"
             ],
             "coverage": [
               "450m"
@@ -89231,7 +89230,7 @@
           "productTitle": "Mizu Stream Heated Towel Rail 600 x 450mm Matte Black",
           "attributes": {
             "sizes": [
-              "600 x      450mm"
+              "600 x 450mm"
             ],
             "coverage": [
               "450m"
@@ -89245,7 +89244,7 @@
           "productTitle": "Mizu Stream Heated Towel Rail 600 x 450mm Polished Stainless Steel",
           "attributes": {
             "sizes": [
-              "600 x      450mm"
+              "600 x 450mm"
             ],
             "coverage": [
               "450m"
@@ -89259,7 +89258,7 @@
           "productTitle": "Mizu Stream Heated Towel Rail 600 x 800mm Brushed Stainless Steel",
           "attributes": {
             "sizes": [
-              "600 x      800mm"
+              "600 x 800mm"
             ],
             "coverage": [
               "800m"
@@ -89273,7 +89272,7 @@
           "productTitle": "Mizu Stream Heated Towel Rail 600 x 800mm Matte Black",
           "attributes": {
             "sizes": [
-              "600 x      800mm"
+              "600 x 800mm"
             ],
             "coverage": [
               "800m"
@@ -89287,7 +89286,7 @@
           "productTitle": "Mizu Stream Heated Towel Rail 600 x 800mm Polished Stainless Steel",
           "attributes": {
             "sizes": [
-              "600 x      800mm"
+              "600 x 800mm"
             ],
             "coverage": [
               "800m"
@@ -89301,7 +89300,7 @@
           "productTitle": "Mizu Stream Heated Towel Rail 800 x 1050mm Brushed Stainless Steel",
           "attributes": {
             "sizes": [
-              "800 x      1050mm"
+              "800 x 1050mm"
             ],
             "coverage": [
               "1050m"
@@ -89315,7 +89314,7 @@
           "productTitle": "Mizu Stream Heated Towel Rail 800 x 1050mm Matte Black",
           "attributes": {
             "sizes": [
-              "800 x      1050mm"
+              "800 x 1050mm"
             ],
             "coverage": [
               "1050m"
@@ -89329,7 +89328,7 @@
           "productTitle": "Mizu Stream Heated Towel Rail 800 x 1050mm Polished Stainless Steel",
           "attributes": {
             "sizes": [
-              "800 x      1050mm"
+              "800 x 1050mm"
             ],
             "coverage": [
               "1050m"
@@ -90813,8 +90812,8 @@
       "variantCount": 6,
       "variantOptions": {
         "size": [
-          "1500 x    700mm",
-          "1725 x    820mm"
+          "1500 x 700mm",
+          "1725 x 820mm"
         ],
         "color": [
           "Cove Grey",
@@ -90828,7 +90827,7 @@
           "productTitle": "Omvivo Villa Freestanding Bath 1500 x 700mm Cove Grey",
           "attributes": {
             "sizes": [
-              "1500 x    700mm"
+              "1500 x 700mm"
             ],
             "coverage": [
               "700m"
@@ -90842,7 +90841,7 @@
           "productTitle": "Omvivo Villa Freestanding Bath 1725 x 820mm Cove Grey",
           "attributes": {
             "sizes": [
-              "1725 x    820mm"
+              "1725 x 820mm"
             ],
             "coverage": [
               "820m"
@@ -90856,7 +90855,7 @@
           "productTitle": "Omvivo Villa Freestanding Bath 1500 x 700mm Island Sand",
           "attributes": {
             "sizes": [
-              "1500 x    700mm"
+              "1500 x 700mm"
             ],
             "coverage": [
               "700m"
@@ -90870,7 +90869,7 @@
           "productTitle": "Omvivo Villa Freestanding Bath 1725 x 820mm Island Sand",
           "attributes": {
             "sizes": [
-              "1725 x    820mm"
+              "1725 x 820mm"
             ],
             "coverage": [
               "820m"
@@ -90884,7 +90883,7 @@
           "productTitle": "Omvivo Villa Freestanding Bath 1500 x 700mm White Haven",
           "attributes": {
             "sizes": [
-              "1500 x    700mm"
+              "1500 x 700mm"
             ],
             "coverage": [
               "700m"
@@ -90898,7 +90897,7 @@
           "productTitle": "Omvivo Villa Freestanding Bath 1725 x 820mm White Haven",
           "attributes": {
             "sizes": [
-              "1725 x    820mm"
+              "1725 x 820mm"
             ],
             "coverage": [
               "820m"
@@ -91461,8 +91460,8 @@
       "variantCount": 2,
       "variantOptions": {
         "size": [
-          "1560 x    750 x 560mm",
-          "1760 x    800 x 590mm"
+          "1560 x 750 x 560mm",
+          "1760 x 800 x 590mm"
         ]
       },
       "variants": [
@@ -91471,7 +91470,7 @@
           "productTitle": "Posh Bristol Freestanding Bath 1560 x 750 x 560mm White",
           "attributes": {
             "sizes": [
-              "1560 x    750 x 560mm"
+              "1560 x 750 x 560mm"
             ],
             "coverage": [
               "560m"
@@ -91485,7 +91484,7 @@
           "productTitle": "Posh Bristol Freestanding Bath 1760 x 800 x 590mm White",
           "attributes": {
             "sizes": [
-              "1760 x    800 x 590mm"
+              "1760 x 800 x 590mm"
             ],
             "coverage": [
               "590m"
@@ -110542,10 +110541,10 @@
       "variantCount": 4,
       "variantOptions": {
         "size": [
-          "500 x     750mm",
-          "650 x     1100mm",
-          "700 x     750mm",
-          "750 x     600mm"
+          "500 x 750mm",
+          "650 x 1100mm",
+          "700 x 750mm",
+          "750 x 600mm"
         ]
       },
       "variants": [
@@ -110554,7 +110553,7 @@
           "productTitle": "Posh Domaine Heated Towel Rail 500 x 750mm Polished Stainless Steel",
           "attributes": {
             "sizes": [
-              "500 x     750mm"
+              "500 x 750mm"
             ],
             "coverage": [
               "750m"
@@ -110568,7 +110567,7 @@
           "productTitle": "Posh Domaine Heated Towel Rail 650 x 1100mm Polished Stainless Steel",
           "attributes": {
             "sizes": [
-              "650 x     1100mm"
+              "650 x 1100mm"
             ],
             "coverage": [
               "1100m"
@@ -110582,7 +110581,7 @@
           "productTitle": "Posh Domaine Heated Towel Rail 700 x 750mm Polished Stainless Steel",
           "attributes": {
             "sizes": [
-              "700 x     750mm"
+              "700 x 750mm"
             ],
             "coverage": [
               "750m"
@@ -110596,7 +110595,7 @@
           "productTitle": "Posh Domaine Heated Towel Rail 750 x 600mm Polished Stainless Steel",
           "attributes": {
             "sizes": [
-              "750 x     600mm"
+              "750 x 600mm"
             ],
             "coverage": [
               "600m"
@@ -110614,9 +110613,9 @@
       "variantCount": 3,
       "variantOptions": {
         "size": [
-          "1420 x 800 x     500mm",
-          "1525 x 800 x     500mm",
-          "1690 x 800 x     500mm"
+          "1420 x 800 x 500mm",
+          "1525 x 800 x 500mm",
+          "1690 x 800 x 500mm"
         ]
       },
       "variants": [
@@ -110625,7 +110624,7 @@
           "productTitle": "Posh Domaine Inset Bath 1420 x 800 x 500mm White",
           "attributes": {
             "sizes": [
-              "1420 x 800 x     500mm"
+              "1420 x 800 x 500mm"
             ],
             "coverage": [
               "500m"
@@ -110639,7 +110638,7 @@
           "productTitle": "Posh Domaine Inset Bath 1525 x 800 x 500mm White",
           "attributes": {
             "sizes": [
-              "1525 x 800 x     500mm"
+              "1525 x 800 x 500mm"
             ],
             "coverage": [
               "500m"
@@ -110653,7 +110652,7 @@
           "productTitle": "Posh Domaine Inset Bath 1690 x 800 x 500mm White",
           "attributes": {
             "sizes": [
-              "1690 x 800 x     500mm"
+              "1690 x 800 x 500mm"
             ],
             "coverage": [
               "500m"
@@ -118406,8 +118405,8 @@
       "variantCount": 2,
       "variantOptions": {
         "size": [
-          "1500 x 700  x 560mm",
-          "1780 x 800  x 560mm"
+          "1500 x 700 x 560mm",
+          "1780 x 800 x 560mm"
         ]
       },
       "variants": [
@@ -118416,7 +118415,7 @@
           "productTitle": "Posh Solus Freestanding Bath 1500 x 700 x 560mm White No Overflow",
           "attributes": {
             "sizes": [
-              "1500 x 700  x 560mm"
+              "1500 x 700 x 560mm"
             ],
             "coverage": [
               "560m"
@@ -118430,7 +118429,7 @@
           "productTitle": "Posh Solus Freestanding Bath 1780 x 800 x 560mm White No Overflow",
           "attributes": {
             "sizes": [
-              "1780 x 800  x 560mm"
+              "1780 x 800 x 560mm"
             ],
             "coverage": [
               "560m"
@@ -118657,8 +118656,8 @@
       "variantCount": 4,
       "variantOptions": {
         "size": [
-          "500 x   700mm",
-          "700 x   700mm"
+          "500 x 700mm",
+          "700 x 700mm"
         ],
         "color": [
           "Matte Black",
@@ -118671,7 +118670,7 @@
           "productTitle": "Posh Solus MK2 Heated Towel Rail 500 x 700mm Matte Black",
           "attributes": {
             "sizes": [
-              "500 x   700mm"
+              "500 x 700mm"
             ],
             "coverage": [
               "700m"
@@ -118685,7 +118684,7 @@
           "productTitle": "Posh Solus MK2 Heated Towel Rail 500 x 700mm Polished Stainless Steel",
           "attributes": {
             "sizes": [
-              "500 x   700mm"
+              "500 x 700mm"
             ],
             "coverage": [
               "700m"
@@ -118699,7 +118698,7 @@
           "productTitle": "Posh Solus MK2 Heated Towel Rail 700 x 700mm Matte Black",
           "attributes": {
             "sizes": [
-              "700 x   700mm"
+              "700 x 700mm"
             ],
             "coverage": [
               "700m"
@@ -118713,7 +118712,7 @@
           "productTitle": "Posh Solus MK2 Heated Towel Rail 700 x 700mm Polished Stainless Steel",
           "attributes": {
             "sizes": [
-              "700 x   700mm"
+              "700 x 700mm"
             ],
             "coverage": [
               "700m"
@@ -125458,8 +125457,8 @@
       "variantCount": 2,
       "variantOptions": {
         "size": [
-          "400 x   350mm",
-          "550 x   350mm"
+          "400 x 350mm",
+          "550 x 350mm"
         ]
       },
       "variants": [
@@ -125468,7 +125467,7 @@
           "productTitle": "Roca The Gap Under Counter Basin 400 x 350mm with Overflow",
           "attributes": {
             "sizes": [
-              "400 x   350mm"
+              "400 x 350mm"
             ],
             "coverage": [
               "350m"
@@ -125480,7 +125479,7 @@
           "productTitle": "Roca The Gap Under Counter Basin 550 x 350mm with Overflow",
           "attributes": {
             "sizes": [
-              "550 x   350mm"
+              "550 x 350mm"
             ],
             "coverage": [
               "350m"
@@ -132872,7 +132871,7 @@
           "productTitle": "Wolfen Slimline Wall Hand Basin 400 x 240mm with Brackets Left Hand 1 Taphole Stainless Steel",
           "attributes": {
             "sizes": [
-              "400 x    240mm"
+              "400 x 240mm"
             ],
             "coverage": [
               "240m"
@@ -132887,7 +132886,7 @@
           "productTitle": "Wolfen Slimline Wall Hand Basin 400 x 240mm with Brackets Right Hand 1 Taphole Stainless Steel",
           "attributes": {
             "sizes": [
-              "400 x    240mm"
+              "400 x 240mm"
             ],
             "coverage": [
               "240m"
