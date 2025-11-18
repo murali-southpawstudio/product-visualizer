@@ -167,14 +167,16 @@ function ProductFamilyDetail() {
                   <div className="product-attributes">
                     <h4>Attributes</h4>
                     <dl className="attributes-list">
-                      {Object.entries(matchingProduct.attributes).map(([key, value]) => (
-                        <div key={key} className="attribute-item">
-                          <dt>{key}</dt>
-                          <dd>
-                            {Array.isArray(value) ? value.join(', ') : value}
-                          </dd>
-                        </div>
-                      ))}
+                      {Object.entries(matchingProduct.attributes)
+                        .filter(([key]) => key !== 'uniqueDescriptors')
+                        .map(([key, value]) => (
+                          <div key={key} className="attribute-item">
+                            <dt>{key}</dt>
+                            <dd>
+                              {Array.isArray(value) ? value.join(', ') : value}
+                            </dd>
+                          </div>
+                        ))}
                     </dl>
                   </div>
                 )}
