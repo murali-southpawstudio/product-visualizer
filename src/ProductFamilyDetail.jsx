@@ -28,6 +28,22 @@ function ProductFamilyDetail() {
       })
   }, [])
 
+  // Set default selected options (first option in each variant)
+  useEffect(() => {
+    if (data && familyId) {
+      const family = data.families?.find(f => f.productFamilyId === familyId)
+      if (family && family.variantOptions && Object.keys(selectedOptions).length === 0) {
+        const defaultOptions = {}
+        Object.entries(family.variantOptions).forEach(([key, values]) => {
+          if (values.length > 0) {
+            defaultOptions[key] = values[0]
+          }
+        })
+        setSelectedOptions(defaultOptions)
+      }
+    }
+  }, [data, familyId, selectedOptions])
+
   if (loading) {
     return <div className="loading">Loading product family...</div>
   }
