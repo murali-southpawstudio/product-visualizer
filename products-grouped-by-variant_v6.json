@@ -1,30 +1,4 @@
 {
-  "90": [
-    [
-      {
-        "productCode": "2219851",
-        "productTitle": "90 Degree 2 Wall Grab Rail 1075 x 1050 x 600mm Left Hand"
-      },
-      {
-        "productCode": "2219852",
-        "productTitle": "90 Degree 2 Wall Grab Rail 1075 x 1050 x 600mm Right Hand"
-      }
-    ]
-  ],
-  "900": [
-    [
-      {
-        "productCode": "4203048",
-        "productTitle": "900 G/Rail Shwr H/Set Hose & Slider (4   Star)"
-      }
-    ],
-    [
-      {
-        "productCode": "4203049",
-        "productTitle": "900 G/Rail Shwr H/Set Slider & Mix (4    Star)"
-      }
-    ]
-  ],
   "_algorithmInfo": {
     "version": 6,
     "description": "Groups products by base type, removing size, materials, finishes, color combinations, directional indicators, and temperature variations. Includes whitespace normalization fix for proper multi-word material matching.",
@@ -43031,6 +43005,28 @@
       {
         "productCode": "1852296",
         "productTitle": "RBA Wall Grab Rail Right Hand with Poly  Backrest 40 Degrees Stainless Steel"
+      }
+    ],
+    [
+      {
+        "productCode": "2219851",
+        "productTitle": "RBA 90 Degree 2 Wall Grab Rail 1075 x 1050 x 600mm Left Hand"
+      },
+      {
+        "productCode": "2219852",
+        "productTitle": "RBA 90 Degree 2 Wall Grab Rail 1075 x 1050 x 600mm Right Hand"
+      }
+    ],
+    [
+      {
+        "productCode": "4203048",
+        "productTitle": "RBA 900 G/Rail Shwr H/Set Hose & Slider (4   Star)"
+      }
+    ],
+    [
+      {
+        "productCode": "4203049",
+        "productTitle": "RBA 900 G/Rail Shwr H/Set Slider & Mix (4    Star)"
       }
     ]
   ],
