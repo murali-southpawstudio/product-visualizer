@@ -111,7 +111,8 @@ function extractVariantAttributes(productTitle, commonTitle) {
                         'corner', 'wall', 'floor', 'ceiling', 'counter', 'above',
                         'below', 'under', 'over', 'mounted', 'inset', 'flush',
                         'bowl', 'taphole', 'tapholes', 'hole', 'holes', 'no',
-                        'with', 'without', 'overflow', 'shelf', 'shelves'];
+                        'with', 'without', 'overflow', 'shelf', 'shelves', 'acrylic',
+                        'base'];
 
   const uniqueWords = productWords.filter(word => {
     const wordLower = word.toLowerCase();

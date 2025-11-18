@@ -3,7 +3,7 @@
     "version": 1,
     "description": "Product families with variants. Each family represents a base product with multiple variations in size, color, material, finish, or orientation. Only includes families with 2 or more products.",
     "sourceFile": "products-grouped-by-variant_v6.json",
-    "generatedAt": "2025-11-18T23:37:24.971Z",
+    "generatedAt": "2025-11-18T23:44:10.101Z",
     "statistics": {
       "totalFamilies": 1281,
       "totalProductsInFamilies": 8446,
@@ -1109,8 +1109,8 @@
           "1650 x 715 x 380mm"
         ],
         "color": [
-          "Base Acrylic Chrome",
-          "Base Acrylic Gloss White"
+          "Chrome",
+          "Gloss White"
         ]
       },
       "variants": [
@@ -1124,8 +1124,8 @@
             "coverage": [
               "380m"
             ],
-            "uniqueDescriptors": "Base Acrylic Chrome",
-            "color": "Base Acrylic Chrome"
+            "uniqueDescriptors": "Chrome",
+            "color": "Chrome"
           }
         },
         {
@@ -1138,8 +1138,8 @@
             "coverage": [
               "380m"
             ],
-            "uniqueDescriptors": "Base Acrylic Gloss White",
-            "color": "Base Acrylic Gloss White"
+            "uniqueDescriptors": "Gloss White",
+            "color": "Gloss White"
           }
         },
         {
@@ -1152,8 +1152,8 @@
             "coverage": [
               "380m"
             ],
-            "uniqueDescriptors": "Base Acrylic Chrome",
-            "color": "Base Acrylic Chrome"
+            "uniqueDescriptors": "Chrome",
+            "color": "Chrome"
           }
         },
         {
@@ -1166,8 +1166,8 @@
             "coverage": [
               "380m"
             ],
-            "uniqueDescriptors": "Base Acrylic Gloss White",
-            "color": "Base Acrylic Gloss White"
+            "uniqueDescriptors": "Gloss White",
+            "color": "Gloss White"
           }
         }
       ]
@@ -26770,8 +26770,8 @@
               "1000m",
               "1000m"
             ],
-            "uniqueDescriptors": "Kado Lux Base",
-            "color": "Kado Lux Base"
+            "uniqueDescriptors": "Kado Lux",
+            "color": "Kado Lux"
           }
         },
         {
@@ -26786,8 +26786,8 @@
               "1200m",
               "900m"
             ],
-            "uniqueDescriptors": "Kado Lux Base",
-            "color": "Kado Lux Base"
+            "uniqueDescriptors": "Kado Lux",
+            "color": "Kado Lux"
           }
         }
       ]
