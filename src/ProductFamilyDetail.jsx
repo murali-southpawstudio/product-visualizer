@@ -103,8 +103,10 @@ function ProductFamilyDetail() {
     }))
   }
 
-  const resetSelection = () => {
-    setSelectedOptions({})
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      // Could add a toast notification here if needed
+    })
   }
 
   return (
@@ -126,85 +128,76 @@ function ProductFamilyDetail() {
       </header>
 
       <div className="detail-content">
-        <div className="options-panel">
-          <h2>Select Options</h2>
-
-          {Object.keys(family.variantOptions).length === 0 ? (
-            <p className="no-options">No variant options available</p>
-          ) : (
-            <div className="options-groups">
-              {Object.entries(family.variantOptions).map(([optionType, values]) => (
-                <div key={optionType} className="option-group">
-                  <h3 className="option-type-title">
-                    {optionType.charAt(0).toUpperCase() + optionType.slice(1)}
-                  </h3>
-                  <div className="option-buttons">
-                    {values.map((value) => (
-                      <button
-                        key={value}
-                        className={`option-btn ${
-                          selectedOptions[optionType] === value ? 'selected' : ''
-                        }`}
-                        onClick={() => handleOptionSelect(optionType, value)}
-                      >
-                        {value}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {Object.keys(selectedOptions).length > 0 && (
-            <button className="reset-button" onClick={resetSelection}>
-              Reset Selection
-            </button>
-          )}
-        </div>
-
-        <div className="product-display-panel">
-          <h2>Selected Product</h2>
-
+        <div className="pdp-card">
           {matchingProduct ? (
-            <div className="selected-product">
-              <div className="product-info-card">
-                <div className="product-header">
-                  <span className="product-code-label">Product Code</span>
-                  <span className="product-code">{matchingProduct.productCode}</span>
-                </div>
-
-                <div className="product-title-section">
-                  <h3>Product Title</h3>
-                  <p className="product-title">{matchingProduct.productTitle}</p>
-                </div>
-
-                {Object.keys(matchingProduct.attributes).length > 0 && (
-                  <div className="product-attributes">
-                    <h4>Attributes</h4>
-                    <dl className="attributes-list">
-                      {Object.entries(matchingProduct.attributes)
-                        .filter(([key]) => key !== 'uniqueDescriptors')
-                        .map(([key, value]) => (
-                          <div key={key} className="attribute-item">
-                            <dt>{key}</dt>
-                            <dd>
-                              {Array.isArray(value) ? value.join(', ') : value}
-                            </dd>
-                          </div>
-                        ))}
-                    </dl>
+            <>
+              <div className="pdp-header">
+                <h2 className="product-title">{matchingProduct.productTitle}</h2>
+                <div className="product-code-section">
+                  <span className="product-code-label">Product Code:</span>
+                  <div className="product-code-container">
+                    <span className="product-code">{matchingProduct.productCode}</span>
+                    <button
+                      className="copy-button"
+                      onClick={() => copyToClipboard(matchingProduct.productCode)}
+                      title="Copy product code"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
                   </div>
-                )}
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="no-selection">
-              {Object.keys(selectedOptions).length === 0 ? (
-                <p>Please select options to view a specific product</p>
-              ) : (
-                <p>No product matches the selected combination. Try different options.</p>
+
+              {Object.keys(family.variantOptions).length > 0 && (
+                <div className="variant-selectors">
+                  {Object.entries(family.variantOptions).map(([optionType, values]) => (
+                    <div key={optionType} className="variant-group">
+                      <label className="variant-label">
+                        {optionType.charAt(0).toUpperCase() + optionType.slice(1)}
+                      </label>
+                      <div className="variant-swatches">
+                        {values.map((value) => (
+                          <button
+                            key={value}
+                            className={`swatch ${
+                              selectedOptions[optionType] === value ? 'selected' : ''
+                            }`}
+                            onClick={() => handleOptionSelect(optionType, value)}
+                            title={value}
+                          >
+                            <span className="swatch-label">{value}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
+
+              {Object.keys(matchingProduct.attributes).length > 0 && (
+                <div className="product-specs">
+                  <h3 className="specs-title">Product Specifications</h3>
+                  <dl className="specs-list">
+                    {Object.entries(matchingProduct.attributes)
+                      .filter(([key]) => key !== 'uniqueDescriptors')
+                      .map(([key, value]) => (
+                        <div key={key} className="spec-item">
+                          <dt>{key}</dt>
+                          <dd>
+                            {Array.isArray(value) ? value.join(', ') : value}
+                          </dd>
+                        </div>
+                      ))}
+                  </dl>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="no-match-message">
+              <p>No product matches the selected combination. Please try different options.</p>
             </div>
           )}
         </div>
