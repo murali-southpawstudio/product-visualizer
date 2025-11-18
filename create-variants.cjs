@@ -248,6 +248,26 @@ for (const [brand, groups] of Object.entries(dataV6)) {
   }
 }
 
+// Merge families with the same productFamilyTitle
+const mergedFamilies = {};
+for (const family of productFamilies) {
+  const key = `${family.brand}:${family.productFamilyTitle}`;
+
+  if (mergedFamilies[key]) {
+    // Merge variants
+    mergedFamilies[key].variants.push(...family.variants);
+    mergedFamilies[key].variantCount += family.variantCount;
+
+    // Re-extract variant options from all merged variants
+    mergedFamilies[key].variantOptions = extractVariantOptions(mergedFamilies[key].variants);
+  } else {
+    mergedFamilies[key] = family;
+  }
+}
+
+// Convert back to array
+const finalFamilies = Object.values(mergedFamilies);
+
 // Create output structure
 const output = {
   _metadata: {
@@ -256,9 +276,9 @@ const output = {
     sourceFile: "products-grouped-by-variant_v6.json",
     generatedAt: new Date().toISOString(),
     statistics: {
-      totalFamilies: totalFamilies,
+      totalFamilies: finalFamilies.length,
       totalProductsInFamilies: totalProducts,
-      averageVariantsPerFamily: (totalProducts / totalFamilies).toFixed(2)
+      averageVariantsPerFamily: (totalProducts / finalFamilies.length).toFixed(2)
     },
     variantTypes: [
       "Size variations (e.g., 1200x900mm, 630mm)",
@@ -268,7 +288,7 @@ const output = {
       "Temperature variations (e.g., Cold, Warm, Hot)"
     ]
   },
-  families: productFamilies
+  families: finalFamilies
 };
 
 // Write the output file
