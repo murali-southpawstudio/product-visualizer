@@ -13,13 +13,13 @@ function findCommonTitle(titles) {
   const normalizedTitles = titles.map(title => {
     let normalized = title;
 
-    // Remove sizes with dimensions like "450mm x 800mm x 130mm", "1520 x 715 x 380mm", "3.0 x 1.8m", or with ranges "1500 x 400-500 x 450mm"
-    // Match patterns with units on each number or just at the end, and support ranges like "400-500" and decimals like "3.0"
-    normalized = normalized.replace(/(?:\d+(?:\.\d+)?(?:-\d+(?:\.\d+)?)?\s*(?:mm|cm|m)?)\s*x\s*(?:\d+(?:\.\d+)?(?:-\d+(?:\.\d+)?)?\s*(?:mm|cm|m)?)\s*(?:x\s*(?:\d+(?:\.\d+)?(?:-\d+(?:\.\d+)?)?\s*(?:mm|cm|m)?))?/gi, '');
+    // Remove sizes with dimensions like "450mm x 800mm x 130mm", "1520 x 715 x 380mm", "3.0 x 1.8m", or with ranges "300mm-400mm x 150mm x 600mm-800mm"
+    // Match patterns with units on each number or just at the end, and support ranges like "400-500mm", "300mm-400mm", "350mm - 400mm" and decimals like "3.0"
+    normalized = normalized.replace(/(?:\d+(?:\.\d+)?(?:mm|cm|m)?(?:\s*-\s*\d+(?:\.\d+)?(?:mm|cm|m)?)?)\s*x\s*(?:\d+(?:\.\d+)?(?:mm|cm|m)?(?:\s*-\s*\d+(?:\.\d+)?(?:mm|cm|m)?)?)\s*(?:x\s*(?:\d+(?:\.\d+)?(?:mm|cm|m)?(?:\s*-\s*\d+(?:\.\d+)?(?:mm|cm|m)?)?))?/gi, '');
 
     // Remove individual dimensions like "1650mm", "3.0m", "10m2", etc.
     normalized = normalized.replace(/\b\d+(?:\.\d+)?\s*(mm|cm|m)\b/gi, '');
-    normalized = normalized.replace(/\(?\d+(?:\.\d+)?\s*m\d?\)?/gi, ''); // m2, m3
+    normalized = normalized.replace(/\(?\d+(?:\.\d+)?\s*m[23]\)?/gi, ''); // m2, m3
 
     // Clean up any remaining standalone "x" characters
     normalized = normalized.replace(/\s+x\s+/gi, ' ');
@@ -120,13 +120,13 @@ function generateFamilyId(brand, commonTitle) {
 function extractVariantAttributes(productTitle, commonTitle) {
   const attributes = {};
 
-  // Extract sizes like "1200 x 900mm", "1200 x 900 x 500mm", "600mm x 500mm x 450mm", "3.0 x 1.8m", or with ranges "1500 x 400-500 x 450mm"
+  // Extract sizes like "1200 x 900mm", "1200 x 900 x 500mm", "600mm x 500mm x 450mm", "3.0 x 1.8m", or with ranges "300mm-400mm x 150mm x 600mm-800mm"
   // Pattern supports:
   // - Units at the end: "1200 x 900 x 500mm"
   // - Units after each dimension: "600mm x 500mm x 450mm"
-  // - Ranges: "1500 x 400-500 x 450mm"
+  // - Ranges: "1500 x 400-500 x 450mm", "300mm-400mm", "350mm - 400mm"
   // - Decimals: "3.0 x 1.8m"
-  const sizeMatches = productTitle.match(/(?:\d+(?:\.\d+)?(?:-\d+(?:\.\d+)?)?\s*(?:mm|cm|m)?)\s*x\s*(?:\d+(?:\.\d+)?(?:-\d+(?:\.\d+)?)?\s*(?:mm|cm|m)?)\s*(?:x\s*(?:\d+(?:\.\d+)?(?:-\d+(?:\.\d+)?)?\s*(?:mm|cm|m)?))?/gi);
+  const sizeMatches = productTitle.match(/(?:\d+(?:\.\d+)?(?:mm|cm|m)?(?:\s*-\s*\d+(?:\.\d+)?(?:mm|cm|m)?)?)\s*x\s*(?:\d+(?:\.\d+)?(?:mm|cm|m)?(?:\s*-\s*\d+(?:\.\d+)?(?:mm|cm|m)?)?)\s*(?:x\s*(?:\d+(?:\.\d+)?(?:mm|cm|m)?(?:\s*-\s*\d+(?:\.\d+)?(?:mm|cm|m)?)?))?/gi);
   if (sizeMatches) {
     attributes.sizes = sizeMatches;
   }
@@ -137,7 +137,7 @@ function extractVariantAttributes(productTitle, commonTitle) {
     attributes.dimensions = dimMatches;
   }
 
-  const m2Matches = productTitle.match(/\(?\d+(?:\.\d+)?\s*m\d?\)?/gi);
+  const m2Matches = productTitle.match(/\(?\d+(?:\.\d+)?\s*m[23]\)?/gi);
   if (m2Matches) {
     attributes.coverage = m2Matches;
   }
@@ -183,19 +183,25 @@ function extractVariantAttributes(productTitle, commonTitle) {
     // Exclude dimension ranges like "400-500"
     const isDimensionRange = /^\d+-\d+$/i.test(word);
     // Exclude parenthetical coverage/dimensions like "(10M2)", "(1M2)", etc.
-    const isParentheticalDimension = /^\(\d+(?:\.\d+)?\s*m\d?\)$/i.test(word);
+    const isParentheticalDimension = /^\(\d+(?:\.\d+)?\s*m[23]\)$/i.test(word);
     // Exclude decimal numbers like "3.0", "3.6"
     const isDecimalNumber = /^\d+\.\d+$/i.test(word);
+    // Exclude dimension ranges with units like "300mm-400mm", "600mm-800mm"
+    const isDimensionRangeWithUnits = /^\d+(?:\.\d+)?(?:mm|cm|m)-\d+(?:\.\d+)?(?:mm|cm|m)$/i.test(word);
+    // Exclude simple alphanumeric product codes like "Z1", "MK2", etc.
+    const isProductCode = /^[A-Z]\d+$/i.test(word);
     return !commonWords.includes(wordLower) &&
            !/^\d+$/.test(word) &&
            !/^(mm|cm|m|x|\(|\))$/i.test(word) &&
-           !/^\d+(?:\.\d+)?(mm|cm|m)\d?$/i.test(word) &&
+           !/^\d+(?:\.\d+)?(mm|cm|m)[23]?$/i.test(word) &&
            !/^\d+(?:\.\d+)?\s*x\s*\d+/i.test(word) &&
            !excludeWords.includes(wordLower) &&
            !isParentheticalTemp &&
            !isDimensionRange &&
            !isParentheticalDimension &&
-           !isDecimalNumber;
+           !isDecimalNumber &&
+           !isDimensionRangeWithUnits &&
+           !isProductCode;
   });
 
   let descriptors = uniqueWords.join(' ');
