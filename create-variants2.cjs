@@ -103,9 +103,15 @@ function findCommonTitle(titles) {
     commonWords = firstTitle.slice(0, Math.max(prefixLength, 1));
   }
 
-  // Capitalize first letter of each word
+  // Capitalize first letter of each word, preserving Roman numerals
   return commonWords
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(word => {
+      // Check if word is a Roman numeral (I, II, III, IV, V, VI, VII, VIII, IX, X, etc.)
+      if (/^[ivx]+$/i.test(word)) {
+        return word.toUpperCase();
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
     .join(' ');
 }
 

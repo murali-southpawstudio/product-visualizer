@@ -3,7 +3,7 @@
     "version": 2,
     "description": "Product families with variants. Enhanced version with improved productFamilyTitle extraction that removes size/color/material variations to find true common text.",
     "sourceFile": "products-grouped-by-variant_v6.json",
-    "generatedAt": "2025-11-19T05:19:30.586Z",
+    "generatedAt": "2025-11-19T23:38:12.968Z",
     "statistics": {
       "totalFamilies": 1675,
       "totalProductsInFamilies": 8446,
@@ -1189,7 +1189,7 @@
     },
     {
       "productFamilyId": "fam_540c84273061",
-      "productFamilyTitle": "Caroma Invisi Ii Blank Access Panel",
+      "productFamilyTitle": "Caroma Invisi II Blank Access Panel",
       "brand": "Caroma",
       "variantCount": 2,
       "variantOptions": {
@@ -1219,7 +1219,7 @@
     },
     {
       "productFamilyId": "fam_67b73530378c",
-      "productFamilyTitle": "Caroma Invisi Ii Care Rnd Dual Flush Button",
+      "productFamilyTitle": "Caroma Invisi II Care Rnd Dual Flush Button",
       "brand": "Caroma",
       "variantCount": 2,
       "variantOptions": {
@@ -1249,7 +1249,7 @@
     },
     {
       "productFamilyId": "fam_c9805a273321",
-      "productFamilyTitle": "Caroma Invisi Ii Care Round Dual Flush Button Plate",
+      "productFamilyTitle": "Caroma Invisi II Care Round Dual Flush Button Plate",
       "brand": "Caroma",
       "variantCount": 2,
       "variantOptions": {
@@ -1279,7 +1279,7 @@
     },
     {
       "productFamilyId": "fam_35130b47d88c",
-      "productFamilyTitle": "Caroma Invisi Ii Dual Flush Round Custom Button",
+      "productFamilyTitle": "Caroma Invisi II Dual Flush Round Custom Button",
       "brand": "Caroma",
       "variantCount": 2,
       "variantOptions": {
@@ -1309,7 +1309,7 @@
     },
     {
       "productFamilyId": "fam_c5f6d509b3a0",
-      "productFamilyTitle": "Caroma Invisi Ii Rectangular Metal Dual Flush Plate Button",
+      "productFamilyTitle": "Caroma Invisi II Rectangular Metal Dual Flush Plate Button",
       "brand": "Caroma",
       "variantCount": 2,
       "variantOptions": {
@@ -1551,7 +1551,7 @@
     },
     {
       "productFamilyId": "fam_088ee4c43ee3",
-      "productFamilyTitle": "Caroma Urbane Ii Freestanding Bath",
+      "productFamilyTitle": "Caroma Urbane II Freestanding Bath",
       "brand": "Caroma",
       "variantCount": 2,
       "variantOptions": {
@@ -4831,7 +4831,7 @@
     },
     {
       "productFamilyId": "fam_0a9fabde50a1",
-      "productFamilyTitle": "Issy Blossom Ii Vanity Unit With Two Soft Close Drawers And One Internal Drawer With Handle",
+      "productFamilyTitle": "Issy Blossom II Vanity Unit With Two Soft Close Drawers And One Internal Drawer With Handle",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -4863,7 +4863,7 @@
     },
     {
       "productFamilyId": "fam_8f6dea3e5cd8",
-      "productFamilyTitle": "Issy Blossom Ii Vanity Unit With Two Soft Close Drawers And Internal Drawer With Handle",
+      "productFamilyTitle": "Issy Blossom II Vanity Unit With Two Soft Close Drawers And Internal Drawer With Handle",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -4895,7 +4895,7 @@
     },
     {
       "productFamilyId": "fam_31238a818979",
-      "productFamilyTitle": "Issy Blossom Ii Vanity Unit With Three Soft Close Drawers And One Internal Drawer With Handle",
+      "productFamilyTitle": "Issy Blossom II Vanity Unit With Three Soft Close Drawers And One Internal Drawer With Handle",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -4927,7 +4927,7 @@
     },
     {
       "productFamilyId": "fam_c850df48b504",
-      "productFamilyTitle": "Issy Blossom Ii Vanity Unit With Three Soft Close Drawers And Internal Drawer With Handle",
+      "productFamilyTitle": "Issy Blossom II Vanity Unit With Three Soft Close Drawers And Internal Drawer With Handle",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -4959,7 +4959,7 @@
     },
     {
       "productFamilyId": "fam_5706e46f5602",
-      "productFamilyTitle": "Issy Blossom Ii Vanity Unit With One Soft Close Drawer Only No Internal Drawer With Handle",
+      "productFamilyTitle": "Issy Blossom II Vanity Unit With One Soft Close Drawer Only No Internal Drawer With Handle",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -4991,7 +4991,7 @@
     },
     {
       "productFamilyId": "fam_57f498cf30ea",
-      "productFamilyTitle": "Issy Blossom Ii Vanity Unit With One Soft Close Drawer And Internal Shelf With Handle",
+      "productFamilyTitle": "Issy Blossom II Vanity Unit With One Soft Close Drawer And Internal Shelf With Handle",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -5693,7 +5693,7 @@
     },
     {
       "productFamilyId": "fam_c9caf59ecbd2",
-      "productFamilyTitle": "Issy Cloud Ii Wall Hung Vanity Unit 4 Touch Latch Drawers (no Basin)",
+      "productFamilyTitle": "Issy Cloud II Wall Hung Vanity Unit 4 Touch Latch Drawers (no Basin)",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -5725,7 +5725,7 @@
     },
     {
       "productFamilyId": "fam_a95ebcc04667",
-      "productFamilyTitle": "Issy Cloud Ii Wall Hung Vanity Unit 4 Touch Latch Drawers Semi Inset (no Basin)",
+      "productFamilyTitle": "Issy Cloud II Wall Hung Vanity Unit 4 Touch Latch Drawers Semi Inset (no Basin)",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -5757,7 +5757,7 @@
     },
     {
       "productFamilyId": "fam_65707ddf7939",
-      "productFamilyTitle": "Issy Cloud Ii Vanity Unit With Legs 4 Touch Latch Drawers (no Basin)",
+      "productFamilyTitle": "Issy Cloud II Vanity Unit With Legs 4 Touch Latch Drawers (no Basin)",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -5789,7 +5789,7 @@
     },
     {
       "productFamilyId": "fam_16dc1f0404b1",
-      "productFamilyTitle": "Issy Cloud Ii Vanity Unit With Legs 4 Touch Latch Drawers Semi Inset (no Basin)",
+      "productFamilyTitle": "Issy Cloud II Vanity Unit With Legs 4 Touch Latch Drawers Semi Inset (no Basin)",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -5821,7 +5821,7 @@
     },
     {
       "productFamilyId": "fam_cda326ae5a48",
-      "productFamilyTitle": "Issy Cloud Ii Wall Hung Vanity Unit 6 Touch Latch Drawers (no Basin)",
+      "productFamilyTitle": "Issy Cloud II Wall Hung Vanity Unit 6 Touch Latch Drawers (no Basin)",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -5853,7 +5853,7 @@
     },
     {
       "productFamilyId": "fam_8e4e9efd8c56",
-      "productFamilyTitle": "Issy Cloud Ii Wall Hung Vanity Unit 6 Touch Latch Drawers Semi Inset (no Basin)",
+      "productFamilyTitle": "Issy Cloud II Wall Hung Vanity Unit 6 Touch Latch Drawers Semi Inset (no Basin)",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -5885,7 +5885,7 @@
     },
     {
       "productFamilyId": "fam_17694b8b3ff5",
-      "productFamilyTitle": "Issy Cloud Ii Vanity Unit With Legs 6 Touch Latch Drawers (no Basin)",
+      "productFamilyTitle": "Issy Cloud II Vanity Unit With Legs 6 Touch Latch Drawers (no Basin)",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -5917,7 +5917,7 @@
     },
     {
       "productFamilyId": "fam_facb21e862c6",
-      "productFamilyTitle": "Issy Cloud Ii Vanity Unit With Legs 6 Touch Latch Drawers Semi Inset (no Basin)",
+      "productFamilyTitle": "Issy Cloud II Vanity Unit With Legs 6 Touch Latch Drawers Semi Inset (no Basin)",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -6965,7 +6965,7 @@
     },
     {
       "productFamilyId": "fam_32046be14f48",
-      "productFamilyTitle": "Issy Halo Ii Vanity Unit With 2 Touch Latch Drawers",
+      "productFamilyTitle": "Issy Halo II Vanity Unit With 2 Touch Latch Drawers",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -6997,7 +6997,7 @@
     },
     {
       "productFamilyId": "fam_1ea98eeed5cd",
-      "productFamilyTitle": "Issy Halo Ii Vanity Unit With 3 Touch Latch Drawers",
+      "productFamilyTitle": "Issy Halo II Vanity Unit With 3 Touch Latch Drawers",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -7029,7 +7029,7 @@
     },
     {
       "productFamilyId": "fam_52f01e556f5e",
-      "productFamilyTitle": "Issy Halo Ii Vanity Unit With 1 Touch Latch Drawer",
+      "productFamilyTitle": "Issy Halo II Vanity Unit With 1 Touch Latch Drawer",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -7061,7 +7061,7 @@
     },
     {
       "productFamilyId": "fam_13fd576fde17",
-      "productFamilyTitle": "Issy Halo Iii Vanity Unit With 2 Soft Close Drawers Internal Shelf With Handle",
+      "productFamilyTitle": "Issy Halo III Vanity Unit With 2 Soft Close Drawers Internal Shelf With Handle",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -7093,7 +7093,7 @@
     },
     {
       "productFamilyId": "fam_5bb08fde3b54",
-      "productFamilyTitle": "Issy Halo Iii Vanity Unit With 2 Touch Latch Drawers Internal Shelf",
+      "productFamilyTitle": "Issy Halo III Vanity Unit With 2 Touch Latch Drawers Internal Shelf",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -7125,7 +7125,7 @@
     },
     {
       "productFamilyId": "fam_26423aa31694",
-      "productFamilyTitle": "Issy Halo Iii Vanity Unit With 3 Soft Close Drawers Internal Shelf With Handle",
+      "productFamilyTitle": "Issy Halo III Vanity Unit With 3 Soft Close Drawers Internal Shelf With Handle",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -7157,7 +7157,7 @@
     },
     {
       "productFamilyId": "fam_ad88974b3912",
-      "productFamilyTitle": "Issy Halo Iii Vanity Unit With 3 Touch Latch Drawers Internal Shelf",
+      "productFamilyTitle": "Issy Halo III Vanity Unit With 3 Touch Latch Drawers Internal Shelf",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -7189,7 +7189,7 @@
     },
     {
       "productFamilyId": "fam_d0d405255aa5",
-      "productFamilyTitle": "Issy Halo Iii Vanity Unit With 1 Soft Close Drawer Internal Shelf With Handle",
+      "productFamilyTitle": "Issy Halo III Vanity Unit With 1 Soft Close Drawer Internal Shelf With Handle",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
@@ -7221,7 +7221,7 @@
     },
     {
       "productFamilyId": "fam_70baf99f39cd",
-      "productFamilyTitle": "Issy Halo Iii Vanity Unit With 1 Touch Latch Drawer Internal Shelf",
+      "productFamilyTitle": "Issy Halo III Vanity Unit With 1 Touch Latch Drawer Internal Shelf",
       "brand": "ISSY",
       "variantCount": 2,
       "variantOptions": {
