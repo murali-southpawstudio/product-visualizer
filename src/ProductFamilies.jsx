@@ -10,7 +10,7 @@ function ProductFamilies() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}products_with_variants.json`)
+    fetch(`${import.meta.env.BASE_URL}products_with_variants2.json`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to load product families data')
