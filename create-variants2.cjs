@@ -50,6 +50,18 @@ function findCommonTitle(titles) {
       normalized = normalized.replace(new RegExp(`\\b${term}\\b`, 'gi'), '');
     });
 
+    // Clean up orphaned conjunctions (& and "and") left after removing colors/materials
+    normalized = normalized.replace(/\s+&\s+/g, ' ');  // Remove standalone &
+    normalized = normalized.replace(/\s+&\s*$/g, '');  // Remove trailing &
+    normalized = normalized.replace(/^\s*&\s+/g, '');  // Remove leading &
+    normalized = normalized.replace(/\s+and\s+$/gi, ' ');  // Remove trailing "and"
+    normalized = normalized.replace(/^\s*and\s+/gi, ' ');  // Remove leading "and"
+
+    // Clean up orphaned forward slashes left after removing colors/materials
+    // This handles cases like "Button / Easy" -> "Button Easy" after colors are removed
+    normalized = normalized.replace(/\s*\/\s*/g, ' ');  // Replace any / (with or without surrounding spaces) with single space
+    normalized = normalized.replace(/\s+$/g, '');  // Remove any trailing spaces
+
     // Clean up extra spaces
     normalized = normalized.replace(/\s+/g, ' ').trim();
 
