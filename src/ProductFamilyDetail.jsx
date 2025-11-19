@@ -129,6 +129,32 @@ function ProductFamilyDetail() {
 
       <div className="detail-content">
         <div className="pdp-card">
+          {Object.keys(family.variantOptions).length > 0 && (
+            <div className="variant-selectors">
+              {Object.entries(family.variantOptions).map(([optionType, values]) => (
+                <div key={optionType} className="variant-group">
+                  <label className="variant-label">
+                    {optionType.charAt(0).toUpperCase() + optionType.slice(1)}
+                  </label>
+                  <div className="variant-swatches">
+                    {values.map((value) => (
+                      <button
+                        key={value}
+                        className={`swatch ${
+                          selectedOptions[optionType] === value ? 'selected' : ''
+                        }`}
+                        onClick={() => handleOptionSelect(optionType, value)}
+                        title={value}
+                      >
+                        <span className="swatch-label">{value}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
           {matchingProduct ? (
             <>
               <div className="pdp-header">
@@ -150,32 +176,6 @@ function ProductFamilyDetail() {
                   </div>
                 </div>
               </div>
-
-              {Object.keys(family.variantOptions).length > 0 && (
-                <div className="variant-selectors">
-                  {Object.entries(family.variantOptions).map(([optionType, values]) => (
-                    <div key={optionType} className="variant-group">
-                      <label className="variant-label">
-                        {optionType.charAt(0).toUpperCase() + optionType.slice(1)}
-                      </label>
-                      <div className="variant-swatches">
-                        {values.map((value) => (
-                          <button
-                            key={value}
-                            className={`swatch ${
-                              selectedOptions[optionType] === value ? 'selected' : ''
-                            }`}
-                            onClick={() => handleOptionSelect(optionType, value)}
-                            title={value}
-                          >
-                            <span className="swatch-label">{value}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
 
               {Object.keys(matchingProduct.attributes).length > 0 && (
                 <div className="product-specs">

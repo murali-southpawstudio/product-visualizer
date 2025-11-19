@@ -15,8 +15,7 @@ function findCommonTitle(titles) {
 
     // Remove sizes with dimensions like "450mm x 800mm x 130mm", "1520 x 715 x 380mm", or with ranges "1500 x 400-500 x 450mm"
     // Match patterns with units on each number or just at the end, and support ranges like "400-500"
-    normalized = normalized.replace(/(?:\d+(?:-\d+)?)\s*(mm|cm|m)?\s*x\s*(?:\d+(?:-\d+)?)\s*(mm|cm|m)?\s*x\s*(?:\d+(?:-\d+)?)\s*(mm|cm|m)?/gi, '');
-    normalized = normalized.replace(/(?:\d+(?:-\d+)?)\s*(mm|cm|m)?\s*x\s*(?:\d+(?:-\d+)?)\s*(mm|cm|m)?/gi, '');
+    normalized = normalized.replace(/(?:\d+(?:-\d+)?\s*(?:mm|cm|m)?)\s*x\s*(?:\d+(?:-\d+)?\s*(?:mm|cm|m)?)\s*(?:x\s*(?:\d+(?:-\d+)?\s*(?:mm|cm|m)?))?/gi, '');
 
     // Remove individual dimensions like "1650mm", "10m2", etc.
     normalized = normalized.replace(/\b\d+\s*(mm|cm|m)\b/gi, '');
@@ -121,13 +120,17 @@ function generateFamilyId(brand, commonTitle) {
 function extractVariantAttributes(productTitle, commonTitle) {
   const attributes = {};
 
-  // Extract sizes like "1200 x 900mm", "1200 x 900 x 500mm", or with ranges "1500 x 400-500 x 450mm"
-  // Pattern supports ranges like "400-500" in dimensions
-  const sizeMatches = productTitle.match(/(?:\d+(?:-\d+)?)\s*x\s*(?:\d+(?:-\d+)?)\s*(?:x\s*(?:\d+(?:-\d+)?))?\s*(mm|cm|m)?/gi);
+  // Extract sizes like "1200 x 900mm", "1200 x 900 x 500mm", "600mm x 500mm x 450mm", or with ranges "1500 x 400-500 x 450mm"
+  // Pattern supports:
+  // - Units at the end: "1200 x 900 x 500mm"
+  // - Units after each dimension: "600mm x 500mm x 450mm"
+  // - Ranges: "1500 x 400-500 x 450mm"
+  const sizeMatches = productTitle.match(/(?:\d+(?:-\d+)?\s*(?:mm|cm|m)?)\s*x\s*(?:\d+(?:-\d+)?\s*(?:mm|cm|m)?)\s*(?:x\s*(?:\d+(?:-\d+)?\s*(?:mm|cm|m)?))?/gi);
   if (sizeMatches) {
     attributes.sizes = sizeMatches;
   }
 
+  // Only extract individual dimensions if no size pattern was found
   const dimMatches = productTitle.match(/\d+\s*(mm|cm|m)\d?/gi);
   if (dimMatches && !sizeMatches) {
     attributes.dimensions = dimMatches;
@@ -160,7 +163,8 @@ function extractVariantAttributes(productTitle, commonTitle) {
 
   // Extract material/color/finish by finding words not in common title
   const commonWords = commonTitle.toLowerCase().split(/\s+/);
-  const productWords = productTitle.split(/\s+/);
+  // Clean up slashes before splitting to ensure proper word matching
+  const productWords = productTitle.replace(/\s*\/\s*/g, ' ').split(/\s+/);
   const excludeWords = ['left', 'right', 'hand', 'cold', 'warm', 'hot', 'cool',
                         'grab', 'rail', 'basin', 'tap', 'mixer', 'shower', 'bath',
                         'toilet', 'vanity', 'cabinet', 'mirror', 'set', 'system',
@@ -168,7 +172,7 @@ function extractVariantAttributes(productTitle, commonTitle) {
                         'below', 'under', 'over', 'mounted', 'inset', 'flush',
                         'bowl', 'taphole', 'tapholes', 'hole', 'holes', 'no',
                         'with', 'without', 'overflow', 'shelf', 'shelves', 'acrylic',
-                        'base'];
+                        'base', 'button', 'plate', 'dn80', 'and', 'mk2', 'medium'];
 
   const uniqueWords = productWords.filter(word => {
     const wordLower = word.toLowerCase();
@@ -190,8 +194,13 @@ function extractVariantAttributes(productTitle, commonTitle) {
   descriptors = descriptors.replace(/\(\d+\s+Star\)/gi, '').trim();
   // Also remove any remaining parenthetical temperature terms
   descriptors = descriptors.replace(/\(?(cold|warm|hot)\)?/gi, '').trim();
+  // Remove any remaining orphaned punctuation (/, &, etc.)
+  descriptors = descriptors.replace(/^[\s\/&]+$/g, '').trim();
+  // Clean up punctuation-only results
+  descriptors = descriptors.replace(/[\/&]+/g, ' ').replace(/\s+/g, ' ').trim();
 
-  if (descriptors.length > 0) {
+  // Only set attributes if we have actual meaningful content (not just punctuation)
+  if (descriptors.length > 0 && !/^[\s\/&\-,\.]+$/.test(descriptors)) {
     attributes.uniqueDescriptors = descriptors;
     attributes.color = descriptors;
   }
