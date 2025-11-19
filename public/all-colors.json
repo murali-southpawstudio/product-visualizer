@@ -1,13 +1,11 @@
 {
   "_metadata": {
     "description": "All unique colors from product family variant options",
-    "totalColors": 127,
-    "generatedAt": "2025-11-19T04:59:49.714Z",
+    "totalColors": 125,
+    "generatedAt": "2025-11-19T05:07:56.071Z",
     "sourceFile": "products_with_variants2.json"
   },
   "colors": [
-    "3.0 1.8m",
-    "3.6 1.8m",
     "Black",
     "Black Black Chrome",
     "Black Brass",
