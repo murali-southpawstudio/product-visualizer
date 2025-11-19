@@ -3,7 +3,7 @@
     "version": 2,
     "description": "Product families with variants. Enhanced version with improved productFamilyTitle extraction that removes size/color/material variations to find true common text.",
     "sourceFile": "products-grouped-by-variant_v6.json",
-    "generatedAt": "2025-11-19T23:38:12.968Z",
+    "generatedAt": "2025-11-19T23:47:59.779Z",
     "statistics": {
       "totalFamilies": 1675,
       "totalProductsInFamilies": 8446,
@@ -650,8 +650,8 @@
       ]
     },
     {
-      "productFamilyId": "fam_ccca0de45257",
-      "productFamilyTitle": "Axa Cento Frame For Basin",
+      "productFamilyId": "fam_e7327b65f5d9",
+      "productFamilyTitle": "AXA Cento Basin Frame",
       "brand": "AXA",
       "variantCount": 2,
       "variantOptions": {
@@ -668,8 +668,8 @@
             "dimensions": [
               "1200mm"
             ],
-            "uniqueDescriptors": "Chrome",
-            "color": "Chrome"
+            "uniqueDescriptors": "for Chrome",
+            "color": "for Chrome"
           }
         },
         {
@@ -679,15 +679,15 @@
             "dimensions": [
               "1400mm"
             ],
-            "uniqueDescriptors": "Chrome",
-            "color": "Chrome"
+            "uniqueDescriptors": "for Chrome",
+            "color": "for Chrome"
           }
         }
       ]
     },
     {
       "productFamilyId": "fam_9acd734fa602",
-      "productFamilyTitle": "Axa Cento Front Towel Rail",
+      "productFamilyTitle": "AXA Cento Front Towel Rail",
       "brand": "AXA",
       "variantCount": 2,
       "variantOptions": {
@@ -723,7 +723,7 @@
     },
     {
       "productFamilyId": "fam_0e67e92ee1c8",
-      "productFamilyTitle": "Axa Cento Mini Wall Basin With Fixing 1 Taphole",
+      "productFamilyTitle": "AXA Cento Mini Wall Basin With Fixing 1 Taphole",
       "brand": "AXA",
       "variantCount": 2,
       "variantOptions": {
@@ -761,7 +761,7 @@
     },
     {
       "productFamilyId": "fam_0fe0c4a457c0",
-      "productFamilyTitle": "Axa H10 Oval Counter Basin",
+      "productFamilyTitle": "AXA H10 Oval Counter Basin",
       "brand": "AXA",
       "variantCount": 3,
       "variantOptions": {
@@ -809,7 +809,7 @@
     },
     {
       "productFamilyId": "fam_7fd251ffd647",
-      "productFamilyTitle": "Axa H10 Rectangle Counter Basin",
+      "productFamilyTitle": "AXA H10 Rectangle Counter Basin",
       "brand": "AXA",
       "variantCount": 3,
       "variantOptions": {
@@ -857,7 +857,7 @@
     },
     {
       "productFamilyId": "fam_d36dd5f5c7a5",
-      "productFamilyTitle": "Axa Wild Counter Basin No Taphole",
+      "productFamilyTitle": "AXA Wild Counter Basin No Taphole",
       "brand": "AXA",
       "variantCount": 2,
       "variantOptions": {
