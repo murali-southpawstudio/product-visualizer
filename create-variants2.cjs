@@ -103,16 +103,25 @@ function findCommonTitle(titles) {
     commonWords = firstTitle.slice(0, Math.max(prefixLength, 1));
   }
 
-  // Capitalize first letter of each word, preserving Roman numerals
-  return commonWords
+  // Capitalize first letter of each word, preserving Roman numerals and special brand names
+  let title = commonWords
     .map(word => {
       // Check if word is a Roman numeral (I, II, III, IV, V, VI, VII, VIII, IX, X, etc.)
       if (/^[ivx]+$/i.test(word)) {
         return word.toUpperCase();
       }
+      // Preserve AXA brand name in all caps
+      if (word.toLowerCase() === 'axa') {
+        return 'AXA';
+      }
       return word.charAt(0).toUpperCase() + word.slice(1);
     })
     .join(' ');
+
+  // Rearrange "Frame For Basin" to "Basin Frame" for more natural phrasing
+  title = title.replace(/Frame For Basin/gi, 'Basin Frame');
+
+  return title;
 }
 
 // Function to generate a unique ID based on brand and common title
