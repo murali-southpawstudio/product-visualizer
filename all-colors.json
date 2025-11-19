@@ -1,8 +1,8 @@
 {
   "_metadata": {
     "description": "All unique colors from product family variant options",
-    "totalColors": 125,
-    "generatedAt": "2025-11-19T05:07:56.071Z",
+    "totalColors": 123,
+    "generatedAt": "2025-11-19T05:20:03.494Z",
     "sourceFile": "products_with_variants2.json"
   },
   "colors": [
@@ -56,8 +56,6 @@
     "Green",
     "Grey",
     "Grey Chrome",
-    "ISSY Z1 - -",
-    "ISSY Z1 300mm-400mm 600mm-800mm",
     "Ivory Chrome",
     "Ivory Chrome Lead Free",
     "Ivory Gold",
