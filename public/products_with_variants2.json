@@ -3,7 +3,7 @@
     "version": 2,
     "description": "Product families with variants. Enhanced version with improved productFamilyTitle extraction that removes size/color/material variations to find true common text.",
     "sourceFile": "products-grouped-by-variant_v6.json",
-    "generatedAt": "2025-11-19T04:52:30.490Z",
+    "generatedAt": "2025-11-19T04:59:23.274Z",
     "statistics": {
       "totalFamilies": 1675,
       "totalProductsInFamilies": 8446,
@@ -124840,18 +124840,6 @@
           "7M2",
           "8m2",
           "9m2"
-        ],
-        "color": [
-          "Heating Pack (10M2)",
-          "Heating Pack (2M2)",
-          "Heating Pack (3M2)",
-          "Heating Pack (4M2)",
-          "Heating Pack (6M2)",
-          "Heating Pack (7M2)",
-          "Heating Pack (8m2)",
-          "Heating Pack (9m2)",
-          "Underfloor Heating Pack (1M2)",
-          "Underfloor Heating Pack (5M2)"
         ]
       },
       "variants": [
@@ -124864,9 +124852,7 @@
             ],
             "coverage": [
               "(10M2)"
-            ],
-            "uniqueDescriptors": "Heating Pack (10M2)",
-            "color": "Heating Pack (10M2)"
+            ]
           }
         },
         {
@@ -124878,9 +124864,7 @@
             ],
             "coverage": [
               "(2M2)"
-            ],
-            "uniqueDescriptors": "Heating Pack (2M2)",
-            "color": "Heating Pack (2M2)"
+            ]
           }
         },
         {
@@ -124892,9 +124876,7 @@
             ],
             "coverage": [
               "(3M2)"
-            ],
-            "uniqueDescriptors": "Heating Pack (3M2)",
-            "color": "Heating Pack (3M2)"
+            ]
           }
         },
         {
@@ -124906,9 +124888,7 @@
             ],
             "coverage": [
               "(4M2)"
-            ],
-            "uniqueDescriptors": "Heating Pack (4M2)",
-            "color": "Heating Pack (4M2)"
+            ]
           }
         },
         {
@@ -124920,9 +124900,7 @@
             ],
             "coverage": [
               "(6M2)"
-            ],
-            "uniqueDescriptors": "Heating Pack (6M2)",
-            "color": "Heating Pack (6M2)"
+            ]
           }
         },
         {
@@ -124934,9 +124912,7 @@
             ],
             "coverage": [
               "(7M2)"
-            ],
-            "uniqueDescriptors": "Heating Pack (7M2)",
-            "color": "Heating Pack (7M2)"
+            ]
           }
         },
         {
@@ -124948,9 +124924,7 @@
             ],
             "coverage": [
               "(8m2)"
-            ],
-            "uniqueDescriptors": "Heating Pack (8m2)",
-            "color": "Heating Pack (8m2)"
+            ]
           }
         },
         {
@@ -124962,9 +124936,7 @@
             ],
             "coverage": [
               "(9m2)"
-            ],
-            "uniqueDescriptors": "Heating Pack (9m2)",
-            "color": "Heating Pack (9m2)"
+            ]
           }
         },
         {
@@ -124976,9 +124948,7 @@
             ],
             "coverage": [
               "(1M2)"
-            ],
-            "uniqueDescriptors": "Underfloor Heating Pack (1M2)",
-            "color": "Underfloor Heating Pack (1M2)"
+            ]
           }
         },
         {
@@ -124990,9 +124960,7 @@
             ],
             "coverage": [
               "(5M2)"
-            ],
-            "uniqueDescriptors": "Underfloor Heating Pack (5M2)",
-            "color": "Underfloor Heating Pack (5M2)"
+            ]
           }
         }
       ]

@@ -172,7 +172,8 @@ function extractVariantAttributes(productTitle, commonTitle) {
                         'below', 'under', 'over', 'mounted', 'inset', 'flush',
                         'bowl', 'taphole', 'tapholes', 'hole', 'holes', 'no',
                         'with', 'without', 'overflow', 'shelf', 'shelves', 'acrylic',
-                        'base', 'button', 'plate', 'dn80', 'and', 'mk2', 'medium'];
+                        'base', 'button', 'plate', 'dn80', 'and', 'mk2', 'medium',
+                        'heating', 'pack', 'underfloor'];
 
   const uniqueWords = productWords.filter(word => {
     const wordLower = word.toLowerCase();
@@ -180,6 +181,8 @@ function extractVariantAttributes(productTitle, commonTitle) {
     const isParentheticalTemp = /^\((cold|warm|hot)\)$/i.test(word);
     // Exclude dimension ranges like "400-500"
     const isDimensionRange = /^\d+-\d+$/i.test(word);
+    // Exclude parenthetical coverage/dimensions like "(10M2)", "(1M2)", etc.
+    const isParentheticalDimension = /^\(\d+\s*m\d?\)$/i.test(word);
     return !commonWords.includes(wordLower) &&
            !/^\d+$/.test(word) &&
            !/^(mm|cm|m|x|\(|\))$/i.test(word) &&
@@ -187,7 +190,8 @@ function extractVariantAttributes(productTitle, commonTitle) {
            !/^\d+\s*x\s*\d+/i.test(word) &&
            !excludeWords.includes(wordLower) &&
            !isParentheticalTemp &&
-           !isDimensionRange;
+           !isDimensionRange &&
+           !isParentheticalDimension;
   });
 
   let descriptors = uniqueWords.join(' ');

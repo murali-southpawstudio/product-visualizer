@@ -1,8 +1,8 @@
 {
   "_metadata": {
     "description": "All unique colors from product family variant options",
-    "totalColors": 137,
-    "generatedAt": "2025-11-19T04:53:26.067Z",
+    "totalColors": 127,
+    "generatedAt": "2025-11-19T04:59:49.714Z",
     "sourceFile": "products_with_variants2.json"
   },
   "colors": [
@@ -58,14 +58,6 @@
     "Green",
     "Grey",
     "Grey Chrome",
-    "Heating Pack (10M2)",
-    "Heating Pack (2M2)",
-    "Heating Pack (3M2)",
-    "Heating Pack (4M2)",
-    "Heating Pack (6M2)",
-    "Heating Pack (7M2)",
-    "Heating Pack (8m2)",
-    "Heating Pack (9m2)",
     "ISSY Z1 - -",
     "ISSY Z1 300mm-400mm 600mm-800mm",
     "Ivory Chrome",
@@ -121,8 +113,6 @@
     "Stainless Steel White",
     "Tangerine Orange",
     "Titanium",
-    "Underfloor Heating Pack (1M2)",
-    "Underfloor Heating Pack (5M2)",
     "Vandal R Backrest D Down",
     "Vandal R Backrest S Arm",
     "White",
