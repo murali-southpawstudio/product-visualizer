@@ -333,7 +333,7 @@ function ProductFamilies() {
                   {matchingProduct.sourceAttributes?.groups?.[0]?.attributes && (
                     <div className="product-specs">
                       <h3 className="specs-title">Product Specifications From Source</h3>
-                      <dl className="specs-list">
+                      <dl className="specs-list two-column">
                         {matchingProduct.sourceAttributes.groups[0].attributes.map((attr) => (
                           <div key={attr.id} className="spec-item">
                             <dt>{attr.name}</dt>
