@@ -4,8 +4,8 @@ const crypto = require('crypto');
 // Read the v6 JSON
 const dataV6 = JSON.parse(fs.readFileSync('./public/products-grouped-by-variant_v6.json', 'utf8'));
 
-// Read products with attributes
-const productsWithAttributes = JSON.parse(fs.readFileSync('./public/products_with_attributes.json', 'utf8'));
+// Read products with attributes (moved to root to avoid GitHub's file size limit)
+const productsWithAttributes = JSON.parse(fs.readFileSync('./products_with_attributes.json', 'utf8'));
 
 // Create a map of productCode -> attributes for quick lookup
 const attributesMap = new Map();
@@ -140,8 +140,33 @@ function generateFamilyId(brand, commonTitle) {
   return `fam_${hash.substring(0, 12)}`;
 }
 
+// Helper function to match dimension value against source attributes
+function matchDimensionToSpec(dimensionValue, sourceAttributes) {
+  if (!sourceAttributes?.groups?.[0]?.attributes) {
+    return null;
+  }
+
+  // Extract numeric value from dimension string (e.g., "420mm" -> 420)
+  const numericValue = parseInt(dimensionValue.match(/\d+/)?.[0]);
+  if (!numericValue) return null;
+
+  // Check each specification attribute
+  const specs = sourceAttributes.groups[0].attributes;
+  for (const spec of specs) {
+    if (spec.values && spec.values.length > 0) {
+      const specValue = parseInt(spec.values[0]);
+      if (specValue === numericValue) {
+        // Found a match! Return the spec name
+        return spec.name;
+      }
+    }
+  }
+
+  return null;
+}
+
 // Function to extract variant attributes from product title
-function extractVariantAttributes(productTitle, commonTitle) {
+function extractVariantAttributes(productTitle, commonTitle, sourceAttributes) {
   const attributes = {};
 
   // Extract sizes like "1200 x 900mm", "1200 x 900 x 500mm", "600mm x 500mm x 450mm", "3.0 x 1.8m", or with ranges "300mm-400mm x 150mm x 600mm-800mm"
@@ -158,7 +183,24 @@ function extractVariantAttributes(productTitle, commonTitle) {
   // Only extract individual dimensions if no size pattern was found
   const dimMatches = productTitle.match(/\d+(?:\.\d+)?\s*(mm|cm|m)\d?/gi);
   if (dimMatches && !sizeMatches) {
-    attributes.dimensions = dimMatches;
+    // Try to match each dimension to a spec attribute
+    const dimensionsWithSpec = {};
+    dimMatches.forEach(dim => {
+      const specName = matchDimensionToSpec(dim, sourceAttributes);
+      if (specName) {
+        if (!dimensionsWithSpec[specName]) {
+          dimensionsWithSpec[specName] = [];
+        }
+        dimensionsWithSpec[specName].push(dim);
+      }
+    });
+
+    // If we found spec matches, use those; otherwise fall back to generic "dimensions"
+    if (Object.keys(dimensionsWithSpec).length > 0) {
+      Object.assign(attributes, dimensionsWithSpec);
+    } else {
+      attributes.dimensions = dimMatches;
+    }
   }
 
   const m2Matches = productTitle.match(/\(?\d+(?:\.\d+)?\s*m[23]\)?/gi);
@@ -250,45 +292,38 @@ function extractVariantAttributes(productTitle, commonTitle) {
 function extractVariantOptions(variants) {
   const options = {};
 
-  const sizes = new Set();
-  const dimensions = new Set();
-  const colors = new Set();
-  const orientations = new Set();
-  const temperatures = new Set();
+  // Collect all attribute keys and their values dynamically
+  const attributeCollections = {};
 
   variants.forEach(variant => {
-    if (variant.attributes.sizes) {
-      variant.attributes.sizes.forEach(s => sizes.add(s));
-    }
-    if (variant.attributes.dimensions) {
-      variant.attributes.dimensions.forEach(d => dimensions.add(d));
-    }
-    if (variant.attributes.color) {
-      colors.add(variant.attributes.color);
-    }
-    if (variant.attributes.orientation) {
-      orientations.add(variant.attributes.orientation);
-    }
-    if (variant.attributes.temperature) {
-      temperatures.add(variant.attributes.temperature);
-    }
+    Object.entries(variant.attributes).forEach(([key, value]) => {
+      // Skip uniqueDescriptors as it's not a variant option
+      if (key === 'uniqueDescriptors') return;
+
+      if (!attributeCollections[key]) {
+        attributeCollections[key] = new Set();
+      }
+
+      // Handle both array values (like sizes, dimensions) and string values (like color, orientation)
+      if (Array.isArray(value)) {
+        value.forEach(v => attributeCollections[key].add(v));
+      } else {
+        attributeCollections[key].add(value);
+      }
+    });
   });
 
-  if (sizes.size > 1) {
-    options.size = Array.from(sizes).sort();
-  }
-  if (dimensions.size > 1) {
-    options.dimension = Array.from(dimensions).sort();
-  }
-  if (colors.size > 1) {
-    options.color = Array.from(colors).sort();
-  }
-  if (orientations.size > 1) {
-    options.orientation = Array.from(orientations).sort();
-  }
-  if (temperatures.size > 1) {
-    options.temperature = Array.from(temperatures).sort();
-  }
+  // Convert to options if there's more than one unique value for each attribute
+  Object.entries(attributeCollections).forEach(([key, valueSet]) => {
+    if (valueSet.size > 1) {
+      // Use proper naming: keep the spec names as-is, but normalize generic ones
+      let optionKey = key;
+      if (key === 'sizes') optionKey = 'size';
+      else if (key === 'dimensions') optionKey = 'dimension';
+
+      options[optionKey] = Array.from(valueSet).sort();
+    }
+  });
 
   return options;
 }
@@ -329,7 +364,7 @@ for (const [brand, groups] of Object.entries(dataV6)) {
       return {
         productCode: product.productCode,
         productTitle: product.productTitle.replace(/\s+/g, ' ').trim(),
-        attributes: extractVariantAttributes(product.productTitle, commonTitle),
+        attributes: extractVariantAttributes(product.productTitle, commonTitle, filteredAttributes),
         sourceAttributes: filteredAttributes
       };
     });
@@ -371,7 +406,7 @@ const finalFamilies = Object.values(mergedFamilies);
 const output = {
   _metadata: {
     version: 3,
-    description: "Product families with variants including sourceAttributes from API. Enhanced version with improved productFamilyTitle extraction that removes size/color/material variations to find true common text. Each variant includes sourceAttributes property containing only the Specifications group from the product API.",
+    description: "Product families with variants including sourceAttributes from API. Enhanced version with improved productFamilyTitle extraction that removes size/color/material variations to find true common text. Each variant includes sourceAttributes property containing only the Specifications group from the product API. Variant options are intelligently named based on matching dimension values against specification attributes (e.g., Width, Height, Depth, Reach) from the source API data.",
     sourceFiles: ["products-grouped-by-variant_v6.json", "products_with_attributes.json"],
     generatedAt: new Date().toISOString(),
     statistics: {
