@@ -7,6 +7,10 @@ function ProductFamilies() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedOptions, setSelectedOptions] = useState({})
+  const [sidebarWidth, setSidebarWidth] = useState(35) // percentage
+  const [isResizing, setIsResizing] = useState(false)
+  const [collapsedBrands, setCollapsedBrands] = useState(new Set())
   const navigate = useNavigate()
   const { familyId } = useParams()
   const selectedFamily = familyId || null
@@ -29,6 +33,62 @@ function ProductFamilies() {
       })
   }, [])
 
+  // Handle resize mouse events
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isResizing) return
+
+      const containerWidth = window.innerWidth
+      const newWidth = (e.clientX / containerWidth) * 100
+
+      // Constrain between 20% and 60%
+      if (newWidth >= 20 && newWidth <= 60) {
+        setSidebarWidth(newWidth)
+      }
+    }
+
+    const handleMouseUp = () => {
+      setIsResizing(false)
+    }
+
+    if (isResizing) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+      document.body.style.cursor = 'col-resize'
+      document.body.style.userSelect = 'none'
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+  }, [isResizing])
+
+  // Get families and metadata
+  const families = data?.families || []
+  const metadata = data?._metadata || {}
+
+  // Get selected family details
+  const family = selectedFamily
+    ? families.find(f => f.productFamilyId === selectedFamily)
+    : null
+
+  // Set default selected options when family changes
+  useEffect(() => {
+    if (family && family.variantOptions) {
+      const defaultOptions = {}
+      Object.entries(family.variantOptions).forEach(([key, values]) => {
+        if (values.length > 0) {
+          defaultOptions[key] = values[0]
+        }
+      })
+      setSelectedOptions(defaultOptions)
+    }
+  }, [selectedFamily, family])
+
+  // Early returns AFTER all hooks
   if (loading) {
     return <div className="loading">Loading product families...</div>
   }
@@ -36,9 +96,6 @@ function ProductFamilies() {
   if (error) {
     return <div className="error">Error: {error}</div>
   }
-
-  const families = data?.families || []
-  const metadata = data?._metadata || {}
 
   const filteredFamilies = searchTerm
     ? families.filter(family =>
@@ -57,27 +114,6 @@ function ProductFamilies() {
   }, {})
 
   const brands = Object.keys(familiesByBrand).sort()
-
-  // Get selected family details
-  const family = selectedFamily
-    ? families.find(f => f.productFamilyId === selectedFamily)
-    : null
-
-  // State for variant selectors
-  const [selectedOptions, setSelectedOptions] = useState({})
-
-  // Set default selected options when family changes
-  useEffect(() => {
-    if (family && family.variantOptions) {
-      const defaultOptions = {}
-      Object.entries(family.variantOptions).forEach(([key, values]) => {
-        if (values.length > 0) {
-          defaultOptions[key] = values[0]
-        }
-      })
-      setSelectedOptions(defaultOptions)
-    }
-  }, [selectedFamily, family])
 
   // Find matching product based on selected options
   const getMatchingProduct = () => {
@@ -120,9 +156,21 @@ function ProductFamilies() {
     })
   }
 
+  const toggleBrandCollapse = (brand) => {
+    setCollapsedBrands(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(brand)) {
+        newSet.delete(brand)
+      } else {
+        newSet.add(brand)
+      }
+      return newSet
+    })
+  }
+
   return (
     <div className="product-families-container split-view">
-      <div className="families-sidebar">
+      <div className="families-sidebar" style={{ width: `${sidebarWidth}%` }}>
         <div className="sidebar-header">
           <div className="header-content">
             <h1>Product Families</h1>
@@ -164,42 +212,53 @@ function ProductFamilies() {
               No families found matching "{searchTerm}"
             </div>
           ) : (
-            brands.map(brand => (
-              <div key={brand} className="brand-section">
-                <div className="brand-header">
-                  <h3 className="brand-name">{brand}</h3>
-                  <span className="brand-family-count">
-                    {familiesByBrand[brand].length}
-                  </span>
-                </div>
-                <div className="families-list-items">
-                  {familiesByBrand[brand].map(fam => (
-                    <div
-                      key={fam.productFamilyId}
-                      className={`family-item ${selectedFamily === fam.productFamilyId ? 'active' : ''}`}
-                      onClick={() => navigate(`/families/${fam.productFamilyId}`)}
-                    >
-                      <div className="family-item-title">{fam.productFamilyTitle}</div>
-                      <div className="family-item-meta">
-                        <span className="variant-count">{fam.variantCount} variants</span>
-                        {Object.keys(fam.variantOptions).length > 0 && (
-                          <div className="options-tags-compact">
-                            {Object.keys(fam.variantOptions).map(key => (
-                              <span key={key} className="option-tag-compact">
-                                {key}
-                              </span>
-                            ))}
+            brands.map(brand => {
+              const isCollapsed = collapsedBrands.has(brand)
+              return (
+                <div key={brand} className={`brand-section ${isCollapsed ? 'collapsed' : ''}`}>
+                  <div className="brand-header" onClick={() => toggleBrandCollapse(brand)}>
+                    <span className="brand-collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
+                    <h3 className="brand-name">{brand}</h3>
+                    <span className="brand-family-count">
+                      {familiesByBrand[brand].length}
+                    </span>
+                  </div>
+                  {!isCollapsed && (
+                    <div className="families-list-items">
+                      {familiesByBrand[brand].map(fam => (
+                        <div
+                          key={fam.productFamilyId}
+                          className={`family-item ${selectedFamily === fam.productFamilyId ? 'active' : ''}`}
+                          onClick={() => navigate(`/families/${fam.productFamilyId}`)}
+                        >
+                          <div className="family-item-title">{fam.productFamilyTitle}</div>
+                          <div className="family-item-meta">
+                            <span className="variant-count">{fam.variantCount} variants</span>
+                            {Object.keys(fam.variantOptions).length > 0 && (
+                              <div className="options-tags-compact">
+                                {Object.keys(fam.variantOptions).map(key => (
+                                  <span key={key} className="option-tag-compact">
+                                    {key}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
-              </div>
-            ))
+              )
+            })
           )}
         </div>
       </div>
+
+      <div
+        className="resize-handle"
+        onMouseDown={() => setIsResizing(true)}
+      />
 
       {selectedFamily && family ? (
         <div className="family-detail-panel">

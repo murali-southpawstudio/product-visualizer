@@ -10,13 +10,29 @@
 
 /* Sidebar */
 .families-sidebar {
-  width: 400px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #e0e0e0;
   background-color: #fafafa;
   overflow: hidden;
+}
+
+/* Resize Handle */
+.resize-handle {
+  width: 6px;
+  background-color: #e0e0e0;
+  cursor: col-resize;
+  flex-shrink: 0;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.resize-handle:hover {
+  background-color: #4CAF50;
+}
+
+.resize-handle:active {
+  background-color: #45a049;
 }
 
 .sidebar-header {
@@ -108,6 +124,10 @@
   margin-bottom: 20px;
 }
 
+.brand-section.collapsed .brand-header {
+  border-radius: 6px;
+}
+
 .brand-header {
   display: flex;
   justify-content: space-between;
@@ -116,6 +136,21 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.2s;
+}
+
+.brand-header:hover {
+  opacity: 0.9;
+}
+
+.brand-collapse-icon {
+  font-size: 12px;
+  margin-right: 8px;
+  width: 12px;
+  display: inline-block;
+  transition: transform 0.2s;
 }
 
 .brand-name {
@@ -227,8 +262,8 @@
 
 .detail-panel-content {
   padding: 40px;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* PDP Card Styles (from ProductFamilyDetail.css) */
@@ -523,10 +558,6 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .families-sidebar {
-    width: 350px;
-  }
-
   .detail-panel-content {
     padding: 30px;
   }
@@ -538,8 +569,12 @@
   }
 
   .families-sidebar {
-    width: 100%;
+    width: 100% !important;
     height: 50vh;
+  }
+
+  .resize-handle {
+    display: none;
   }
 
   .family-detail-panel {

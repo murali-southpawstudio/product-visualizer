@@ -3,7 +3,7 @@
     "version": 1,
     "description": "Product families with variants. Each family represents a base product with multiple variations in size, color, material, finish, or orientation. Only includes families with 2 or more products.",
     "sourceFile": "products-grouped-by-variant_v6.json",
-    "generatedAt": "2025-11-18T23:44:10.101Z",
+    "generatedAt": "2025-11-18T23:50:13.084Z",
     "statistics": {
       "totalFamilies": 1281,
       "totalProductsInFamilies": 8446,

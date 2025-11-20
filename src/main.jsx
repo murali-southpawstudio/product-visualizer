@@ -13,7 +13,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<App />} />
         <Route path="/brand/:brandName" element={<App />} />
         <Route path="/families" element={<ProductFamilies />} />
-        <Route path="/families/:familyId" element={<ProductFamilyDetail />} />
+        <Route path="/families/:familyId" element={<ProductFamilies />} />
       </Routes>
     </HashRouter>
   </StrictMode>,
