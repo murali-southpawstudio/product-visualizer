@@ -27,6 +27,15 @@ function ProductFamilies() {
       })
   }, [])
 
+  // Restore scroll position when returning to this page
+  useEffect(() => {
+    const savedScrollPosition = sessionStorage.getItem('familiesScrollPosition')
+    if (savedScrollPosition) {
+      window.scrollTo(0, parseInt(savedScrollPosition, 10))
+      sessionStorage.removeItem('familiesScrollPosition')
+    }
+  }, [data])
+
   if (loading) {
     return <div className="loading">Loading product families...</div>
   }
@@ -55,6 +64,12 @@ function ProductFamilies() {
   }, {})
 
   const brands = Object.keys(familiesByBrand).sort()
+
+  const handleFamilyClick = (familyId) => {
+    // Save current scroll position before navigating
+    sessionStorage.setItem('familiesScrollPosition', window.scrollY.toString())
+    navigate(`/families/${familyId}`)
+  }
 
   return (
     <div className="product-families-container">
@@ -126,7 +141,7 @@ function ProductFamilies() {
                       <tr
                         key={family.productFamilyId}
                         className="family-row"
-                        onClick={() => navigate(`/families/${family.productFamilyId}`)}
+                        onClick={() => handleFamilyClick(family.productFamilyId)}
                       >
                         <td className="title-cell">
                           <span className="family-title">{family.productFamilyTitle}</span>
