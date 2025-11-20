@@ -16,7 +16,7 @@ function ProductFamilies() {
   const selectedFamily = familyId || null
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}products_with_variants2.json`)
+    fetch(`${import.meta.env.BASE_URL}products_with_variants3.json`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to load product families data')
@@ -326,6 +326,23 @@ function ProductFamilies() {
                               </dd>
                             </div>
                           ))}
+                      </dl>
+                    </div>
+                  )}
+
+                  {matchingProduct.sourceAttributes?.groups?.[0]?.attributes && (
+                    <div className="product-specs">
+                      <h3 className="specs-title">Product Specifications From Source</h3>
+                      <dl className="specs-list">
+                        {matchingProduct.sourceAttributes.groups[0].attributes.map((attr) => (
+                          <div key={attr.id} className="spec-item">
+                            <dt>{attr.name}</dt>
+                            <dd>
+                              {attr.values.join(', ')}
+                              {attr.uom ? ` ${attr.uom}` : ''}
+                            </dd>
+                          </div>
+                        ))}
                       </dl>
                     </div>
                   )}
