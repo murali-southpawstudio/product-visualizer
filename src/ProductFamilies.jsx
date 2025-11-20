@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './ProductFamilies.css'
 
@@ -8,6 +8,7 @@ function ProductFamilies() {
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const navigate = useNavigate()
+  const scrollRestored = useRef(false)
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}products_with_variants2.json`)
@@ -29,12 +30,20 @@ function ProductFamilies() {
 
   // Restore scroll position when returning to this page
   useEffect(() => {
-    const savedScrollPosition = sessionStorage.getItem('familiesScrollPosition')
-    if (savedScrollPosition) {
-      window.scrollTo(0, parseInt(savedScrollPosition, 10))
-      sessionStorage.removeItem('familiesScrollPosition')
+    if (!loading && data && !scrollRestored.current) {
+      const savedScrollPosition = sessionStorage.getItem('familiesScrollPosition')
+      if (savedScrollPosition) {
+        scrollRestored.current = true
+        // Use requestAnimationFrame to ensure DOM is fully rendered
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            window.scrollTo(0, parseInt(savedScrollPosition, 10))
+            sessionStorage.removeItem('familiesScrollPosition')
+          })
+        })
+      }
     }
-  }, [data])
+  }, [loading, data])
 
   if (loading) {
     return <div className="loading">Loading product families...</div>
