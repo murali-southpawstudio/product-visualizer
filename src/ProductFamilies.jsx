@@ -75,15 +75,32 @@ function ProductFamilies() {
     ? families.find(f => f.productFamilyId === selectedFamily)
     : null
 
-  // Set default selected options when family changes
+  // Set default selected options to show the first variant when family changes
   useEffect(() => {
-    if (family && family.variantOptions) {
+    if (family && family.variants.length > 0) {
+      // Get the first variant's attributes
+      const firstVariant = family.variants[0]
       const defaultOptions = {}
-      Object.entries(family.variantOptions).forEach(([key, values]) => {
-        if (values.length > 0) {
-          defaultOptions[key] = values[0]
+
+      // For each variant option type, select the value from the first variant
+      Object.keys(family.variantOptions).forEach(optionType => {
+        let attr = firstVariant.attributes[optionType]
+
+        // Handle pluralization mismatch (same logic as getMatchingProduct)
+        if (attr === undefined) {
+          if (!optionType.endsWith('s')) {
+            attr = firstVariant.attributes[optionType + 's']
+          } else if (optionType.endsWith('s')) {
+            attr = firstVariant.attributes[optionType.slice(0, -1)]
+          }
+        }
+
+        if (attr) {
+          // If it's an array, take the first value; otherwise use the value directly
+          defaultOptions[optionType] = Array.isArray(attr) ? attr[0] : attr
         }
       })
+
       setSelectedOptions(defaultOptions)
     }
   }, [selectedFamily, family])
@@ -148,6 +165,14 @@ function ProductFamilies() {
       ...prev,
       [optionType]: value
     }))
+  }
+
+  const clearOption = (optionType) => {
+    setSelectedOptions(prev => {
+      const newOptions = { ...prev }
+      delete newOptions[optionType]
+      return newOptions
+    })
   }
 
   const copyToClipboard = (text) => {
@@ -284,6 +309,15 @@ function ProductFamilies() {
                             <span className="swatch-label">{value}</span>
                           </button>
                         ))}
+                        {selectedOptions[optionType] && (
+                          <button
+                            className="clear-option-link"
+                            onClick={() => clearOption(optionType)}
+                            title="Clear selection"
+                          >
+                            Clear
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))}
