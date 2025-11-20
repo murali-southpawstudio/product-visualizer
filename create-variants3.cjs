@@ -150,19 +150,39 @@ function matchDimensionToSpec(dimensionValue, sourceAttributes) {
   const numericValue = parseInt(dimensionValue.match(/\d+/)?.[0]);
   if (!numericValue) return null;
 
-  // Check each specification attribute
   const specs = sourceAttributes.groups[0].attributes;
+  let matchedSpecName = null;
+
+  // Check each specification attribute
   for (const spec of specs) {
     if (spec.values && spec.values.length > 0) {
       const specValue = parseInt(spec.values[0]);
       if (specValue === numericValue) {
-        // Found a match! Return the spec name
-        return spec.name;
+        matchedSpecName = spec.name;
+        break;
       }
     }
   }
 
-  return null;
+  if (!matchedSpecName) return null;
+
+  // Normalize "Minimum X" and "Maximum X" to just "X" if they have the same value
+  if (matchedSpecName.startsWith('Minimum ') || matchedSpecName.startsWith('Maximum ')) {
+    const baseName = matchedSpecName.replace(/^(Minimum|Maximum) /, '');
+
+    // Check if both Minimum and Maximum exist with the same value
+    const minSpec = specs.find(s => s.name === `Minimum ${baseName}`);
+    const maxSpec = specs.find(s => s.name === `Maximum ${baseName}`);
+
+    if (minSpec && maxSpec &&
+        minSpec.values?.[0] && maxSpec.values?.[0] &&
+        parseInt(minSpec.values[0]) === parseInt(maxSpec.values[0])) {
+      // Both exist and are equal, use just the base name
+      return baseName;
+    }
+  }
+
+  return matchedSpecName;
 }
 
 // Function to extract variant attributes from product title
