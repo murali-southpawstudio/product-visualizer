@@ -315,6 +315,12 @@ function extractVariantOptions(variants) {
   // Collect all attribute keys and their values dynamically
   const attributeCollections = {};
 
+  // List of dimensional attribute names that should be normalized to "dimension"
+  const dimensionalAttributes = ['Width', 'Height', 'Depth', 'Length', 'Diameter', 'Projection',
+                                  'Reach', 'Arm Length', 'Shower Head Width', 'Fixing Point Distance',
+                                  'Minimum Width', 'Maximum Width', 'Minimum Height', 'Maximum Height',
+                                  'dimensions', 'dimension'];
+
   variants.forEach(variant => {
     Object.entries(variant.attributes).forEach(([key, value]) => {
       // Skip uniqueDescriptors as it's not a variant option
@@ -332,6 +338,25 @@ function extractVariantOptions(variants) {
       }
     });
   });
+
+  // Check if we have mixed dimensional attributes (different dimension types across variants)
+  const dimensionalKeys = Object.keys(attributeCollections).filter(key =>
+    dimensionalAttributes.includes(key)
+  );
+
+  // If we have multiple different dimensional attribute types, normalize them to "dimension"
+  if (dimensionalKeys.length > 1) {
+    const allDimensionValues = new Set();
+    dimensionalKeys.forEach(key => {
+      attributeCollections[key].forEach(val => allDimensionValues.add(val));
+    });
+
+    // Remove individual dimensional keys
+    dimensionalKeys.forEach(key => delete attributeCollections[key]);
+
+    // Add consolidated dimension key
+    attributeCollections['dimension'] = allDimensionValues;
+  }
 
   // Convert to options if there's more than one unique value for each attribute
   Object.entries(attributeCollections).forEach(([key, valueSet]) => {

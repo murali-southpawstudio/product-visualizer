@@ -138,6 +138,12 @@ function ProductFamilies() {
       return null
     }
 
+    // List of dimensional attribute names
+    const dimensionalAttributes = ['Width', 'Height', 'Depth', 'Length', 'Diameter', 'Projection',
+                                    'Reach', 'Arm Length', 'Shower Head Width', 'Fixing Point Distance',
+                                    'Minimum Width', 'Maximum Width', 'Minimum Height', 'Maximum Height',
+                                    'dimensions', 'dimension']
+
     return family.variants.find(variant => {
       return Object.entries(selectedOptions).every(([key, value]) => {
         let attr = variant.attributes[key]
@@ -148,6 +154,22 @@ function ProductFamilies() {
           } else if (key.endsWith('s')) {
             attr = variant.attributes[key.slice(0, -1)]
           }
+        }
+
+        // Special handling for "dimension" - check all dimensional attributes
+        if (attr === undefined && (key === 'dimension' || key === 'dimensions')) {
+          // Look for any dimensional attribute that matches the value
+          for (const dimAttr of dimensionalAttributes) {
+            const dimValue = variant.attributes[dimAttr]
+            if (dimValue) {
+              if (Array.isArray(dimValue) && dimValue.includes(value)) {
+                return true
+              } else if (dimValue === value) {
+                return true
+              }
+            }
+          }
+          return false
         }
 
         if (Array.isArray(attr)) {
