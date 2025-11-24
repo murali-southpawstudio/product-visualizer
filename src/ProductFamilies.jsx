@@ -7,6 +7,7 @@ function ProductFamilies() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [vapOnly, setVapOnly] = useState(false)
   const [selectedOptions, setSelectedOptions] = useState({})
   const [sidebarWidth, setSidebarWidth] = useState(35) // percentage
   const [isResizing, setIsResizing] = useState(false)
@@ -114,12 +115,23 @@ function ProductFamilies() {
     return <div className="error">Error: {error}</div>
   }
 
-  const filteredFamilies = searchTerm
-    ? families.filter(family =>
-        family.productFamilyTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        family.brand.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : families
+  // Filter families by search term and VAP status
+  const filteredFamilies = families.filter(family => {
+    // Search term filter
+    const matchesSearch = !searchTerm ||
+      family.productFamilyTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      family.brand.toLowerCase().includes(searchTerm.toLowerCase())
+
+    if (!matchesSearch) return false
+
+    // VAP filter: if vapOnly is true, exclude families with no VAP products
+    if (vapOnly) {
+      const hasVapProducts = family.variants.some(variant => variant.isVap === true)
+      return hasVapProducts
+    }
+
+    return true
+  })
 
   // Group families by brand
   const familiesByBrand = filteredFamilies.reduce((acc, family) => {
@@ -250,6 +262,17 @@ function ProductFamilies() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
             />
+            <div className="vap-filter">
+              <label className="vap-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={vapOnly}
+                  onChange={(e) => setVapOnly(e.target.checked)}
+                  className="vap-checkbox"
+                />
+                <span>VAP only</span>
+              </label>
+            </div>
           </div>
         </div>
 
