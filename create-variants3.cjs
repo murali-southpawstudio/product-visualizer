@@ -330,6 +330,22 @@ function extractVariantAttributes(productTitle, commonTitle, sourceAttributes) {
   // Only set attributes if we have actual meaningful content (not just punctuation)
   if (descriptors.length > 0 && !/^[\s\/&\-,\.]+$/.test(descriptors)) {
     attributes.uniqueDescriptors = descriptors;
+    // Don't set color from title - will be set from sourceAttributes if available
+  }
+
+  // Extract color from "Colour Finish" in source attributes (prioritize this over title)
+  if (sourceAttributes?.groups?.[0]?.attributes) {
+    const colourFinishSpec = sourceAttributes.groups[0].attributes.find(
+      attr => attr.name === 'Colour Finish'
+    );
+    if (colourFinishSpec && colourFinishSpec.values && colourFinishSpec.values.length > 0) {
+      attributes.color = colourFinishSpec.values[0];
+    } else if (descriptors.length > 0 && !/^[\s\/&\-,\.]+$/.test(descriptors)) {
+      // Fallback to title-based color only if Colour Finish not available
+      attributes.color = descriptors;
+    }
+  } else if (descriptors.length > 0 && !/^[\s\/&\-,\.]+$/.test(descriptors)) {
+    // Fallback to title-based color if no sourceAttributes
     attributes.color = descriptors;
   }
 
