@@ -7,7 +7,8 @@ function ProductFamilies() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [vapOnly, setVapOnly] = useState(false)
+  const [filterNoVap, setFilterNoVap] = useState(false)
+  const [filterMixed, setFilterMixed] = useState(false)
   const [selectedOptions, setSelectedOptions] = useState({})
   const [sidebarWidth, setSidebarWidth] = useState(35) // percentage
   const [isResizing, setIsResizing] = useState(false)
@@ -115,8 +116,27 @@ function ProductFamilies() {
     return <div className="error">Error: {error}</div>
   }
 
+  // Calculate family VAP statistics
+  const familyVapStats = families.map(family => {
+    const vapCount = family.variants.filter(v => v.isVap === true).length
+    const totalCount = family.variants.length
+
+    return {
+      family,
+      vapCount,
+      totalCount,
+      isAllVap: vapCount === totalCount,
+      isNoVap: vapCount === 0,
+      isMixed: vapCount > 0 && vapCount < totalCount
+    }
+  })
+
+  // Count families by type
+  const noVapFamiliesCount = familyVapStats.filter(f => f.isNoVap).length
+  const mixedFamiliesCount = familyVapStats.filter(f => f.isMixed).length
+
   // Filter families by search term and VAP status
-  const filteredFamilies = families.filter(family => {
+  const filteredFamilies = familyVapStats.filter(({ family, isNoVap, isMixed }) => {
     // Search term filter
     const matchesSearch = !searchTerm ||
       family.productFamilyTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -124,14 +144,12 @@ function ProductFamilies() {
 
     if (!matchesSearch) return false
 
-    // VAP filter: if vapOnly is true, exclude families with no VAP products
-    if (vapOnly) {
-      const hasVapProducts = family.variants.some(variant => variant.isVap === true)
-      return hasVapProducts
-    }
+    // VAP filters
+    if (filterNoVap && isNoVap) return false
+    if (filterMixed && isMixed) return false
 
     return true
-  })
+  }).map(stat => stat.family)
 
   // Group families by brand
   const familiesByBrand = filteredFamilies.reduce((acc, family) => {
@@ -245,11 +263,21 @@ function ProductFamilies() {
             <div className="metadata-stats">
               <div className="stat-item">
                 <span className="stat-label">Families:</span>
-                <span className="stat-value">{metadata.statistics.totalFamilies}</span>
+                <span className="stat-value">
+                  {filteredFamilies.length}
+                  {filteredFamilies.length !== metadata.statistics.totalFamilies && (
+                    <span className="stat-total"> / {metadata.statistics.totalFamilies}</span>
+                  )}
+                </span>
               </div>
               <div className="stat-item">
                 <span className="stat-label">Products:</span>
-                <span className="stat-value">{metadata.statistics.totalProductsInFamilies}</span>
+                <span className="stat-value">
+                  {filteredFamilies.reduce((sum, f) => sum + f.variantCount, 0)}
+                  {filteredFamilies.length !== metadata.statistics.totalFamilies && (
+                    <span className="stat-total"> / {metadata.statistics.totalProductsInFamilies}</span>
+                  )}
+                </span>
               </div>
             </div>
           )}
@@ -262,15 +290,24 @@ function ProductFamilies() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
             />
-            <div className="vap-filter">
+            <div className="vap-filters">
               <label className="vap-checkbox-label">
                 <input
                   type="checkbox"
-                  checked={vapOnly}
-                  onChange={(e) => setVapOnly(e.target.checked)}
+                  checked={filterNoVap}
+                  onChange={(e) => setFilterNoVap(e.target.checked)}
                   className="vap-checkbox"
                 />
-                <span>VAP only</span>
+                <span>Filter out families with no VAP products ({noVapFamiliesCount} families)</span>
+              </label>
+              <label className="vap-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filterMixed}
+                  onChange={(e) => setFilterMixed(e.target.checked)}
+                  className="vap-checkbox"
+                />
+                <span>Filter out families with mixed VAP/non-VAP products ({mixedFamiliesCount} families)</span>
               </label>
             </div>
           </div>
@@ -413,6 +450,10 @@ function ProductFamilies() {
                     <div className="product-specs">
                       <h3 className="specs-title">Product Specifications From Source</h3>
                       <dl className="specs-list two-column">
+                        <div className="spec-item">
+                          <dt>Is VAP</dt>
+                          <dd>{matchingProduct.isVap ? 'Yes' : 'No'}</dd>
+                        </div>
                         {matchingProduct.sourceAttributes.groups[0].attributes.map((attr) => (
                           <div key={attr.id} className="spec-item">
                             <dt>{attr.name}</dt>
