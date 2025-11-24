@@ -152,32 +152,60 @@ function matchDimensionToSpec(dimensionValue, sourceAttributes) {
 
   const specs = sourceAttributes.groups[0].attributes;
   let matchedSpecName = null;
+  const tolerance = 50; // ±50mm tolerance for matching
 
-  // Check each specification attribute
+  // Priority order for spec names (when multiple specs match the same value)
+  const specPriority = [
+    'Benchtop Thickness',
+    'Width', 'Height', 'Depth', 'Length', 'Diameter',
+    'Minimum Width', 'Maximum Width', 'Minimum Height', 'Maximum Height',
+    'Projection', 'Reach', 'Arm Length', 'Shower Head Width', 'Fixing Point Distance'
+  ];
+
+  // Find all matching specs within tolerance
+  const matchingSpecs = [];
   for (const spec of specs) {
     if (spec.values && spec.values.length > 0) {
       const specValue = parseInt(spec.values[0]);
-      if (specValue === numericValue) {
-        matchedSpecName = spec.name;
-        break;
+      // Check if the values match within tolerance
+      if (Math.abs(specValue - numericValue) <= tolerance) {
+        matchingSpecs.push(spec.name);
       }
     }
   }
 
+  if (matchingSpecs.length === 0) return null;
+
+  // If multiple specs match, use priority order
+  if (matchingSpecs.length > 1) {
+    for (const prioritySpec of specPriority) {
+      if (matchingSpecs.includes(prioritySpec)) {
+        matchedSpecName = prioritySpec;
+        break;
+      }
+    }
+    // If no priority match found, use first match
+    if (!matchedSpecName) {
+      matchedSpecName = matchingSpecs[0];
+    }
+  } else {
+    matchedSpecName = matchingSpecs[0];
+  }
+
   if (!matchedSpecName) return null;
 
-  // Normalize "Minimum X" and "Maximum X" to just "X" if they have the same value
+  // Normalize "Minimum X" and "Maximum X" to just "X" if they have the same value (within tolerance)
   if (matchedSpecName.startsWith('Minimum ') || matchedSpecName.startsWith('Maximum ')) {
     const baseName = matchedSpecName.replace(/^(Minimum|Maximum) /, '');
 
-    // Check if both Minimum and Maximum exist with the same value
+    // Check if both Minimum and Maximum exist with the same value (within tolerance)
     const minSpec = specs.find(s => s.name === `Minimum ${baseName}`);
     const maxSpec = specs.find(s => s.name === `Maximum ${baseName}`);
 
     if (minSpec && maxSpec &&
         minSpec.values?.[0] && maxSpec.values?.[0] &&
-        parseInt(minSpec.values[0]) === parseInt(maxSpec.values[0])) {
-      // Both exist and are equal, use just the base name
+        Math.abs(parseInt(minSpec.values[0]) - parseInt(maxSpec.values[0])) <= tolerance) {
+      // Both exist and are equal (within tolerance), use just the base name
       return baseName;
     }
   }
