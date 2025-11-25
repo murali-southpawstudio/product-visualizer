@@ -82,11 +82,11 @@ function ProductFamilies() {
         // Each hit in Algolia represents a product family with all its data
         const families = hits.map(hit => {
           return {
-            productFamilyId: hit.objectID || hit.productFamilyId || hit['Product Family ID'],
+            productFamilyId: hit.productFamilyId,
             productFamilyTitle: hit['Product Family Title'] || hit.productFamilyTitle || 'Unknown',
             brand: hit.Brand || hit.brand || 'Unknown',
-            variants: hit.variants || [],
-            variantCount: hit['Variant Count'] || hit.variantCount || (hit.variants ? hit.variants.length : 0),
+            variants: hit.variants,
+            variantCount: hit.variantCount,
             variantOptions: hit.variantOptions || {}
           }
         })
