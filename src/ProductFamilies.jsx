@@ -53,6 +53,9 @@ function ProductFamilies() {
 
     setAlgoliaLoading(true)
 
+    // Track if this request is still valid
+    let isCurrentRequest = true
+
     // Initialize Algolia client (v5 API) - Using environment variables
     const searchClient = algoliasearch(
       import.meta.env.VITE_ALGOLIA_APP_ID,
@@ -70,13 +73,12 @@ function ProductFamilies() {
       ]
     })
       .then(({ results }) => {
-        const hits = results[0].hits
-
-        // Log first hit to see the structure
-        if (hits.length > 0) {
-          console.log('First Algolia hit structure:', hits[0])
-          console.log('Available keys:', Object.keys(hits[0]))
+        // Only update state if this is still the current request
+        if (!isCurrentRequest) {
+          return
         }
+
+        const hits = results[0].hits
 
         // Simply transform Algolia hits into the expected family structure
         // Each hit in Algolia represents a product family with all its data
@@ -91,14 +93,20 @@ function ProductFamilies() {
           }
         })
 
-        console.log('Transformed families:', families.slice(0, 2))
         setAlgoliaResults(families)
         setAlgoliaLoading(false)
       })
       .catch(err => {
-        console.error('Algolia search error:', err)
-        setAlgoliaLoading(false)
+        if (isCurrentRequest) {
+          console.error('Algolia search error:', err)
+          setAlgoliaLoading(false)
+        }
       })
+
+    // Cleanup function to mark this request as stale when searchTerm changes
+    return () => {
+      isCurrentRequest = false
+    }
   }, [useAlgolia, searchTerm])
 
   // Handle resize mouse events
@@ -202,7 +210,7 @@ function ProductFamilies() {
   const mixedFamiliesCount = familyVapStats.filter(f => f.isMixed).length
 
   // Filter families by search term and VAP status
-  const filteredFamilies = familyVapStats.filter(({ family, isNoVap, isMixed }) => {
+  const filteredFamilies = useAlgolia? algoliaResults : familyVapStats.filter(({ family, isNoVap, isMixed }) => {
     // Search term filter
     const matchesSearch = !searchTerm ||
       family.productFamilyTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
