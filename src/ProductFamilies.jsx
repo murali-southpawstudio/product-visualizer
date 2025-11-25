@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { algoliasearch } from 'algoliasearch'
 import './ProductFamilies.css'
 
 function ProductFamilies() {
@@ -13,9 +14,17 @@ function ProductFamilies() {
   const [sidebarWidth, setSidebarWidth] = useState(35) // percentage
   const [isResizing, setIsResizing] = useState(false)
   const [collapsedBrands, setCollapsedBrands] = useState(new Set())
+  const [useAlgolia, setUseAlgolia] = useState(false)
+  const [algoliaResults, setAlgoliaResults] = useState([])
+  const [algoliaLoading, setAlgoliaLoading] = useState(false)
   const navigate = useNavigate()
   const { familyId } = useParams()
   const selectedFamily = familyId || null
+
+  // Clear search term when Algolia toggle changes
+  useEffect(() => {
+    setSearchTerm('')
+  }, [useAlgolia])
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}products_with_variants3.json`)
@@ -34,6 +43,63 @@ function ProductFamilies() {
         setLoading(false)
       })
   }, [])
+
+  // Algolia search effect
+  useEffect(() => {
+    if (!useAlgolia || !searchTerm) {
+      setAlgoliaResults([])
+      return
+    }
+
+    setAlgoliaLoading(true)
+
+    // Initialize Algolia client (v5 API) - Using environment variables
+    const searchClient = algoliasearch(
+      import.meta.env.VITE_ALGOLIA_APP_ID,
+      import.meta.env.VITE_ALGOLIA_SEARCH_API_KEY
+    )
+
+    // Use v5 API - searchClient.search with index name
+    searchClient.search({
+      requests: [
+        {
+          indexName: 'Reece BCX',
+          query: searchTerm,
+          hitsPerPage: 1000
+        }
+      ]
+    })
+      .then(({ results }) => {
+        const hits = results[0].hits
+
+        // Log first hit to see the structure
+        if (hits.length > 0) {
+          console.log('First Algolia hit structure:', hits[0])
+          console.log('Available keys:', Object.keys(hits[0]))
+        }
+
+        // Simply transform Algolia hits into the expected family structure
+        // Each hit in Algolia represents a product family with all its data
+        const families = hits.map(hit => {
+          return {
+            productFamilyId: hit.objectID || hit.productFamilyId || hit['Product Family ID'],
+            productFamilyTitle: hit['Product Family Title'] || hit.productFamilyTitle || 'Unknown',
+            brand: hit.Brand || hit.brand || 'Unknown',
+            variants: hit.variants || [],
+            variantCount: hit['Variant Count'] || hit.variantCount || (hit.variants ? hit.variants.length : 0),
+            variantOptions: hit.variantOptions || {}
+          }
+        })
+
+        console.log('Transformed families:', families.slice(0, 2))
+        setAlgoliaResults(families)
+        setAlgoliaLoading(false)
+      })
+      .catch(err => {
+        console.error('Algolia search error:', err)
+        setAlgoliaLoading(false)
+      })
+  }, [useAlgolia, searchTerm])
 
   // Handle resize mouse events
   useEffect(() => {
@@ -68,8 +134,8 @@ function ProductFamilies() {
     }
   }, [isResizing])
 
-  // Get families and metadata
-  const families = data?.families || []
+  // Get families and metadata - use Algolia results if toggle is on, otherwise use local data
+  const families = useAlgolia ? algoliaResults : (data?.families || [])
   const metadata = data?._metadata || {}
 
   // Get selected family details
@@ -245,6 +311,8 @@ function ProductFamilies() {
     })
   }
 
+  console.log(familiesByBrand)
+
   return (
     <div className="product-families-container split-view">
       <div className="families-sidebar" style={{ width: `${sidebarWidth}%` }}>
@@ -259,7 +327,7 @@ function ProductFamilies() {
             </button>
           </div>
 
-          {metadata.statistics && (
+          {!useAlgolia && metadata.statistics && (
             <div className="metadata-stats">
               <div className="stat-item">
                 <span className="stat-label">Families:</span>
@@ -283,6 +351,18 @@ function ProductFamilies() {
           )}
 
           <div className="search-container">
+            <div className="algolia-toggle-container">
+              <label className="algolia-toggle-label">
+                <span>Algolia</span>
+                <input
+                  type="checkbox"
+                  checked={useAlgolia}
+                  onChange={(e) => setUseAlgolia(e.target.checked)}
+                  className="algolia-toggle-checkbox"
+                />
+                <span className="algolia-toggle-switch"></span>
+              </label>
+            </div>
             <input
               type="text"
               placeholder="Search families..."
@@ -290,26 +370,28 @@ function ProductFamilies() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
             />
-            <div className="vap-filters">
-              <label className="vap-checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={filterNoVap}
-                  onChange={(e) => setFilterNoVap(e.target.checked)}
-                  className="vap-checkbox"
-                />
-                <span>Filter out families with no VAP products ({noVapFamiliesCount} families)</span>
-              </label>
-              <label className="vap-checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={filterMixed}
-                  onChange={(e) => setFilterMixed(e.target.checked)}
-                  className="vap-checkbox"
-                />
-                <span>Filter out families with mixed VAP/non-VAP products ({mixedFamiliesCount} families)</span>
-              </label>
-            </div>
+            {!useAlgolia && (
+              <div className="vap-filters">
+                <label className="vap-checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={filterNoVap}
+                    onChange={(e) => setFilterNoVap(e.target.checked)}
+                    className="vap-checkbox"
+                  />
+                  <span>Filter out families with no VAP products ({noVapFamiliesCount} families)</span>
+                </label>
+                <label className="vap-checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={filterMixed}
+                    onChange={(e) => setFilterMixed(e.target.checked)}
+                    className="vap-checkbox"
+                  />
+                  <span>Filter out families with mixed VAP/non-VAP products ({mixedFamiliesCount} families)</span>
+                </label>
+              </div>
+            )}
           </div>
         </div>
 
