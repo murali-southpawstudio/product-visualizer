@@ -17,6 +17,7 @@ function ProductFamilies() {
   const [useAlgolia, setUseAlgolia] = useState(false)
   const [algoliaResults, setAlgoliaResults] = useState([])
   const [algoliaLoading, setAlgoliaLoading] = useState(false)
+  const [groupBy, setGroupBy] = useState('brand') // 'brand' or 'category'
   const navigate = useNavigate()
   const { familyId } = useParams()
   const selectedFamily = familyId || null
@@ -225,16 +226,17 @@ function ProductFamilies() {
     return true
   }).map(stat => stat.family)
 
-  // Group families by brand
-  const familiesByBrand = filteredFamilies.reduce((acc, family) => {
-    if (!acc[family.brand]) {
-      acc[family.brand] = []
+  // Group families by brand or category
+  const groupedFamilies = filteredFamilies.reduce((acc, family) => {
+    const groupKey = groupBy === 'category' ? (family.category || 'Unknown') : family.brand
+    if (!acc[groupKey]) {
+      acc[groupKey] = []
     }
-    acc[family.brand].push(family)
+    acc[groupKey].push(family)
     return acc
   }, {})
 
-  const brands = Object.keys(familiesByBrand).sort()
+  const groupKeys = Object.keys(groupedFamilies).sort()
 
   // Find matching product based on selected options
   const getMatchingProduct = () => {
@@ -307,19 +309,17 @@ function ProductFamilies() {
     })
   }
 
-  const toggleBrandCollapse = (brand) => {
+  const toggleGroupCollapse = (groupKey) => {
     setCollapsedBrands(prev => {
       const newSet = new Set(prev)
-      if (newSet.has(brand)) {
-        newSet.delete(brand)
+      if (newSet.has(groupKey)) {
+        newSet.delete(groupKey)
       } else {
-        newSet.add(brand)
+        newSet.add(groupKey)
       }
       return newSet
     })
   }
-
-  console.log(familiesByBrand)
 
   return (
     <div className="product-families-container split-view">
@@ -371,6 +371,18 @@ function ProductFamilies() {
                 <span className="algolia-toggle-switch"></span>
               </label>
             </div>
+            <div className="algolia-toggle-container">
+              <label className="algolia-toggle-label">
+                <span>Group by Category</span>
+                <input
+                  type="checkbox"
+                  checked={groupBy === 'category'}
+                  onChange={(e) => setGroupBy(e.target.checked ? 'category' : 'brand')}
+                  className="algolia-toggle-checkbox"
+                />
+                <span className="algolia-toggle-switch"></span>
+              </label>
+            </div>
             <input
               type="text"
               placeholder="Search families..."
@@ -404,25 +416,25 @@ function ProductFamilies() {
         </div>
 
         <div className="families-list">
-          {brands.length === 0 ? (
+          {groupKeys.length === 0 ? (
             <div className="no-results">
               No families found matching "{searchTerm}"
             </div>
           ) : (
-            brands.map(brand => {
-              const isCollapsed = collapsedBrands.has(brand)
+            groupKeys.map(groupKey => {
+              const isCollapsed = collapsedBrands.has(groupKey)
               return (
-                <div key={brand} className={`brand-section ${isCollapsed ? 'collapsed' : ''}`}>
-                  <div className="brand-header" onClick={() => toggleBrandCollapse(brand)}>
+                <div key={groupKey} className={`brand-section ${isCollapsed ? 'collapsed' : ''}`}>
+                  <div className="brand-header" onClick={() => toggleGroupCollapse(groupKey)}>
                     <span className="brand-collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
-                    <h3 className="brand-name">{brand}</h3>
+                    <h3 className="brand-name">{groupKey}</h3>
                     <span className="brand-family-count">
-                      {familiesByBrand[brand].length}
+                      {groupedFamilies[groupKey].length}
                     </span>
                   </div>
                   {!isCollapsed && (
                     <div className="families-list-items">
-                      {familiesByBrand[brand].map(fam => (
+                      {groupedFamilies[groupKey].map(fam => (
                         <div
                           key={fam.productFamilyId}
                           className={`family-item ${selectedFamily === fam.productFamilyId ? 'active' : ''}`}
