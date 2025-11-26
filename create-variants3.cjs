@@ -162,9 +162,27 @@ function matchDimensionToSpec(dimensionValue, sourceAttributes) {
     'Projection', 'Reach', 'Arm Length', 'Shower Head Width', 'Fixing Point Distance'
   ];
 
+  // List of spec names that should NOT be matched as dimensions
+  const excludedSpecs = [
+    'Recommended Pressure Range',
+    'Maximum Continuous Working Temperature',
+    'Temperature',
+    'Pressure',
+    'Flow Rate',
+    'Capacity',
+    'Weight',
+    'Star Rating',
+    'WELS Rating'
+  ];
+
   // Find all matching specs within tolerance
   const matchingSpecs = [];
   for (const spec of specs) {
+    // Skip specs that are not dimensional
+    if (excludedSpecs.includes(spec.name)) {
+      continue;
+    }
+
     if (spec.values && spec.values.length > 0) {
       const specValue = parseInt(spec.values[0]);
       // Check if the values match within tolerance
