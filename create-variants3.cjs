@@ -274,8 +274,13 @@ function extractVariantAttributes(productTitle, commonTitle, sourceAttributes) {
     attributes.coverage = m2Matches;
   }
 
-  // Extract directional info
-  if (/\bleft\s+hand\b/i.test(productTitle)) {
+  // Extract directional info - prioritize bowl/basin orientation for vanities
+  const bowlMatch = productTitle.match(/(left|right)\s+hand\s+(bowl|basin)/i);
+  if (bowlMatch) {
+    // For vanities, bowl/basin orientation is the primary differentiator
+    const side = bowlMatch[1].charAt(0).toUpperCase() + bowlMatch[1].slice(1).toLowerCase();
+    attributes.orientation = side + ' Hand';
+  } else if (/\bleft\s+hand\b/i.test(productTitle)) {
     attributes.orientation = 'Left Hand';
   } else if (/\bright\s+hand\b/i.test(productTitle)) {
     attributes.orientation = 'Right Hand';
