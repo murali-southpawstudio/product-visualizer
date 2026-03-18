@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Visualizer — Data Pipeline (Chronological)</title>
+  <style>
+    :root {
+      --blue: #0057a8;
+      --dark: #003d7a;
+      --light-blue: #e8f1fb;
+      --orange: #f47920;
+      --orange-light: #fff4ec;
+      --green: #2e7d32;
+      --green-light: #e8f5e9;
+      --purple: #6a1b9a;
+      --purple-light: #f3e5f5;
+      --teal: #00796b;
+      --teal-light: #e0f2f1;
+      --red: #c62828;
+      --red-light: #ffebee;
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --border: #e2e8f0;
+      --code-bg: #1e1e2e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    code {
+      font-family: 'SF Mono', Consolas, 'Courier New', monospace;
+      font-size: 0.88em;
+      background: #f0f4f8;
+      border: 1px solid #d4dde8;
+      border-radius: 4px;
+      padding: 1px 5px;
+      color: #003d7a;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #002a55 0%, var(--blue) 65%, #1a78d4 100%);
+      color: #fff;
+      padding: 56px 40px 72px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: -80px; right: -80px;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+    .hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-eyebrow {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px; padding: 4px 14px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-size: clamp(24px, 3.5vw, 40px);
+      font-weight: 800; line-height: 1.2; margin-bottom: 14px;
+    }
+    .hero h1 em { color: #f9c74f; font-style: normal; }
+    .hero p { font-size: 16px; opacity: 0.82; max-width: 640px; margin-bottom: 32px; }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .hero-chip {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 8px; padding: 10px 18px;
+      text-align: center;
+    }
+    .hero-chip .n { font-size: 24px; font-weight: 800; color: #f9c74f; display: block; }
+    .hero-chip .l { font-size: 11px; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* ── Layout ── */
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .sec { padding: 52px 0; }
+    .sec + .sec { border-top: 1px solid var(--border); }
+    .sec.alt { background: #fff; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 3px 10px;
+      border-radius: 4px; margin-bottom: 10px;
+    }
+    .eyebrow.blue   { background: var(--light-blue); color: var(--dark); }
+    .eyebrow.orange { background: var(--orange-light); color: #b54400; }
+    .eyebrow.green  { background: var(--green-light); color: var(--green); }
+    .eyebrow.purple { background: var(--purple-light); color: var(--purple); }
+    .eyebrow.teal   { background: var(--teal-light); color: var(--teal); }
+    .eyebrow.red    { background: var(--red-light); color: var(--red); }
+
+    .sec-title { font-size: clamp(20px, 2.8vw, 28px); font-weight: 800; margin-bottom: 6px; }
+    .sec-sub { font-size: 15px; color: var(--muted); margin-bottom: 32px; max-width: 700px; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 20px; }
+    .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 16px; }
+
+    /* ── Timeline Steps ── */
+    .timeline { display: flex; flex-direction: column; }
+    .tl-item {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 0 20px;
+      position: relative;
+    }
+    .tl-item:not(:last-child) .tl-line::after {
+      content: '';
+      display: block;
+      width: 2px;
+      background: linear-gradient(180deg, var(--blue) 0%, var(--border) 100%);
+      position: absolute;
+      left: 39px;
+      top: 52px;
+      bottom: 0;
+    }
+    .tl-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .tl-line { flex: 1; position: relative; }
+    .tl-badge {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 15px; color: #fff;
+      position: relative; z-index: 1;
+      flex-shrink: 0;
+    }
+    .tl-date {
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      margin-top: 6px; text-align: center; white-space: nowrap;
+    }
+    .tl-body {
+      padding-bottom: 28px;
+    }
+    .tl-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: box-shadow 0.2s;
+    }
+    .tl-card:hover { box-shadow: 0 4px 16px rgba(0,87,168,0.1); }
+    .tl-header {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin-bottom: 10px;
+    }
+    .tl-icon { font-size: 22px; flex-shrink: 0; }
+    .tl-title { font-weight: 700; font-size: 16px; }
+    .tl-script {
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 11px;
+      background: #f0f4f8; color: var(--blue);
+      border: 1px solid var(--border);
+      border-radius: 5px; padding: 2px 7px;
+      margin-left: auto; white-space: nowrap; flex-shrink: 0;
+    }
+    .tl-desc { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+    .tl-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pill {
+      font-size: 12px; padding: 3px 10px;
+      border-radius: 20px; font-weight: 500;
+    }
+    .pill-blue   { background: var(--light-blue); color: var(--dark); }
+    .pill-orange { background: var(--orange-light); color: #b54400; }
+    .pill-green  { background: var(--green-light); color: var(--green); }
+    .pill-purple { background: var(--purple-light); color: var(--purple); }
+    .pill-red    { background: var(--red-light); color: var(--red); }
+
+    /* ── Code blocks ── */
+    pre.code {
+      font-family: 'SF Mono', Consolas, 'Courier New', monospace;
+      font-size: 12.5px;
+      background: var(--code-bg);
+      color: #cdd6f4;
+      border-radius: 12px;
+      padding: 22px 24px;
+      overflow-x: auto;
+      line-height: 1.75;
+      tab-size: 2;
+    }
+    pre.code .k  { color: #cba6f7; } /* keyword */
+    pre.code .fn { color: #89b4fa; } /* function/prop name */
+    pre.code .s  { color: #a6e3a1; } /* string */
+    pre.code .n  { color: #fab387; } /* number */
+    pre.code .c  { color: #6c7086; font-style: italic; } /* comment */
+    pre.code .v  { color: #f9e2af; } /* variable */
+    pre.code .p  { color: #bac2de; } /* punctuation */
+
+    /* ── Step detail boxes ── */
+    .detail-box {
+      background: #fafbfc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+    .detail-box h4 {
+      font-size: 13px; font-weight: 700;
+      color: var(--blue); margin-bottom: 8px;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .detail-box ul { padding-left: 18px; }
+    .detail-box li { margin-bottom: 4px; color: var(--muted); }
+    .detail-box li strong { color: var(--text); }
+
+    /* ── API table ── */
+    .api-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .api-table th {
+      background: var(--blue); color: #fff;
+      text-align: left; padding: 11px 14px;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .api-table th:first-child { border-radius: 10px 0 0 0; }
+    .api-table th:last-child  { border-radius: 0 10px 0 0; }
+    .api-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .api-table tr:last-child td { border-bottom: none; }
+    .api-table tr:nth-child(even) { background: #fafbfc; }
+    .api-table tr:hover { background: var(--light-blue); }
+    .badge {
+      display: inline-block; font-family: monospace;
+      font-size: 11px; font-weight: 700;
+      padding: 2px 7px; border-radius: 4px;
+    }
+    .badge-get  { background: #e8f5e9; color: #2e7d32; }
+    .badge-post { background: #fff3e0; color: #e65100; }
+    .url { font-family: 'SF Mono', Consolas, monospace; font-size: 12px; color: var(--blue); word-break: break-all; }
+
+    /* ── Stats ── */
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 14px; }
+    .stat {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px 16px; text-align: center;
+    }
+    .stat .n { font-size: 28px; font-weight: 800; color: var(--blue); display: block; line-height: 1; margin-bottom: 6px; }
+    .stat .l { font-size: 12px; color: var(--muted); }
+    .stat.orange .n { color: var(--orange); }
+    .stat.green  .n { color: var(--green); }
+    .stat.purple .n { color: var(--purple); }
+    .stat.teal   .n { color: var(--teal); }
+
+    /* ── Highlight rows for algorithm steps ── */
+    .algo-step {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .algo-step:last-child { border-bottom: none; }
+    .algo-num {
+      min-width: 24px; height: 24px;
+      background: var(--blue); color: #fff;
+      border-radius: 50%; font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .algo-text strong { color: var(--text); }
+    .algo-text span { color: var(--muted); }
+
+    /* ── Flow arrow ── */
+    .flow {
+      display: flex; align-items: center; flex-wrap: wrap;
+      gap: 8px; padding: 16px 0; justify-content: center;
+    }
+    .flow-box {
+      border: 2px solid var(--border);
+      border-radius: 10px; padding: 10px 16px;
+      text-align: center; font-weight: 600; font-size: 13px;
+      min-width: 120px;
+    }
+    .flow-box.hi { border-color: var(--blue); background: var(--light-blue); color: var(--blue); }
+    .flow-box.end { border-color: var(--purple); background: var(--purple-light); color: var(--purple); }
+    .arr { font-size: 20px; color: var(--muted); }
+
+    footer {
+      background: var(--dark); color: rgba(255,255,255,0.65);
+      text-align: center; padding: 24px;
+      font-size: 13px;
+    }
+    footer strong { color: #fff; }
+
+    @media (max-width: 700px) {
+      .hero { padding: 32px 16px 48px; }
+      .wrap { padding: 0 14px; }
+      .tl-item { grid-template-columns: 56px 1fr; }
+      .tl-script { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Reece Group — Product Visualizer</div>
+    <h1>How <em>products_with_variants3.json</em> is built<br>— From file creation date</h1>
+    <p>
+      A step-by-step walkthrough of every script, in chronological order
+      of when the files were created, covering how raw product codes become
+      enriched product families with variants, specs, pricing, assets and categories.
+    </p>
+    <div class="hero-chips">
+      <div class="hero-chip"><span class="n">1,673</span><span class="l">Families</span></div>
+      <div class="hero-chip"><span class="n">8,442</span><span class="l">Variants</span></div>
+      <div class="hero-chip"><span class="n">6</span><span class="l">Grouping versions</span></div>
+      <div class="hero-chip"><span class="n">6</span><span class="l">APIs consumed</span></div>
+      <div class="hero-chip"><span class="n">48</span><span class="l">Categories</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 1 — CHRONOLOGICAL FILE CREATION
+══════════════════════════════════════════════════ -->
+<div class="sec">
+<div class="wrap">
+  <div class="eyebrow blue">Section 1 — Chronological File Creation</div>
+  <h2 class="sec-title">Pipeline in Order of File Creation Date</h2>
+  <p class="sec-sub">
+    Each stage builds on the previous one. Dates are from <code>ls -lt</code>.
+    The core grouping happened in November, enrichment in January–February.
+  </p>
+
+  <div class="timeline">
+
+    <!-- ── Stage 1: Nov 13 ── -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-badge" style="background:var(--blue);">1</div>
+        <div class="tl-date">13 Nov</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-card">
+          <div class="tl-header">
+            <span class="tl-icon">🔍</span>
+            <span class="tl-title">Fetch all products from Search API</span>
+            <code class="tl-script">fetch_products_with_attributes.js</code>
+          </div>
+          <p class="tl-desc">
+            Calls the Product Search Service to get all product listings, then for each product
+            individually calls the Product API (to get <code>isVap</code>) and the Attributes API
+            (to get raw spec groups). Uses a checkpoint file every 50 products so it can resume
+            if interrupted. 100ms delay between calls, exponential backoff on errors.
+          </p>
+          <div class="detail-box">
+            <h4>Exact API calls</h4>
+            <ul>
+              <li><strong>Search:</strong> <code>GET /product-search-service/search?channelId=557576&catalogueType=PUBLIC&pageSize=2000</code></li>
+              <li><strong>Product detail:</strong> <code>GET /product-api/products/{productCode}</code> → extracts <code>isVap</code> (boolean)</li>
+              <li><strong>Attributes:</strong> <code>GET /product-api/{productCode}/2357124/attributes</code> → extracts <code>sourceAttributes</code> (groups array with Specifications)</li>
+            </ul>
+          </div>
+          <div class="detail-box" style="margin-top:10px;">
+            <h4>Output: <code>products_with_attributes.json</code> (root) + checkpoint file</h4>
+            <ul>
+              <li>Each product enriched with <code>isVap: true/false</code></li>
+              <li>Each product enriched with <code>sourceAttributes: &#123; groups: [&#123; name: "Specifications", attributes: [...] &#125;] &#125;</code></li>
+              <li><code>_metadata</code> block with fetch stats and source URLs</li>
+            </ul>
+          </div>
+          <div class="tl-pills" style="margin-top:12px;">
+            <span class="pill pill-blue">branchId: 2357124</span>
+            <span class="pill pill-blue">delay: 100ms</span>
+            <span class="pill pill-blue">Checkpoint every 50 products</span>
+            <span class="pill pill-orange">Output: products_with_attributes.json</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stage 2: Nov 13–14 — v1 Grouping ── -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-badge" style="background:#5b7fa6;">2</div>
+        <div class="tl-date">13–14 Nov</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-card">
+          <div class="tl-header">
+            <span class="tl-icon">🏷️</span>
+            <span class="tl-title">First title normalisation and grouping — v1</span>
+            <code class="tl-script">create-variants.cjs</code>
+          </div>
+          <p class="tl-desc">
+            The first attempt at grouping products by stripping variant tokens from titles and
+            grouping by brand + normalised title. Also introduces <code>findCommonTitle()</code>
+            (longest common word sequence) and <code>generateFamilyId()</code> (MD5 of brand+title).
+          </p>
+          <div class="tl-pills">
+            <span class="pill pill-blue">Input: products-grouped-by-variant_v6.json</span>
+            <span class="pill pill-orange">Output: products-grouped-by-variant_v1.json</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stage 3: Nov 14 — v4, v5 ── -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-badge" style="background:#5b7fa6;">3</div>
+        <div class="tl-date">14 Nov</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-card">
+          <div class="tl-header">
+            <span class="tl-icon">🔄</span>
+            <span class="tl-title">Iterative refinement — v2, v3, v4, v5</span>
+            <code class="tl-script">create-v4.cjs / create-v5.cjs</code>
+          </div>
+          <p class="tl-desc">
+            Multiple rapid iterations that progressively improved the normalisation by finding
+            more edge cases — materials missing from the list, finishes not matching, products
+            that should be grouped but weren't. Each version re-groups from the previous output.
+          </p>
+          <div class="tl-pills">
+            <span class="pill pill-orange">v2, v3, v4, v5 JSON files written to public/</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stage 4: Nov 18 — v6 ── -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-badge" style="background:var(--blue);">4</div>
+        <div class="tl-date">18 Nov</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-card">
+          <div class="tl-header">
+            <span class="tl-icon">🎯</span>
+            <span class="tl-title">Final grouping algorithm — v6 (reads v5, re-groups)</span>
+            <code class="tl-script">create-v6.cjs</code>
+          </div>
+          <p class="tl-desc">
+            The definitive grouping step. Reads <code>products-grouped-by-variant_v5.json</code>,
+            flattens all products per brand, then re-groups by <code>normalizeTitle()</code>.
+            Four bugs were fixed in this version vs earlier ones.
+          </p>
+
+          <div class="detail-box">
+            <h4>normalizeTitle() — exact removal order</h4>
+            <ul>
+              <li><strong>1. Size patterns:</strong> <code>/\d+\s*x\s*\d+(…)(mm|cm|m)?/gi</code> — e.g. "1200x900mm", "3.0x1.8m"</li>
+              <li><strong>2. Individual dims:</strong> <code>/\d+\s*(mm|cm|m)\d?/gi</code> — "630mm", "10m2", "5m3"</li>
+              <li><strong>3. Parenthetical area:</strong> <code>/\(?\d+m[23]\)?/gi</code> — "(10M2)", "(5m3)"</li>
+              <li><strong>4. Whitespace normalise</strong> to single spaces before material matching (bug fix)</li>
+              <li><strong>5. Word variations:</strong> "underfloor" ↔ "under floor" normalised</li>
+              <li><strong>6. Directional:</strong> "left hand", "right hand", "left", "right"</li>
+              <li><strong>7. Colour combos:</strong> <code>/\b\w+\s*\/\s*\w+\b/gi</code> — "Grey/Chrome"</li>
+              <li><strong>8. Materials list (sorted longest-first):</strong> complex finishes first (e.g. "brushed platinum gold"), then standard finishes (brushed, polished, matte…), glass types, wood types, base colours, temperatures</li>
+            </ul>
+          </div>
+
+          <div class="detail-box" style="margin-top:10px;">
+            <h4>4 bugs fixed in v6 vs v5</h4>
+            <ul>
+              <li><strong>Whitespace bug:</strong> "Polished Stainless&nbsp;&nbsp;&nbsp;Steel" (extra spaces) failed multi-word match → fix: normalise whitespace first</li>
+              <li><strong>m2/m3 notation:</strong> "(10M2)" size not stripped → Stiebel Eltron heating packs not grouped</li>
+              <li><strong>underfloor vs under floor:</strong> different spacing = different groups → normalise</li>
+              <li><strong>Missing colour names:</strong> Fume, Green, Tangerine Orange not in list → LAUFEN Kartell racks not grouped</li>
+            </ul>
+          </div>
+
+          <div class="tl-pills" style="margin-top:12px;">
+            <span class="pill pill-blue">Input: v5 JSON</span>
+            <span class="pill pill-blue">~60 tokens in materials array, sorted by length DESC</span>
+            <span class="pill pill-orange">Output: products-grouped-by-variant_v6.json</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stage 5: Nov 19–20 — create-variants2 ── -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-badge" style="background:var(--blue);">5</div>
+        <div class="tl-date">19–20 Nov</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-card">
+          <div class="tl-header">
+            <span class="tl-icon">👨‍👩‍👧‍👦</span>
+            <span class="tl-title">First family + variants JSON — v1, v2</span>
+            <code class="tl-script">create-variants.cjs / create-variants2.cjs</code>
+          </div>
+          <p class="tl-desc">
+            Early attempts at building the <code>families</code> + <code>variants</code> structure
+            from the v6 grouping. Establishes the shape of the JSON but without
+            <code>sourceAttributes</code> (not yet merged in) and with a simpler attribute
+            extraction approach.
+          </p>
+          <div class="tl-pills">
+            <span class="pill pill-orange">Output: products_with_variants.json, _with_variants2.json</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stage 6: Nov 24 — products.json ── -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-badge" style="background:var(--green);">6</div>
+        <div class="tl-date">24 Nov</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-card">
+          <div class="tl-header">
+            <span class="tl-icon">📦</span>
+            <span class="tl-title">products.json written to public/</span>
+            <code class="tl-script">fetch_products_with_attributes.js (re-run)</code>
+          </div>
+          <p class="tl-desc">
+            The enriched product list (with <code>isVap</code> and <code>sourceAttributes</code>)
+            was written to <code>public/products.json</code> for browser access. This is the
+            intermediate product catalogue before family grouping.
+          </p>
+          <div class="tl-pills">
+            <span class="pill pill-green">File: public/products.json (7 MB)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stage 7: Nov 27 — create-variants3 (THE KEY STEP) ── -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-badge" style="background:var(--orange);">7</div>
+        <div class="tl-date">27 Nov</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-card" style="border-color: var(--orange);">
+          <div class="tl-header">
+            <span class="tl-icon">⭐</span>
+            <span class="tl-title">Create products_with_variants3.json — THE MAIN FILE</span>
+            <code class="tl-script">create-variants3.cjs</code>
+          </div>
+          <p class="tl-desc">
+            This is the core script. It merges v6 grouping with <code>products_with_attributes.json</code>
+            to produce the definitive file. It introduces intelligent dimension matching,
+            improved <code>findCommonTitle()</code>, and full <code>sourceAttributes</code> embedding.
+          </p>
+
+          <div class="detail-box">
+            <h4>Step-by-step logic inside create-variants3.cjs</h4>
+
+            <div class="algo-step">
+              <div class="algo-num">1</div>
+              <div class="algo-text">
+                <strong>Load inputs:</strong>
+                <span>Read <code>products-grouped-by-variant_v6.json</code> + <code>products_with_attributes.json</code>.
+                Build a <code>Map(productCode → attributes)</code> for O(1) lookup.</span>
+              </div>
+            </div>
+
+            <div class="algo-step">
+              <div class="algo-num">2</div>
+              <div class="algo-text">
+                <strong>For each brand's groups (skip groups with ≤ 1 product):</strong>
+                <span>Call <code>findCommonTitle(titles[])</code> — strips sizes, directions, temperatures,
+                and 15 material/colour terms from each title, then finds the longest common consecutive
+                word sequence across all titles in the group. Falls back to common prefix words if no
+                sequence found. Capitalises result, handles Roman numerals and "AXA" brand.</span>
+              </div>
+            </div>
+
+            <div class="algo-step">
+              <div class="algo-num">3</div>
+              <div class="algo-text">
+                <strong>Generate family ID:</strong>
+                <span><code>fam_ + MD5(brand.toLowerCase() + "-" + commonTitle.toLowerCase())[0..12]</code></span>
+              </div>
+            </div>
+
+            <div class="algo-step">
+              <div class="algo-num">4</div>
+              <div class="algo-text">
+                <strong>For each product in the group, build a variant object:</strong>
+                <span>Look up <code>sourceAttributes</code> from the map, filter to only the
+                <code>"Specifications"</code> group (dropping marketing/other groups), then call
+                <code>extractVariantAttributes(productTitle, commonTitle, filteredAttributes)</code>.</span>
+              </div>
+            </div>
+
+            <div class="algo-step">
+              <div class="algo-num">5</div>
+              <div class="algo-text">
+                <strong>extractVariantAttributes() — builds the <code>attributes</code> object:</strong>
+                <span>
+                  <br>• <strong>sizes:</strong> regex for "NxNmm" multi-dim patterns → array<br>
+                  • <strong>Individual dims:</strong> if no sizes, match "Nmm" tokens → call <code>matchDimensionToSpec()</code> to map each to the correct spec name (Width/Height/Depth/etc) using ±50mm tolerance<br>
+                  • <strong>coverage:</strong> area patterns "(10M2)"<br>
+                  • <strong>orientation:</strong> "Left Hand Bowl" takes priority for vanities, else "Left Hand" / "Right Hand" / "Left" / "Right"<br>
+                  • <strong>temperature:</strong> "Cold" / "Warm" / "Hot"<br>
+                  • <strong>uniqueDescriptors / color:</strong> words remaining after removing common title words, excluding a hardcoded exclude list (hand, rail, basin, tap, mixer, shower, etc.)
+                </span>
+              </div>
+            </div>
+
+            <div class="algo-step">
+              <div class="algo-num">6</div>
+              <div class="algo-text">
+                <strong>matchDimensionToSpec() — spec name lookup:</strong>
+                <span>
+                  Parses the numeric value from "Nmm", searches <code>sourceAttributes.groups[0].attributes</code>
+                  for specs where <code>|specValue - numericValue| ≤ 50</code>.
+                  Excluded from matching: Recommended Pressure Range, Temperature, Flow Rate, Capacity, Weight, Star Rating, WELS Rating.
+                  When multiple specs match, picks highest priority: Benchtop Thickness → Width → Height → Depth → Length → Diameter → Min/Max Width/Height → Projection → Reach → Arm Length → Shower Head Width → Fixing Point Distance.
+                  If Min and Max have the same value (±50mm), collapses to base name (e.g. "Width" instead of "Minimum Width").
+                </span>
+              </div>
+            </div>
+
+            <div class="algo-step">
+              <div class="algo-num">7</div>
+              <div class="algo-text">
+                <strong>extractVariantOptions() — builds variantOptions at family level:</strong>
+                <span>
+                  Collects all values for each attribute key across all variants.
+                  If multiple different dimension-type keys exist across variants (e.g. some have "Width", others have "Height"),
+                  consolidates them all into a single <code>"dimension"</code> key.
+                  Only includes keys where there are ≥ 2 unique values.
+                  Renames "sizes" → "size", "dimensions" → "dimension".
+                </span>
+              </div>
+            </div>
+
+            <div class="algo-step">
+              <div class="algo-num">8</div>
+              <div class="algo-text">
+                <strong>Merge duplicate families:</strong>
+                <span>After all groups are processed, merge any families with identical
+                <code>brand:productFamilyTitle</code> key by combining their variants and
+                re-running <code>extractVariantOptions()</code>.</span>
+              </div>
+            </div>
+
+            <div class="algo-step">
+              <div class="algo-num">9</div>
+              <div class="algo-text">
+                <strong>Write output:</strong>
+                <span><code>public/products_with_variants3.json</code> with <code>_metadata</code> block
+                (version: 3, statistics, variantTypes array) and <code>families</code> array.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-pills" style="margin-top:14px;">
+            <span class="pill pill-blue">Input: v6 grouping JSON</span>
+            <span class="pill pill-blue">Input: products_with_attributes.json</span>
+            <span class="pill pill-green">Only groups with ≥ 2 products become families</span>
+            <span class="pill pill-orange">Output: products_with_variants3.json (base)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stage 8: Jan 20 — Prices ── -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-badge" style="background:var(--teal);">8</div>
+        <div class="tl-date">20 Jan</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-card">
+          <div class="tl-header">
+            <span class="tl-icon">💲</span>
+            <span class="tl-title">Enrich — Live Pricing</span>
+            <code class="tl-script">fetch_prices.cjs</code>
+          </div>
+          <p class="tl-desc">
+            Reads <code>products_with_variants3.json</code>, extracts all product codes,
+            and calls Reece's pricing endpoint in batches of 50 with a 500ms delay between batches.
+          </p>
+          <div class="detail-box">
+            <h4>Exact API call</h4>
+            <ul>
+              <li><strong>URL:</strong> <code>POST https://www.reece.com.au/trsonline/products/prices/batch</code></li>
+              <li><strong>Body:</strong> <code>&#123; postCode: "2018", products: [&#123; productCode, packs: ["PACK1"] &#125;] &#125;</code></li>
+              <li><strong>Response path:</strong> <code>response.prices[].cmp.PACK1.gstInclusive</code> → stored as <code>variant.price</code></li>
+              <li>Variants without a price get <code>variant.price = null</code></li>
+            </ul>
+          </div>
+          <div class="tl-pills" style="margin-top:12px;">
+            <span class="pill pill-blue">Batch: 50 products</span>
+            <span class="pill pill-blue">Delay: 500ms between batches</span>
+            <span class="pill pill-blue">Postcode: 2018 (Sydney)</span>
+            <span class="pill pill-green">Adds: variant.price (GST incl., AUD)</span>
+            <span class="pill pill-orange">Writes back to: products_with_variants3.json</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stage 9: Jan 22 — Assets ── -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-badge" style="background:var(--teal);">9</div>
+        <div class="tl-date">22 Jan</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-card">
+          <div class="tl-header">
+            <span class="tl-icon">🖼️</span>
+            <span class="tl-title">Enrich — Digital Assets (3D + Images)</span>
+            <code class="tl-script">fetch_assets.cjs</code>
+          </div>
+          <p class="tl-desc">
+            Batch-fetches all 5 asset types per product from the internal Digital Asset Service.
+            300ms delay between batches of 50.
+          </p>
+          <div class="detail-box">
+            <h4>Exact API call</h4>
+            <ul>
+              <li><strong>URL:</strong> <code>POST http://reeceausys.reece.com.au/digital-asset-service/products/assets/batch</code></li>
+              <li><strong>Body:</strong> <code>&#123; productNumbers: [int, …], subAssetType: ["GLB_3D_Planner", "GLB_3D_Planner_Void", "GLB_3D_Planner_Review", "Hero", "Supporting_Image"] &#125;</code></li>
+              <li><strong>Note:</strong> productCode is cast to <code>parseInt()</code> before sending</li>
+              <li><strong>Response:</strong> array of asset objects grouped by <code>asset.productNumber</code></li>
+              <li><strong>Stored as:</strong> <code>variant.assets = [&#123; productNumber, subAssetType, title, thumbnails: [&#123;width, height, absoluteUrl&#125;] &#125;]</code></li>
+            </ul>
+          </div>
+          <div class="tl-pills" style="margin-top:12px;">
+            <span class="pill pill-blue">Batch: 50 products</span>
+            <span class="pill pill-blue">Delay: 300ms</span>
+            <span class="pill pill-green">Adds: variant.assets []</span>
+            <span class="pill pill-orange">Writes back to: products_with_variants3.json</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stage 10: Feb 3 — Product Images ── -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-badge" style="background:var(--purple);">10</div>
+        <div class="tl-date">3 Feb</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-card">
+          <div class="tl-header">
+            <span class="tl-icon">📸</span>
+            <span class="tl-title">Extract productImages from assets (1200×900 only)</span>
+            <code class="tl-script">scripts/add-product-images.js</code>
+          </div>
+          <p class="tl-desc">
+            Pure local transformation — no API call. Reads the already-embedded <code>assets</code>
+            array and pulls out only 1200×900 thumbnail URLs.
+          </p>
+          <div class="detail-box">
+            <h4>Exact logic</h4>
+            <ul>
+              <li>Filter <code>variant.assets</code> to <code>subAssetType === "Hero" || "Supporting_Image"</code></li>
+              <li>Sort Hero first, Supporting_Image second</li>
+              <li>For each, find <code>thumbnails.find(t =&gt; t.width === 1200 &amp;&amp; t.height === 900)</code></li>
+              <li>Push <code>thumbnail.absoluteUrl</code> to <code>variant.productImages</code></li>
+            </ul>
+          </div>
+          <div class="tl-pills" style="margin-top:12px;">
+            <span class="pill pill-purple">No API — local transform only</span>
+            <span class="pill pill-green">Adds: variant.productImages [] (flat URL array)</span>
+            <span class="pill pill-green">Result: 23,140 images, avg 2.74 per variant</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stage 11: Feb 18 — Category ── -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-badge" style="background:var(--red);">11</div>
+        <div class="tl-date">18 Feb</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-card">
+          <div class="tl-header">
+            <span class="tl-icon">🗂️</span>
+            <span class="tl-title">Enrich — Category Descriptions</span>
+            <code class="tl-script">fetch_category_description.cjs</code>
+          </div>
+          <p class="tl-desc">
+            Re-hits the Product API for each variant to retrieve <code>categoryDescription</code>.
+            Processes in parallel batches of 10, with checkpointing every 100 products and
+            exponential retry (up to 3 attempts).
+          </p>
+          <div class="detail-box">
+            <h4>Exact API call</h4>
+            <ul>
+              <li><strong>URL:</strong> <code>GET http://trsausys.reecenet.org/product-api/products/{productCode}</code></li>
+              <li><strong>Extracts:</strong> <code>productData.categoryDescription</code></li>
+              <li><strong>Batch:</strong> 10 parallel fetches at a time, 100ms delay between batches</li>
+              <li><strong>Checkpoint:</strong> saved every 100 products to <code>category_description_checkpoint.json</code>, deleted on completion</li>
+              <li><strong>Retry:</strong> 3 attempts with <code>RETRY_DELAY × attempt</code> backoff (1s, 2s)</li>
+              <li><strong>Stored as:</strong> <code>variant.categoryDescription</code> (e.g. "Shower Bases", "Tapware", "Vanities"…)</li>
+            </ul>
+          </div>
+          <div class="tl-pills" style="margin-top:12px;">
+            <span class="pill pill-blue">Parallel batch: 10</span>
+            <span class="pill pill-blue">Delay: 100ms per batch</span>
+            <span class="pill pill-green">48 unique categories identified</span>
+            <span class="pill pill-orange">Writes back to: products_with_variants3.json</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stage 12: Feb 26 — Final file ── -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-badge" style="background:var(--green);">✓</div>
+        <div class="tl-date">26 Feb</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-card" style="border-color:var(--green); background: var(--green-light);">
+          <div class="tl-header">
+            <span class="tl-icon">🎉</span>
+            <span class="tl-title">Final file — products_with_variants3.json (174 MB)</span>
+          </div>
+          <p class="tl-desc">
+            The fully enriched, final version of the file used by the Product Visualizer app.
+            Every variant has all fields populated: attributes, sourceAttributes, price, assets,
+            productImages, and categoryDescription.
+          </p>
+          <div class="tl-pills">
+            <span class="pill pill-green">1,673 families</span>
+            <span class="pill pill-green">8,442 variants</span>
+            <span class="pill pill-green">100% priced</span>
+            <span class="pill pill-green">100% with assets</span>
+            <span class="pill pill-green">23,140 images</span>
+            <span class="pill pill-green">48 categories</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /timeline -->
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 2 — API ENDPOINTS
+══════════════════════════════════════════════════ -->
+<div class="sec alt">
+<div class="wrap">
+  <div class="eyebrow green">Section 2 — APIs Consumed</div>
+  <h2 class="sec-title">All API Endpoints, In Order of First Use</h2>
+  <p class="sec-sub">Six distinct Reece internal and public services, called at different pipeline stages.</p>
+
+  <div class="card" style="overflow-x:auto;">
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>Service</th>
+          <th>Method + Endpoint</th>
+          <th>Request Body / Params</th>
+          <th>Field Written to Variant</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1</strong></td>
+          <td><strong>Product Search</strong></td>
+          <td><span class="badge badge-get">GET</span><br><span class="url">trsausys.reecenet.org/product-search-service/search<br>?channelId=557576&catalogueType=PUBLIC&pageSize=2000</span></td>
+          <td>None</td>
+          <td><em>Provides initial product list (productCode, productTitle)</em></td>
+        </tr>
+        <tr>
+          <td><strong>1</strong></td>
+          <td><strong>Product API</strong><br>(isVap)</td>
+          <td><span class="badge badge-get">GET</span><br><span class="url">trsausys.reecenet.org/product-api/products/{productCode}</span></td>
+          <td>None — one call per product</td>
+          <td><code>isVap: true|false</code></td>
+        </tr>
+        <tr>
+          <td><strong>1</strong></td>
+          <td><strong>Attributes API</strong></td>
+          <td><span class="badge badge-get">GET</span><br><span class="url">trsausys.reecenet.org/product-api/{productCode}/2357124/attributes</span></td>
+          <td>branchId: 2357124 (in URL path)</td>
+          <td><code>sourceAttributes.groups[0] (Specifications)</code></td>
+        </tr>
+        <tr>
+          <td><strong>8</strong></td>
+          <td><strong>Pricing API</strong></td>
+          <td><span class="badge badge-post">POST</span><br><span class="url">www.reece.com.au/trsonline/products/prices/batch</span></td>
+          <td><code>&#123; postCode:"2018", products:[&#123;productCode, packs:["PACK1"]&#125;] &#125;</code><br>Batch: 50</td>
+          <td><code>price</code> (GST incl., AUD) from <code>response.prices[].cmp.PACK1.gstInclusive</code></td>
+        </tr>
+        <tr>
+          <td><strong>9</strong></td>
+          <td><strong>Digital Asset Service</strong></td>
+          <td><span class="badge badge-post">POST</span><br><span class="url">reeceausys.reece.com.au/digital-asset-service/products/assets/batch</span></td>
+          <td><code>&#123; productNumbers:[int,…], subAssetType:[5 types] &#125;</code><br>Batch: 50</td>
+          <td><code>assets[]</code> (full objects with thumbnails)</td>
+        </tr>
+        <tr>
+          <td><strong>11</strong></td>
+          <td><strong>Product API</strong><br>(category)</td>
+          <td><span class="badge badge-get">GET</span><br><span class="url">trsausys.reecenet.org/product-api/products/{productCode}</span></td>
+          <td>None — same endpoint as isVap but fetched again for category</td>
+          <td><code>categoryDescription</code> from <code>productData.categoryDescription</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 3 — VARIANT OBJECT ANATOMY
+══════════════════════════════════════════════════ -->
+<div class="sec">
+<div class="wrap">
+  <div class="eyebrow purple">Section 3 — JSON Structure</div>
+  <h2 class="sec-title">Full Variant Object — Every Field &amp; Where It Comes From</h2>
+  <p class="sec-sub">Every field in a variant is written by a specific pipeline stage.</p>
+
+  <pre class="code"><span class="p">{</span>
+  <span class="fn">"productFamilyId"</span><span class="p">:</span>    <span class="s">"fam_5613fea5246b"</span><span class="p">,</span>  <span class="c">// create-variants3.cjs — MD5(brand+title)[0..12]</span>
+  <span class="fn">"productFamilyTitle"</span><span class="p">:</span> <span class="s">"Akril Torbex Shower Base"</span><span class="p">,</span>  <span class="c">// longest common word sequence across all titles</span>
+  <span class="fn">"brand"</span><span class="p">:</span>              <span class="s">"Akril"</span><span class="p">,</span>           <span class="c">// from v6 grouping key</span>
+  <span class="fn">"variantCount"</span><span class="p">:</span>      <span class="n">4</span><span class="p">,</span>
+  <span class="fn">"variantOptions"</span><span class="p">:</span> <span class="p">{</span>          <span class="c">// extracted by extractVariantOptions() from all variants</span>
+    <span class="fn">"size"</span><span class="p">: [</span><span class="s">"900x900mm"</span><span class="p">,</span> <span class="s">"1000x1000mm"</span><span class="p">,</span> <span class="s">"1200x900mm"</span><span class="p">,</span> <span class="s">"1370x900mm"</span><span class="p">],</span>
+    <span class="fn">"color"</span><span class="p">: [</span><span class="s">"White"</span><span class="p">,</span> <span class="s">"Black"</span><span class="p">],</span>
+    <span class="fn">"orientation"</span><span class="p">: [</span><span class="s">"Left Hand"</span><span class="p">,</span> <span class="s">"Right Hand"</span><span class="p">]</span>  <span class="c">// only if applicable</span>
+  <span class="p">},</span>
+  <span class="fn">"variants"</span><span class="p">: [</span>
+    <span class="p">{</span>
+      <span class="fn">"productCode"</span><span class="p">:</span>  <span class="s">"1791290"</span><span class="p">,</span>            <span class="c">// from Product Search API</span>
+      <span class="fn">"productTitle"</span><span class="p">:</span> <span class="s">"Akril Torbex Shower Base 1000x1000mm White"</span><span class="p">,</span>
+
+      <span class="fn">"attributes"</span><span class="p">:</span> <span class="p">{</span>              <span class="c">// extractVariantAttributes() in create-variants3.cjs</span>
+        <span class="fn">"sizes"</span><span class="p">: [</span><span class="s">"1000x1000mm"</span><span class="p">],</span>    <span class="c">// regex: /NxNmm/ multi-dim pattern</span>
+        <span class="fn">"uniqueDescriptors"</span><span class="p">:</span> <span class="s">"White"</span><span class="p">,</span>  <span class="c">// words not in commonTitle, not excluded</span>
+        <span class="fn">"color"</span><span class="p">:</span> <span class="s">"White"</span><span class="p">,</span>            <span class="c">// same as uniqueDescriptors</span>
+        <span class="c">// "orientation": only if Left/Right found in title</span>
+        <span class="c">// "temperature": only if Cold/Warm/Hot found in title</span>
+        <span class="c">// "Width"/"Height"/"Depth": if single dim matched to spec via matchDimensionToSpec()</span>
+      <span class="p">},</span>
+
+      <span class="fn">"sourceAttributes"</span><span class="p">:</span> <span class="p">{</span>       <span class="c">// fetch_products_with_attributes.js → filtered to Specifications only</span>
+        <span class="fn">"groups"</span><span class="p">: [{</span>
+          <span class="fn">"name"</span><span class="p">:</span> <span class="s">"Specifications"</span><span class="p">,</span>
+          <span class="fn">"attributes"</span><span class="p">: [</span>
+            <span class="p">{ </span><span class="fn">"name"</span><span class="p">:</span> <span class="s">"Width"</span><span class="p">,</span>  <span class="fn">"uom"</span><span class="p">:</span> <span class="s">"mm"</span><span class="p">,</span> <span class="fn">"values"</span><span class="p">: [</span><span class="s">"1000"</span><span class="p">] },</span>
+            <span class="p">{ </span><span class="fn">"name"</span><span class="p">:</span> <span class="s">"Depth"</span><span class="p">,</span>  <span class="fn">"uom"</span><span class="p">:</span> <span class="s">"mm"</span><span class="p">,</span> <span class="fn">"values"</span><span class="p">: [</span><span class="s">"1000"</span><span class="p">] },</span>
+            <span class="p">{ </span><span class="fn">"name"</span><span class="p">:</span> <span class="s">"Height"</span><span class="p">, </span><span class="fn">"uom"</span><span class="p">:</span> <span class="s">"mm"</span><span class="p">,</span> <span class="fn">"values"</span><span class="p">: [</span><span class="s">"29"</span><span class="p">] }</span>
+          <span class="p">]</span>
+        <span class="p">}]</span>
+      <span class="p">},</span>
+
+      <span class="fn">"price"</span><span class="p">:</span> <span class="n">599.99</span><span class="p">,</span>               <span class="c">// fetch_prices.cjs — response.prices[].cmp.PACK1.gstInclusive</span>
+
+      <span class="fn">"assets"</span><span class="p">: [{</span>                    <span class="c">// fetch_assets.cjs</span>
+        <span class="fn">"productNumber"</span><span class="p">:</span> <span class="n">1791290</span><span class="p">,</span>
+        <span class="fn">"subAssetType"</span><span class="p">:</span>  <span class="s">"Hero"</span><span class="p">,</span>
+        <span class="fn">"title"</span><span class="p">:</span>         <span class="s">"Torbex 1000x1000 Hero"</span><span class="p">,</span>
+        <span class="fn">"thumbnails"</span><span class="p">: [{</span>
+          <span class="fn">"width"</span><span class="p">:</span>       <span class="n">1200</span><span class="p">,</span>
+          <span class="fn">"height"</span><span class="p">:</span>      <span class="n">900</span><span class="p">,</span>
+          <span class="fn">"absoluteUrl"</span><span class="p">:</span> <span class="s">"https://..."</span>
+        <span class="p">}]</span>
+      <span class="p">}],</span>
+
+      <span class="fn">"productImages"</span><span class="p">: [</span><span class="s">"https://..."</span><span class="p">],</span>  <span class="c">// scripts/add-product-images.js — 1200x900 URLs, Hero first</span>
+      <span class="fn">"categoryDescription"</span><span class="p">:</span> <span class="s">"Shower Bases"</span>  <span class="c">// fetch_category_description.cjs</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span></pre>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 4 — isVap
+══════════════════════════════════════════════════ -->
+<div class="sec alt">
+<div class="wrap">
+  <div class="eyebrow orange">Section 4 — isVap</div>
+  <h2 class="sec-title">What is <code>isVap</code> and how is it fetched?</h2>
+  <p class="sec-sub">isVap (Visualizer Applicable Product) determines whether a product can be shown in the 3D bathroom planner.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 style="font-size:15px;font-weight:700;margin-bottom:12px;">How it's fetched</h3>
+      <div class="algo-step">
+        <div class="algo-num">1</div>
+        <div class="algo-text">
+          <strong>GET</strong> <code>/product-api/products/{productCode}</code>
+        </div>
+      </div>
+      <div class="algo-step">
+        <div class="algo-num">2</div>
+        <div class="algo-text">
+          <strong>Extract:</strong> <span><code>productData.isVap</code> — a boolean on the product API response</span>
+        </div>
+      </div>
+      <div class="algo-step">
+        <div class="algo-num">3</div>
+        <div class="algo-text">
+          <strong>Store:</strong> <span><code>product.isVap = productData.isVap</code> (defaults to <code>false</code> if API fails)</span>
+        </div>
+      </div>
+      <div class="algo-step" style="border:none;">
+        <div class="algo-num">4</div>
+        <div class="algo-text">
+          <strong>Later:</strong> <span>The v6 grouping and family creation scripts carry this field into the variant's source data, so the UI can filter to only show VAP-eligible products in the planner.</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px;font-weight:700;margin-bottom:12px;">What isVap controls</h3>
+      <ul style="padding-left:18px;font-size:14px;line-height:2;color:var(--muted);">
+        <li><strong style="color:var(--text);">isVap = true:</strong> Product has 3D GLB assets and can be placed in the bathroom planner</li>
+        <li><strong style="color:var(--text);">isVap = false:</strong> Product is catalogued but not available in the planner</li>
+        <li>Counted in <code>_metadata.vapProducts</code> stats at fetch time</li>
+        <li>3D asset types (GLB_3D_Planner, GLB_3D_Planner_Void, GLB_3D_Planner_Review) only meaningful for VAP products</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 5 — STATISTICS
+══════════════════════════════════════════════════ -->
+<div class="sec">
+<div class="wrap">
+  <div class="eyebrow teal">Section 5 — Final Statistics</div>
+  <h2 class="sec-title">Dataset Metrics — products_with_variants3.json</h2>
+  <p class="sec-sub">All statistics are stored in the <code>_metadata</code> block of the JSON.</p>
+
+  <div class="stat-grid" style="margin-bottom:32px;">
+    <div class="stat"><span class="n">1,673</span><span class="l">Product Families</span></div>
+    <div class="stat orange"><span class="n">8,442</span><span class="l">Total Variants</span></div>
+    <div class="stat green"><span class="n">5.05</span><span class="l">Avg Variants / Family</span></div>
+    <div class="stat purple"><span class="n">23,140</span><span class="l">Product Images</span></div>
+    <div class="stat teal"><span class="n">2.74</span><span class="l">Avg Images / Variant</span></div>
+    <div class="stat"><span class="n">48</span><span class="l">Category Descriptions</span></div>
+    <div class="stat orange"><span class="n">100%</span><span class="l">Variants Priced</span></div>
+    <div class="stat green"><span class="n">174 MB</span><span class="l">Final File Size</span></div>
+  </div>
+
+  <!-- Flow summary -->
+  <h3 style="font-size:17px;font-weight:700;margin-bottom:16px;">End-to-end data flow</h3>
+  <div class="flow">
+    <div class="flow-box">Product Search API<br><small>all product codes</small></div>
+    <div class="arr">→</div>
+    <div class="flow-box">Product API + Attributes API<br><small>isVap + sourceAttributes</small></div>
+    <div class="arr">→</div>
+    <div class="flow-box hi">Title Normalisation v1→v6<br><small>group by brand + normalised title</small></div>
+  </div>
+  <div style="text-align:center;font-size:22px;color:var(--muted);">↓</div>
+  <div class="flow">
+    <div class="flow-box hi">create-variants3.cjs<br><small>families + variants + sourceAttributes</small></div>
+    <div class="arr">→</div>
+    <div class="flow-box">Pricing API<br><small>+ price</small></div>
+    <div class="arr">→</div>
+    <div class="flow-box">Digital Asset Service<br><small>+ assets</small></div>
+    <div class="arr">→</div>
+    <div class="flow-box">Image extractor<br><small>+ productImages</small></div>
+    <div class="arr">→</div>
+    <div class="flow-box">Product API<br><small>+ categoryDescription</small></div>
+  </div>
+  <div style="text-align:center;font-size:22px;color:var(--muted);">↓</div>
+  <div class="flow">
+    <div class="flow-box end">products_with_variants3.json<br><small>174 MB — fully enriched</small></div>
+  </div>
+</div>
+</div>
+
+</main>
+
+<footer>
+  <strong>Reece Group — Product Visualizer</strong><br>
+  Data pipeline technical overview — products_with_variants3.json — chronological by file creation date
+</footer>
+
+</body>
+</html>
